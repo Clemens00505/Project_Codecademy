@@ -2,14 +2,15 @@ package DatabaseConnection;
 
 import java.sql.*;
 
-import javax.swing.text.AbstractDocument.Content;
+// import javax.swing.text.AbstractDocument.Content;
 
 /**
  * Dit is een voorbeeld Java toepassing waarin je verbinding maakt met een SQLServer database.
  */
 public class databaseConnection {
 
-    public static void main(String[] args) {
+    // public static void main(String[] args) {
+    public void test() {
 
         // Dit zijn de instellingen voor de verbinding. Vervang de databaseName indien deze voor jou anders is.
         String connectionUrl = "jdbc:sqlserver://localhost;databaseName=codecademy;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";

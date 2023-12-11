@@ -1,7 +1,14 @@
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "c:\\Users\\mathi\\Desktop\\ref lib\\mssql-jdbc-12.4.2.jre11-sources.jar"
+        ],
+        "exclude": [
+            "lib/Nieuwe map/mssql-jdbc-12.4.2.jre11-javadoc.jar",
+            "lib/Nieuwe map/mssql-jdbc-12.4.2.jre11.jar"
+        ]
+    }
 }
