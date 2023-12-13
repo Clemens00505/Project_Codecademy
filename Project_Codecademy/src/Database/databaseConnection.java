@@ -2,6 +2,7 @@ package Database;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Objects.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
@@ -125,7 +126,7 @@ public class databaseConnection {
         } else {
             result = true;
         }
-        System.out.println("verbinding gemaakt");
+        // System.out.println("verbinding gemaakt");
 
         return result;
     }
@@ -154,7 +155,7 @@ public class databaseConnection {
         }
     }
 
-    public ResultSet executeSQLSelectStatement(String query) {
+    public ResultSet executeSQLSelectStatement(String query) { //methode om een query te gebruiken
         ResultSet resultSet = null;
 
         if (query != null && connectionIsOpen()) {
@@ -165,7 +166,28 @@ public class databaseConnection {
             }
         }
 
-        System.out.println("Resultset gemaakt");
+        // System.out.println("Resultset gemaakt");
         return resultSet;
+    }
+
+    public ObservableList<Student> getAllStudents() throws SQLException, ClassNotFoundException { //methode om alle informatie over studenten uit de database te halen
+        ObservableList<Student> students = FXCollections.observableArrayList();
+
+        String selectStatement = "SELECT * FROM Student"; //Statement voor alle informatie over studenten
+
+        try { //select statement uitvoeren
+            ResultSet resultSet = executeSQLSelectStatement(selectStatement);
+
+            while (resultSet.next()) {
+                Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL select query was niet succesvol: " + e);
+            //laat de exception zien
+            throw e;
+        }
+
+        return students;
     }
 }

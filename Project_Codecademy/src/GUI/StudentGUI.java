@@ -6,12 +6,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-class StudentsGUI extends Application {
+class StudentGUI extends Application {
 
     @Override
     public void start(Stage studentGUI) throws Exception {
-        databaseConnection databaseConnection = new databaseConnection();
-        databaseConnection.openConnection();
+    
+        Stage stage;
+        studentGUI.setTitle("Studenten");
+        Label label = new Label("hatsikidee");
+        Scene scene = new Scene(label);
 
     }
 
