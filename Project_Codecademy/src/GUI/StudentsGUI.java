@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-class Students extends Application {
+class StudentsGUI extends Application {
 
     @Override
     public void start(Stage studentGUI) throws Exception {

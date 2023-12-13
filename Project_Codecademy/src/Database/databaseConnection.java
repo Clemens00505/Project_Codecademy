@@ -99,7 +99,7 @@ public class databaseConnection {
         /**
          * @return
          */
-        public boolean openConnection() {
+        public boolean openConnection() { //methode die wordt geroepen vanuit de GUI om te verbinden met de database
             boolean result = false;
 
             if (connection == null) {
@@ -110,7 +110,6 @@ public class databaseConnection {
                 String connectionUrl = "jdbc:sqlserver://localhost;databaseName=codecademy;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";
                 //connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=codecademy;integratedSecurity=true;");
                 connection = DriverManager.getConnection(connectionUrl);
-                // "jdbc:mysql://localhost/library" , "biblio1", "boekje");
 
                 if (connection != null) {
                     statement = connection.createStatement();
@@ -126,11 +125,12 @@ public class databaseConnection {
         } else {
             result = true;
         }
+        System.out.println("verbinding gemaakt");
 
         return result;
     }
 
-    public boolean connectionIsOpen() {
+    public boolean connectionIsOpen() { //methode om te controleren of de de verbinding nog aanwezig is
         boolean open = false;
 
         if (connection != null && statement != null) {
@@ -143,5 +143,29 @@ public class databaseConnection {
         }
 
         return open;
+    }
+
+    public void closeConnection() { //methode om de verbinding met de database te verbreken
+        try {
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public ResultSet executeSQLSelectStatement(String query) {
+        ResultSet resultSet = null;
+
+        if (query != null && connectionIsOpen()) {
+            try {
+                resultSet = statement.executeQuery(query);
+            } catch (SQLException e) {
+            resultSet = null;
+            }
+        }
+
+        System.out.println("Resultset gemaakt");
+        return resultSet;
     }
 }
