@@ -10,7 +10,7 @@ import Database.databaseConnection;
 
 public class App {
     public static void main(String[] args) {
-        Application.launch(CodecademyGUI.class);
+        Application.launch(StudentGUI.class);
 
 
     //     try {
