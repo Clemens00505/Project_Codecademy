@@ -209,4 +209,20 @@ public class databaseConnection {
 
         executeSQLSelectStatement(insertStmt.toString());
     }
+
+    public void deleteStudent(String email) throws SQLException {
+        
+        StringBuilder deleteStmt = new StringBuilder();
+        deleteStmt.append("DELETE FROM STUDENT WHERE Email LIKE '");
+        deleteStmt.append(email);
+        deleteStmt.append("'");
+
+
+        executeSQLSelectStatement(deleteStmt.toString());
+        System.out.println(deleteStmt);
+    }
 }
+
+
+
+

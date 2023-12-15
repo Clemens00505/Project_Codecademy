@@ -26,6 +26,9 @@ public class StudentGUI extends Application {
     @Override
     public void start(Stage studentGUI) throws Exception {
 
+        studentGUI.show();
+        studentGUI.setTitle("Studenten");
+
         //labels voor inputvelden
         Label emailLabel = new Label("Email: ");
         Label nameLabel = new Label("Naam: ");
@@ -59,26 +62,8 @@ public class StudentGUI extends Application {
         databaseConnection databaseConnection = new databaseConnection();
         databaseConnection.openConnection();
 
-        ObservableList<Student> data = databaseConnection.getAllStudents();
         
-        studentGUI.show();
-        studentGUI.setTitle("Studenten");
-        
-        TableView<Student> table = new TableView();
-        TableColumn<Student, String> emailCol = new TableColumn("Email");
-        TableColumn<Student, String> nameCol = new TableColumn("Naam");
-        TableColumn<Student, String> genderCol = new TableColumn("Gender");
-        TableColumn<Student, String> dateOfBirthCol = new TableColumn("Geboortedatum");
-
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("Gender"));
-        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("DateOfBirth"));
-
-        table.getColumns().addAll(emailCol, nameCol, genderCol, dateOfBirthCol);
-
-        table.setItems(data);
-
+        TableView<Student> table = createTable(databaseConnection);
         VBox rightSide = new VBox(inputFields, buttons);
 
         HBox box = new HBox(table, rightSide);
@@ -103,10 +88,12 @@ public class StudentGUI extends Application {
                 databaseConnection.addStudent(student);
                 System.out.println(student);
 
+                
+                
+                createTable(databaseConnection);
                 table.refresh();
-                studentGUI.hide();
 
-                studentGUI.show();
+                // databaseConnection.deleteStudent("FuckRijen@Gilze.nl");
                 
 
                 
@@ -119,6 +106,27 @@ public class StudentGUI extends Application {
         });
 
 
+    }
+
+    public TableView createTable(databaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
+        ObservableList<Student> data = databaseConnection.getAllStudents();
+        
+        TableView<Student> table = new TableView();
+        TableColumn<Student, String> emailCol = new TableColumn("Email");
+        TableColumn<Student, String> nameCol = new TableColumn("Naam");
+        TableColumn<Student, String> genderCol = new TableColumn("Gender");
+        TableColumn<Student, String> dateOfBirthCol = new TableColumn("Geboortedatum");
+
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
+        genderCol.setCellValueFactory(new PropertyValueFactory<>("Gender"));
+        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("DateOfBirth"));
+
+        table.getColumns().addAll(emailCol, nameCol, genderCol, dateOfBirthCol);
+
+        table.setItems(data);
+
+        return table;
     }
 
 
