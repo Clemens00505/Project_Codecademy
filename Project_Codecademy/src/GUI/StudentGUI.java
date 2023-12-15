@@ -2,7 +2,6 @@ package GUI;
 
 import java.sql.Date;
 import java.sql.SQLException;
-
 import Database.databaseConnection;
 import Objects.Student;
 import javafx.application.Application;
@@ -10,9 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -55,9 +51,10 @@ public class StudentGUI extends Application {
         Button addStudentButton = new Button("Student toevoegen");
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
+        Button confirmButton = new Button("Aanpassing bevestigen");
 
         //buttons in een VBox zetten
-        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton);
+        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton);
 
         databaseConnection databaseConnection = new databaseConnection();
         databaseConnection.openConnection();
@@ -74,7 +71,7 @@ public class StudentGUI extends Application {
 
         addStudentButton.setOnAction((event) -> {
             try {
-                databaseConnection.openConnection();
+                // databaseConnection.openConnection();
                 System.out.println(databaseConnection.connectionIsOpen());
 
                 String email = emailInput.getText();
@@ -89,20 +86,68 @@ public class StudentGUI extends Application {
                 System.out.println(student);
 
                 
-                
-                createTable(databaseConnection);
+                studentGUI.close();
                 table.refresh();
+                createTable(databaseConnection);
+                studentGUI.show();
 
                 // databaseConnection.deleteStudent("FuckRijen@Gilze.nl");
                 
 
-                
-                // databaseConnection.closeConnection();
-
-
             } catch (Exception e) {
                 System.out.println(e);
             }
+        });
+
+
+        //eventhandler voor update
+        editStudentButton.setOnAction((event) -> {
+            Student selectedStudent = table.getSelectionModel().getSelectedItem();
+
+            if (selectedStudent != null) {
+                String email = selectedStudent.getEmail();
+                String name = selectedStudent.getName();
+                String gender = selectedStudent.getGender();
+                Date dateOfBirth = selectedStudent.getDateOfBirth();
+                String dateOfBirthString = String.valueOf(dateOfBirth);
+
+                emailInput.setText(email);
+                nameInput.setText(name);
+                genderInput.setText(gender);
+                dateOfBirthInput.setText(dateOfBirthString);
+
+                confirmButton.setOnAction((eventConfirm) -> {
+                    String emailUpdated = emailInput.getText();
+                    String nameUpdated = nameInput.getText();
+                    String genderUpdated = genderInput.getText();
+                    String dateOfBirthStringUpdated = dateOfBirthInput.getText();
+                    Date dateOfBirthUpdated = Date.valueOf(dateOfBirthStringUpdated);
+
+                    Student studentUpdated = new Student(emailUpdated, nameUpdated, genderUpdated, dateOfBirthUpdated);
+
+                    try {
+                        databaseConnection.updateStudent(studentUpdated);
+                    } catch (SQLException e) {
+                        System.out.println(e);
+                    }
+                });
+            }            
+        });
+
+        //eventhandler voor delete
+        deleteStudentButton.setOnAction((event) -> {
+            Student selectedStudent = table.getSelectionModel().getSelectedItem();
+
+            if (selectedStudent != null) {
+                try {
+                    String email = selectedStudent.getEmail();
+                
+                    databaseConnection.deleteStudent(email);
+                } catch (SQLException e) {
+                    System.out.println(e);
+                }
+                
+            }       
         });
 
 

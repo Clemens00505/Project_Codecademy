@@ -221,6 +221,21 @@ public class databaseConnection {
         executeSQLSelectStatement(deleteStmt.toString());
         System.out.println(deleteStmt);
     }
+
+    public void updateStudent(Student student) throws SQLException {
+        StringBuilder updateStmt = new StringBuilder();
+        updateStmt.append("UPDATE Student SET ");
+        updateStmt.append("Email = '" + student.getEmail());
+        updateStmt.append("', Name = '" + student.getName());
+        updateStmt.append("', Gender = '" + student.getGender());
+        updateStmt.append("', DateOfBirth = '" + student.getDateOfBirth());
+        updateStmt.append("' WHERE Email = '" + student.getEmail());
+        updateStmt.append("'");
+
+        System.out.println(updateStmt);
+
+        executeSQLSelectStatement(updateStmt.toString());
+    }
 }
 
 
