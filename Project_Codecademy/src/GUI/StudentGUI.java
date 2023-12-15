@@ -59,7 +59,7 @@ public class StudentGUI extends Application {
         databaseConnection databaseConnection = new databaseConnection();
         databaseConnection.openConnection();
 
-        final ObservableList<Student> data = databaseConnection.getAllStudents();
+        ObservableList<Student> data = databaseConnection.getAllStudents();
         
         studentGUI.show();
         studentGUI.setTitle("Studenten");
@@ -92,19 +92,24 @@ public class StudentGUI extends Application {
                 databaseConnection.openConnection();
                 System.out.println(databaseConnection.connectionIsOpen());
 
-                String Email = emailInput.getText();
-                String Name = nameInput.getText();
-                String Gender = genderInput.getText();
-                String DateOfBirthString = dateOfBirthInput.getText();
-                Date DateOfBirth = Date.valueOf(DateOfBirthString);
+                String email = emailInput.getText();
+                String name = nameInput.getText();
+                String gender = genderInput.getText();
+                String dateOfBirthString = dateOfBirthInput.getText();
+                Date dateOfBirth = Date.valueOf(dateOfBirthString);
 
-                Student student = new Student(Email, Name, Gender, DateOfBirth);
+                Student student = new Student(email, name, gender, dateOfBirth);
 
+                databaseConnection.addStudent(student);
                 System.out.println(student);
 
+                table.refresh();
+                studentGUI.hide();
+
+                studentGUI.show();
                 
 
-                // databaseConnection.addStudent(student);
+                
                 // databaseConnection.closeConnection();
 
 
@@ -115,5 +120,6 @@ public class StudentGUI extends Application {
 
 
     }
+
 
 }

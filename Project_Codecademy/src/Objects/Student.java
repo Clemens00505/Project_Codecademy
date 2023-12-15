@@ -3,49 +3,49 @@ package Objects;
 import java.sql.Date;
 
 public class Student {
-    private String Email;
-    private String Name;
-    private String Gender;
-    private Date DateOfBirth;
+    private String email;
+    private String name;
+    private String gender;
+    private Date dateOfBirth;
 
     public Student(String Email, String Name, String Gender, Date DateOfBirth) {
-        this.Email = Email;
-        this.Name = Name;
-        this.Gender = Gender;
-        this.DateOfBirth = DateOfBirth;
+        this.email = Email;
+        this.name = Name;
+        this.gender = Gender;
+        this.dateOfBirth = DateOfBirth;
     }
 
 
     //getters en setters
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        email = email;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 
      public String getGender() {
-        return Gender;
+        return gender;
     }
 
     public void setGender(String gender) {
-        Gender = gender;
+        gender = gender;
     }
     
     public Date getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        dateOfBirth = dateOfBirth;
     }
 }
