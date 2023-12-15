@@ -1,17 +1,23 @@
 package GUI;
 
+import java.sql.Date;
+import java.sql.SQLException;
+
 import Database.databaseConnection;
 import Objects.Student;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -20,24 +26,40 @@ public class StudentGUI extends Application {
     @Override
     public void start(Stage studentGUI) throws Exception {
 
-        // Menu menuItem = new Menu("Studenten");
+        //labels voor inputvelden
+        Label emailLabel = new Label("Email: ");
+        Label nameLabel = new Label("Naam: ");
+        Label genderLabel = new Label("Gender: ");
+        Label dateOfBirthLabel = new Label("Geboortedatum: ");
+       
+        //textfields voor het invoeren van een nieuwe student
+        TextField emailInput = new TextField();
+        TextField nameInput = new TextField();
+        TextField genderInput = new TextField();
+        TextField dateOfBirthInput = new TextField();
 
-        // MenuItem addStudentMenu = new MenuItem("Student toevoegen");
-        // MenuItem editStudentMenu = new MenuItem("Student bewerken");
-        // MenuItem deleteStudentMenu = new MenuItem("Student verwijderen");
+        //prompttext maken voor de inputvelden als voorbeeld van een goede input
+        emailInput.setPromptText("abcdefg@gmail.com");
+        nameInput.setPromptText("abcdefg");
+        genderInput.setPromptText("man/vrouw/anders");
+        dateOfBirthInput.setPromptText("yyyy-mm-dd");
 
-        // menuItem.getItems().add(addStudentMenu);
-        // menuItem.getItems().add(editStudentMenu);
-        // menuItem.getItems().add(deleteStudentMenu);
+        //alles wat te maken heeft met input in een VBox zetten
+        VBox inputFields = new VBox(emailLabel, emailInput, nameLabel, nameInput, genderLabel, genderInput, dateOfBirthLabel, dateOfBirthInput);
 
-        // MenuBar menuBar = new MenuBar();
-        // menuBar.getMenus().add(menuItem);
+        
+        //buttons maken voor verschillende acties
+        Button addStudentButton = new Button("Student toevoegen");
+        Button editStudentButton = new Button("Student bewerken");
+        Button deleteStudentButton = new Button("Student verwijderen");
+
+        //buttons in een VBox zetten
+        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton);
 
         databaseConnection databaseConnection = new databaseConnection();
         databaseConnection.openConnection();
 
         final ObservableList<Student> data = databaseConnection.getAllStudents();
-        databaseConnection.closeConnection();
         
         studentGUI.show();
         studentGUI.setTitle("Studenten");
@@ -57,11 +79,39 @@ public class StudentGUI extends Application {
 
         table.setItems(data);
 
-        // VBox box = new VBox(menuBar, table);
+        VBox rightSide = new VBox(inputFields, buttons);
 
-        Scene scene = new Scene(table);
+        HBox box = new HBox(table, rightSide);
+
+        Scene scene = new Scene(box);
 
         studentGUI.setScene(scene);
+
+        addStudentButton.setOnAction((event) -> {
+            try {
+                databaseConnection.openConnection();
+                System.out.println(databaseConnection.connectionIsOpen());
+
+                String Email = emailInput.getText();
+                String Name = nameInput.getText();
+                String Gender = genderInput.getText();
+                String DateOfBirthString = dateOfBirthInput.getText();
+                Date DateOfBirth = Date.valueOf(DateOfBirthString);
+
+                Student student = new Student(Email, Name, Gender, DateOfBirth);
+
+                System.out.println(student);
+
+                
+
+                // databaseConnection.addStudent(student);
+                // databaseConnection.closeConnection();
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        });
 
 
     }

@@ -190,4 +190,23 @@ public class databaseConnection {
 
         return students;
     }
+
+    public void addStudent(Student student) throws SQLException {
+        StringBuilder insertStmt = new StringBuilder();
+
+        insertStmt.append("INSERT INTO Student (Email, Name, Gender, DateOfBirth) ");
+        insertStmt.append("VALUES ('");
+        insertStmt.append(student.getEmail());
+        insertStmt.append("', '");
+        insertStmt.append(student.getName());
+        insertStmt.append("', '");
+        insertStmt.append(student.getGender());
+        insertStmt.append("', '");
+        insertStmt.append(student.getDateOfBirth());
+        insertStmt.append("')");
+
+        System.out.println(insertStmt.toString());
+
+        executeSQLSelectStatement(insertStmt.toString());
+    }
 }
