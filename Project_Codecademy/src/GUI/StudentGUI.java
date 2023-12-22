@@ -1,9 +1,9 @@
-package GUI;
+package gui;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import Database.databaseConnection;
-import Objects.Student;
+import database.DatabaseConnection;
+import objects.Student;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -56,7 +56,7 @@ public class StudentGUI extends Application {
         //buttons in een VBox zetten
         VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton);
 
-        databaseConnection databaseConnection = new databaseConnection();
+        DatabaseConnection databaseConnection = new DatabaseConnection();
         databaseConnection.openConnection();
 
         
