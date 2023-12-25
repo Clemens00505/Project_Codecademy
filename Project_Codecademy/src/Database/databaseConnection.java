@@ -17,12 +17,12 @@ public class DatabaseConnection {
         statement = null;
     }
 
-        public boolean openConnection() { //methode die wordt geroepen vanuit de GUI om te verbinden met de database
+        public boolean openConnection() { //method to connect to databse
             boolean result = false;
 
             if (connection == null) {
                 try {
-                    // 'Importeer' de driver die je gedownload hebt.
+                    //Import driver
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 // Try to create a connection with the library database
                 String connectionUrl = "jdbc:sqlserver://localhost;databaseName=codecademy;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";
@@ -31,9 +31,9 @@ public class DatabaseConnection {
 
                 if (connection != null) {
                     statement = connection.createStatement();
+                    result = true;
                 }
 
-                result = true;
             } catch (SQLException e) {
                 System.out.println(e);
                 result = false;
@@ -48,7 +48,7 @@ public class DatabaseConnection {
         return result;
     }
 
-    public boolean connectionIsOpen() { //methode om te controleren of de de verbinding nog aanwezig is
+    public boolean connectionIsOpen() { //method to check connection to database
         boolean open = false;
 
         if (connection != null && statement != null) {
@@ -63,16 +63,19 @@ public class DatabaseConnection {
         return open;
     }
 
-    public void closeConnection() { //methode om de verbinding met de database te verbreken
+    public void closeConnection() { //method to close connection to database
         try {
             statement.close();
             connection.close();
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        statement = null;
+        connection = null;
     }
 
-    public ResultSet executeSQLSelectStatement(String query) { //methode om een query te gebruiken
+    public ResultSet executeSQLSelectStatement(String query) { //method for using a query
         ResultSet resultSet = null;
 
         if (query != null && connectionIsOpen()) {
@@ -87,59 +90,29 @@ public class DatabaseConnection {
         return resultSet;
     }
 
-    public ObservableList<Student> getAllStudents() throws SQLException, ClassNotFoundException { //methode om alle informatie over studenten uit de database te halen
-        ObservableList<Student> students = FXCollections.observableArrayList();
-
-        String selectStatement = "SELECT * FROM Student"; //Statement voor alle informatie over studenten
-
-        try { //select statement uitvoeren
-            ResultSet resultSet = executeSQLSelectStatement(selectStatement);
-
-            while (resultSet.next()) {
-                Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
-                students.add(student);
+    public void executeSQLStatement(String query) {
+        if (query != null && connectionIsOpen()) {
+            try {
+                statement.executeQuery(query);
+            } catch (SQLException e) {
+                System.out.println(e);
             }
-        } catch (SQLException e) {
-            System.out.println("SQL select query was niet succesvol: " + e);
-            //laat de exception zien
-            throw e;
         }
-
-        return students;
     }
 
-    public void addStudent(Student student) throws SQLException {
-        StringBuilder insertStmt = new StringBuilder();
-
-        insertStmt.append("INSERT INTO Student (Email, Name, Gender, DateOfBirth) ");
-        insertStmt.append("VALUES ('");
-        insertStmt.append(student.getEmail());
-        insertStmt.append("', '");
-        insertStmt.append(student.getName());
-        insertStmt.append("', '");
-        insertStmt.append(student.getGender());
-        insertStmt.append("', '");
-        insertStmt.append(student.getDateOfBirth());
-        insertStmt.append("')");
-
-        System.out.println(insertStmt.toString());
-
-        executeSQLSelectStatement(insertStmt.toString());
-    }
-
-    public void deleteStudent(String email) throws SQLException {
+    // public void deleteStudent(String email) throws SQLException { //method for removing student from database
         
-        StringBuilder deleteStmt = new StringBuilder();
-        deleteStmt.append("DELETE FROM STUDENT WHERE Email LIKE '");
-        deleteStmt.append(email);
-        deleteStmt.append("'");
+    //     StringBuilder deleteStmt = new StringBuilder();
+    //     deleteStmt.append("DELETE FROM STUDENT WHERE Email LIKE '");
+    //     deleteStmt.append(email);
+    //     deleteStmt.append("'");
 
 
-        executeSQLSelectStatement(deleteStmt.toString());
-        System.out.println(deleteStmt);
-    }
+    //     executeSQLStatement(deleteStmt.toString());
+    //     System.out.println(deleteStmt);
+    // }
 
-    public void updateStudent(Student student) throws SQLException {
+    public void updateStudent(Student student) throws SQLException { //method to update student information in database
         StringBuilder updateStmt = new StringBuilder();
         updateStmt.append("UPDATE Student SET ");
         updateStmt.append("Email = '" + student.getEmail());

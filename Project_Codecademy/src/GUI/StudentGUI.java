@@ -1,10 +1,12 @@
 package gui;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.DatabaseConnection;
 import objects.Student;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -57,10 +59,11 @@ public class StudentGUI extends Application {
         VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.openConnection();
 
-        
+        databaseConnection.openConnection();
         TableView<Student> table = createTable(databaseConnection);
+        databaseConnection.closeConnection();
+
         VBox rightSide = new VBox(inputFields, buttons);
 
         HBox box = new HBox(table, rightSide);
@@ -69,10 +72,10 @@ public class StudentGUI extends Application {
 
         studentGUI.setScene(scene);
 
+        //eventhandler for adding student
         addStudentButton.setOnAction((event) -> {
             try {
-                // databaseConnection.openConnection();
-                System.out.println(databaseConnection.connectionIsOpen());
+                // System.out.println(databaseConnection.connectionIsOpen());
 
                 String email = emailInput.getText();
                 String name = nameInput.getText();
@@ -82,17 +85,8 @@ public class StudentGUI extends Application {
 
                 Student student = new Student(email, name, gender, dateOfBirth);
 
-                databaseConnection.addStudent(student);
+                student.addStudent(student, databaseConnection);
                 System.out.println(student);
-
-                
-                studentGUI.close();
-                table.refresh();
-                createTable(databaseConnection);
-                studentGUI.show();
-
-                // databaseConnection.deleteStudent("FuckRijen@Gilze.nl");
-                
 
             } catch (Exception e) {
                 System.out.println(e);
@@ -100,7 +94,7 @@ public class StudentGUI extends Application {
         });
 
 
-        //eventhandler voor update
+        //eventhandler for updating student
         editStudentButton.setOnAction((event) -> {
             Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
@@ -134,27 +128,33 @@ public class StudentGUI extends Application {
             }            
         });
 
-        //eventhandler voor delete
+        //eventhandler for deleting student
         deleteStudentButton.setOnAction((event) -> {
             Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
             if (selectedStudent != null) {
                 try {
                     String email = selectedStudent.getEmail();
-                
-                    databaseConnection.deleteStudent(email);
-                } catch (SQLException e) {
+                    String name = selectedStudent.getName();
+                    String gender = selectedStudent.getGender();
+                    Date dateOfBirth = selectedStudent.getDateOfBirth();
+
+                    Student student = new Student(email, name, gender, dateOfBirth);
+
+                    student.deleteStudent(email, databaseConnection);
+                } catch (Exception e) {
                     System.out.println(e);
                 }
                 
             }       
         });
 
-
     }
 
-    public TableView createTable(databaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
-        ObservableList<Student> data = databaseConnection.getAllStudents();
+    //method for creating a table with all student data. Uses getAllStudents to get the data from the database
+    public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
+
+        ObservableList<Student> data = getAllStudents(databaseConnection);
         
         TableView<Student> table = new TableView();
         TableColumn<Student, String> emailCol = new TableColumn("Email");
@@ -174,5 +174,31 @@ public class StudentGUI extends Application {
         return table;
     }
 
+    //method to get all student information
+    public ObservableList<Student> getAllStudents(DatabaseConnection databaseConnection) throws SQLException, ClassNotFoundException { 
+        ObservableList<Student> students = FXCollections.observableArrayList();
+
+        databaseConnection.openConnection();
+
+        String selectStatement = "SELECT * FROM Student"; //Statement to get all student information
+
+        try { //execute select statement 
+            ResultSet resultSet = databaseConnection.executeSQLSelectStatement(selectStatement);
+
+            while (resultSet.next()) {
+                Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
+                students.add(student);
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("SQL select query was niet succesvol: " + e);
+            //Shows exception
+            throw e;
+        }
+
+        databaseConnection.closeConnection();
+        return students;
+    }
+    
 
 }

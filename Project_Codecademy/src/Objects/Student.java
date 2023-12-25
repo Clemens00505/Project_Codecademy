@@ -1,6 +1,11 @@
 package objects;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import database.DatabaseConnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Student {
     private String email;
@@ -14,7 +19,6 @@ public class Student {
         this.gender = Gender;
         this.dateOfBirth = DateOfBirth;
     }
-
 
     //getters en setters
     public String getEmail() {
@@ -48,5 +52,42 @@ public class Student {
     public void setDateOfBirth(Date dateOfBirth) {
         dateOfBirth = dateOfBirth;
     }
-    
+
+    public void addStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { //method for adding student to database
+        StringBuilder insertStmt = new StringBuilder();
+        
+        databaseConnection.openConnection();
+
+        //stringbuilder used for adding a student
+        insertStmt.append("INSERT INTO Student (Email, Name, Gender, DateOfBirth) ");
+        insertStmt.append("VALUES ('");
+        insertStmt.append(student.getEmail());
+        insertStmt.append("', '");
+        insertStmt.append(student.getName());
+        insertStmt.append("', '");
+        insertStmt.append(student.getGender());
+        insertStmt.append("', '");
+        insertStmt.append(student.getDateOfBirth());
+        insertStmt.append("')");
+
+        System.out.println(insertStmt.toString());
+
+        databaseConnection.executeSQLStatement(insertStmt.toString());
+        databaseConnection.closeConnection();
+    }
+
+    //method for deleting student from database
+    public void deleteStudent(String email, DatabaseConnection databaseConnection) throws SQLException { 
+        databaseConnection.openConnection();
+
+        StringBuilder deleteStmt = new StringBuilder();
+        deleteStmt.append("DELETE FROM STUDENT WHERE Email LIKE '");
+        deleteStmt.append(email);
+        deleteStmt.append("'");
+
+
+        databaseConnection.executeSQLStatement(deleteStmt.toString());
+        System.out.println(deleteStmt);
+        databaseConnection.closeConnection();
+    }
 }
