@@ -60,9 +60,7 @@ public class StudentGUI extends Application {
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
-        databaseConnection.openConnection();
         TableView<Student> table = createTable(databaseConnection);
-        databaseConnection.closeConnection();
 
         VBox rightSide = new VBox(inputFields, buttons);
 
@@ -88,6 +86,7 @@ public class StudentGUI extends Application {
                 student.addStudent(student, databaseConnection);
                 System.out.println(student);
 
+                refreshTable(databaseConnection, table);                
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -120,7 +119,15 @@ public class StudentGUI extends Application {
                     Student studentUpdated = new Student(emailUpdated, nameUpdated, genderUpdated, dateOfBirthUpdated);
 
                     try {
-                        databaseConnection.updateStudent(studentUpdated);
+                        studentUpdated.updateStudent(studentUpdated, databaseConnection);
+                        refreshTable(databaseConnection, table);
+
+                        if (selectedStudent != null) {
+                            emailInput.setText(null);
+                            nameInput.setText(null);
+                            genderInput.setText(null);
+                            dateOfBirthInput.setText(null);
+                        }
                     } catch (SQLException e) {
                         System.out.println(e);
                     }
@@ -142,6 +149,8 @@ public class StudentGUI extends Application {
                     Student student = new Student(email, name, gender, dateOfBirth);
 
                     student.deleteStudent(email, databaseConnection);
+                    
+                    refreshTable(databaseConnection, table);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -150,6 +159,7 @@ public class StudentGUI extends Application {
         });
 
     }
+
 
     //method for creating a table with all student data. Uses getAllStudents to get the data from the database
     public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
@@ -198,6 +208,16 @@ public class StudentGUI extends Application {
 
         databaseConnection.closeConnection();
         return students;
+    }
+
+    public void refreshTable(DatabaseConnection databaseConnection, TableView<Student> table) {
+        try {
+            ObservableList<Student> data = getAllStudents(databaseConnection);
+            table.setItems(data);
+            table.refresh();
+        } catch (Exception e) {
+            System.out.println("Error refreshing table: " + e);
+        }
     }
     
 

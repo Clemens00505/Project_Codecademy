@@ -90,4 +90,23 @@ public class Student {
         System.out.println(deleteStmt);
         databaseConnection.closeConnection();
     }
+
+    //method to update student information in database
+    public void updateStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { 
+        databaseConnection.openConnection();
+        
+        StringBuilder updateStmt = new StringBuilder();
+        updateStmt.append("UPDATE Student SET ");
+        updateStmt.append("Email = '" + student.getEmail());
+        updateStmt.append("', Name = '" + student.getName());
+        updateStmt.append("', Gender = '" + student.getGender());
+        updateStmt.append("', DateOfBirth = '" + student.getDateOfBirth());
+        updateStmt.append("' WHERE Email = '" + student.getEmail());
+        updateStmt.append("'");
+
+        System.out.println(updateStmt);
+
+        databaseConnection.executeSQLStatement(updateStmt.toString());
+        databaseConnection.closeConnection();
+    }
 }

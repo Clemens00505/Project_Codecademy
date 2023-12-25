@@ -100,32 +100,6 @@ public class DatabaseConnection {
         }
     }
 
-    // public void deleteStudent(String email) throws SQLException { //method for removing student from database
-        
-    //     StringBuilder deleteStmt = new StringBuilder();
-    //     deleteStmt.append("DELETE FROM STUDENT WHERE Email LIKE '");
-    //     deleteStmt.append(email);
-    //     deleteStmt.append("'");
-
-
-    //     executeSQLStatement(deleteStmt.toString());
-    //     System.out.println(deleteStmt);
-    // }
-
-    public void updateStudent(Student student) throws SQLException { //method to update student information in database
-        StringBuilder updateStmt = new StringBuilder();
-        updateStmt.append("UPDATE Student SET ");
-        updateStmt.append("Email = '" + student.getEmail());
-        updateStmt.append("', Name = '" + student.getName());
-        updateStmt.append("', Gender = '" + student.getGender());
-        updateStmt.append("', DateOfBirth = '" + student.getDateOfBirth());
-        updateStmt.append("' WHERE Email = '" + student.getEmail());
-        updateStmt.append("'");
-
-        System.out.println(updateStmt);
-
-        executeSQLSelectStatement(updateStmt.toString());
-    }
 }
 
 
