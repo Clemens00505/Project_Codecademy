@@ -27,19 +27,19 @@ public class StudentGUI extends Application {
         studentGUI.show();
         studentGUI.setTitle("Studenten");
 
-        //labels voor inputvelden
+        //labels for the textfields
         Label emailLabel = new Label("Email: ");
         Label nameLabel = new Label("Naam: ");
         Label genderLabel = new Label("Gender: ");
         Label dateOfBirthLabel = new Label("Geboortedatum: ");
        
-        //textfields voor het invoeren van een nieuwe student
+        //add textfields
         TextField emailInput = new TextField();
         TextField nameInput = new TextField();
         TextField genderInput = new TextField();
         TextField dateOfBirthInput = new TextField();
 
-        //prompttext maken voor de inputvelden als voorbeeld van een goede input
+        //add prompttext
         emailInput.setPromptText("abcdefg@gmail.com");
         nameInput.setPromptText("abcdefg");
         genderInput.setPromptText("man/vrouw/anders");
@@ -54,6 +54,7 @@ public class StudentGUI extends Application {
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
         Button confirmButton = new Button("Aanpassing bevestigen");
+        Button showEnrollmentsButton = new Button("Inschrijvingen");
         Button backButton = new Button("Terug naar hoofdmenu");
 
         int equalWidth = 175;
@@ -61,10 +62,11 @@ public class StudentGUI extends Application {
         editStudentButton.setMinWidth(equalWidth);
         deleteStudentButton.setMinWidth(equalWidth);
         confirmButton.setMinWidth(equalWidth);
+        showEnrollmentsButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         //put buttons in a vbox
-        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton, backButton);
+        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton, showEnrollmentsButton, backButton);
 
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -185,6 +187,21 @@ public class StudentGUI extends Application {
             }
 
             //close current stage
+            studentGUI.close();
+        });
+
+        showEnrollmentsButton.setOnAction((event) -> {
+            EnrollmentGUI enrollmentGUI = new EnrollmentGUI();
+
+            Stage enrollmentStage = new Stage();
+            enrollmentStage.setTitle("Inschrijvingen");
+
+            try {
+                enrollmentGUI.start(enrollmentStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             studentGUI.close();
         });
 
