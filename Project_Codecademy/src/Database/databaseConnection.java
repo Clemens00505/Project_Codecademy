@@ -2,9 +2,6 @@ package database;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objects.Student;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import java.sql.*;
 
 public class DatabaseConnection {
@@ -17,21 +14,21 @@ public class DatabaseConnection {
         statement = null;
     }
 
-        public boolean openConnection() { //method to connect to databse
-            boolean result = false;
+    public boolean openConnection() { // method to connect to databse
+        boolean result = false;
 
-            if (connection == null) {
-                try {
-                    //Import driver
+        if (connection == null) {
+            try {
+                // Import driver
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                // Try to create a connection with the library database
-                String connectionUrl = "jdbc:sqlserver://localhost;databaseName=codecademy;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";
-                //connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=codecademy;integratedSecurity=true;");
+                //connecting to the server
+                String connectionUrl = "jdbc:sqlserver://aei-sql2.avans.nl:1443;databaseName=CodecademyClemens;user=Clemens;password=wachtwoord1;encrypt=false;";
                 connection = DriverManager.getConnection(connectionUrl);
 
                 if (connection != null) {
                     statement = connection.createStatement();
                     result = true;
+                    System.out.println("verbonden");
                 }
 
             } catch (SQLException e) {
@@ -48,7 +45,7 @@ public class DatabaseConnection {
         return result;
     }
 
-    public boolean connectionIsOpen() { //method to check connection to database
+    public boolean connectionIsOpen() { // method to check connection to database
         boolean open = false;
 
         if (connection != null && statement != null) {
@@ -63,7 +60,7 @@ public class DatabaseConnection {
         return open;
     }
 
-    public void closeConnection() { //method to close connection to database
+    public void closeConnection() { // method to close connection to database
         try {
             statement.close();
             connection.close();
@@ -75,14 +72,14 @@ public class DatabaseConnection {
         connection = null;
     }
 
-    public ResultSet executeSQLSelectStatement(String query) { //method for using a query
+    public ResultSet executeSQLSelectStatement(String query) { // method for using a query
         ResultSet resultSet = null;
 
         if (query != null && connectionIsOpen()) {
             try {
                 resultSet = statement.executeQuery(query);
             } catch (SQLException e) {
-            resultSet = null;
+                resultSet = null;
             }
         }
 
@@ -101,7 +98,3 @@ public class DatabaseConnection {
     }
 
 }
-
-
-
-

@@ -17,37 +17,21 @@ public class Student {
         this.dateOfBirth = DateOfBirth;
     }
 
-    //getters en setters
+    //getters 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        email = email;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        name = name;
-    }
-
      public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        gender = gender;
-    }
-    
     public Date getDateOfBirth() {
         return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        dateOfBirth = dateOfBirth;
     }
 
     public void addStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { //method for adding student to database
