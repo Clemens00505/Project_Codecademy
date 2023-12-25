@@ -1,11 +1,8 @@
 package objects;
 
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.DatabaseConnection;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class Student {
     private String email;

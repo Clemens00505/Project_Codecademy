@@ -8,6 +8,7 @@ import objects.Student;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -49,20 +50,33 @@ public class StudentGUI extends Application {
         VBox inputFields = new VBox(emailLabel, emailInput, nameLabel, nameInput, genderLabel, genderInput, dateOfBirthLabel, dateOfBirthInput);
 
         
-        //buttons maken voor verschillende acties
+        //Create buttons
         Button addStudentButton = new Button("Student toevoegen");
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
         Button confirmButton = new Button("Aanpassing bevestigen");
+        Button backButton = new Button("Terug naar hoofdmenu");
 
-        //buttons in een VBox zetten
-        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton);
+        int equalWidth = 175;
+        addStudentButton.setMinWidth(equalWidth);
+        editStudentButton.setMinWidth(equalWidth);
+        deleteStudentButton.setMinWidth(equalWidth);
+        confirmButton.setMinWidth(equalWidth);
+        backButton.setMinWidth(equalWidth);
+
+        //put buttons in a vbox
+        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton, backButton);
+
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         TableView<Student> table = createTable(databaseConnection);
 
+        table.setPrefWidth(450);
+
         VBox rightSide = new VBox(inputFields, buttons);
+
+        rightSide.setPrefWidth(250);
 
         HBox box = new HBox(table, rightSide);
 
@@ -156,6 +170,23 @@ public class StudentGUI extends Application {
                 }
                 
             }       
+        });
+
+        //eventhandler for button to return to menu
+        backButton.setOnAction((event) -> {
+            CodecademyGUI codecademyGUI = new CodecademyGUI();
+
+            Stage codecademyStage = new Stage();
+            codecademyStage.setTitle("Menu");
+
+            try {
+                codecademyGUI.start(codecademyStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //close current stage
+            studentGUI.close();
         });
 
     }
