@@ -10,6 +10,9 @@ public class ContentGUI extends Application {
     public void start(Stage contentGUI) throws Exception {
         contentGUI.setTitle("Content");
 
+
+        Button allContentButton = new Button("Alle content");
+        Button webcastButton = new Button("Alle webcasts");
         Button backButton = new Button("Terug");
 
         Scene scene = new Scene(backButton);

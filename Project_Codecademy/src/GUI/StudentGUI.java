@@ -190,16 +190,36 @@ public class StudentGUI extends Application {
             studentGUI.close();
         });
 
+        //button to show students enrollments
         showEnrollmentsButton.setOnAction((event) -> {
-            EnrollmentGUI enrollmentGUI = new EnrollmentGUI();
+            
 
-            Stage enrollmentStage = new Stage();
-            enrollmentStage.setTitle("Inschrijvingen");
+            
+            Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
-            try {
-                enrollmentGUI.start(enrollmentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (selectedStudent != null) {
+                try {
+                    String email = selectedStudent.getEmail();
+                    String name = selectedStudent.getName();
+                    String gender = selectedStudent.getGender();
+                    Date dateOfBirth = selectedStudent.getDateOfBirth();
+
+                    Student student = new Student(email, name, gender, dateOfBirth);
+
+                    EnrollmentGUI enrollmentGUI = new EnrollmentGUI(student);
+                    Stage enrollmentStage = new Stage();
+                    enrollmentStage.setTitle("Inschrijvingen");
+
+                    try {
+                        enrollmentGUI.start(enrollmentStage);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
 
             studentGUI.close();
