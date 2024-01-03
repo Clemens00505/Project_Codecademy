@@ -10,11 +10,11 @@ public class Student {
     private String gender;
     private Date dateOfBirth;
 
-    public Student(String Email, String Name, String Gender, Date DateOfBirth) {
-        this.email = Email;
-        this.name = Name;
-        this.gender = Gender;
-        this.dateOfBirth = DateOfBirth;
+    public Student(String email, String name, String gender, Date dateOfBirth) {
+        this.email = email;
+        this.name = name;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
     }
 
     //getters 

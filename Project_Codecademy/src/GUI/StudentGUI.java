@@ -101,6 +101,11 @@ public class StudentGUI extends Application {
                 student.addStudent(student, databaseConnection);
                 System.out.println(student);
 
+                emailInput.setText(null);
+                nameInput.setText(null);
+                genderInput.setText(null);
+                dateOfBirthInput.setText(null);
+                
                 refreshTable(databaseConnection, table);                
             } catch (Exception e) {
                 System.out.println(e);
