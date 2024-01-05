@@ -2,7 +2,7 @@ package gui;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import objects.Enrollment;
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -31,7 +31,11 @@ public class EnrollmentGUI extends Application {
         Button backButton = new Button("Terug");
         Label testLabel = new Label(student.toString());
 
-        
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+
+        TableView<Enrollment> table = createTable(databaseConnection);
+
+        table.setPrefWidth(450);
 
         // Scene scene = new Scene();
 
@@ -62,20 +66,24 @@ public class EnrollmentGUI extends Application {
     //method for creating a table with all student data. Uses getAllStudents to get the data from the database
     public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
 
-        ObservableList<Student> data = getEnrollment(databaseConnection);
+        ObservableList<Enrollment> data = getEnrollment(databaseConnection);
         
-        TableView<Student> table = new TableView();
-        TableColumn<Student, String> emailCol = new TableColumn("Email");
-        TableColumn<Student, String> nameCol = new TableColumn("Naam");
-        TableColumn<Student, String> genderCol = new TableColumn("Gender");
-        TableColumn<Student, String> dateOfBirthCol = new TableColumn("Geboortedatum");
+        TableView<Enrollment> table = new TableView();
+        TableColumn<Enrollment, String> studentMailCol = new TableColumn("Student email");
+        TableColumn<Enrollment, String> courseNameCol = new TableColumn("Cursusnaam");
+        TableColumn<Enrollment, String> percentageCol = new TableColumn("Percentage");
+        TableColumn<Enrollment, String> gradeCol = new TableColumn("Cijfer");
+        TableColumn<Enrollment, String> enrollmentDateCol = new TableColumn("Inschrijfdatum");
+        TableColumn<Enrollment, String> enrollmentIdCol = new TableColumn("InschrijvingsID");
 
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("Gender"));
-        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("DateOfBirth"));
+        studentMailCol.setCellValueFactory(new PropertyValueFactory<>("StudentMail"));
+        courseNameCol.setCellValueFactory(new PropertyValueFactory<>("CourseName"));
+        percentageCol.setCellValueFactory(new PropertyValueFactory<>("Percentage"));
+        gradeCol.setCellValueFactory(new PropertyValueFactory<>("Grade"));
+        enrollmentDateCol.setCellValueFactory(new PropertyValueFactory<>("EnrollmentDate"));
+        enrollmentIdCol.setCellValueFactory(new PropertyValueFactory<>("EnrollmentId"));
 
-        table.getColumns().addAll(emailCol, nameCol, genderCol, dateOfBirthCol);
+        table.getColumns().addAll(studentMailCol, courseNameCol, percentageCol, gradeCol, enrollmentDateCol, enrollmentIdCol);
 
         table.setItems(data);
 
@@ -83,8 +91,8 @@ public class EnrollmentGUI extends Application {
     }
 
     //method to get all student information
-    public ObservableList<Student> getEnrollment(DatabaseConnection databaseConnection) throws SQLException, ClassNotFoundException { 
-        ObservableList<Student> students = FXCollections.observableArrayList();
+    public ObservableList<Enrollment> getEnrollment(DatabaseConnection databaseConnection) throws SQLException, ClassNotFoundException { 
+        ObservableList<Enrollment> enrollments = FXCollections.observableArrayList();
 
         databaseConnection.openConnection();
 
@@ -94,8 +102,8 @@ public class EnrollmentGUI extends Application {
             ResultSet resultSet = databaseConnection.executeSQLSelectStatement(selectStatement);
 
             while (resultSet.next()) {
-                Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
-                students.add(student);
+                Enrollment enrollment = new Enrollment(resultSet.getString("StudentMail"), resultSet.getString("CourseName"), resultSet.getInt("Percentage"), resultSet.getDouble("Grade"), resultSet.getDate("EnrollmentDate"), resultSet.getInt("EnrollmentId"));
+                enrollments.add(enrollment);
             }
             
         } catch (SQLException e) {
@@ -105,6 +113,6 @@ public class EnrollmentGUI extends Application {
         }
 
         databaseConnection.closeConnection();
-        return students;
+        return enrollments;
     }
 }
