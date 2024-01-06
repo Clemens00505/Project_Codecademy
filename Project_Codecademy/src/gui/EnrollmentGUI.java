@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Student;
 
@@ -42,9 +41,6 @@ public class EnrollmentGUI extends Application {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
-
-
-
 
         //eventhandler for button to return to main menu
         backButton.setOnAction((event) -> {

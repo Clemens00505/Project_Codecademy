@@ -9,6 +9,8 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -68,7 +70,6 @@ public class StudentGUI extends Application {
         //put buttons in a vbox
         VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton, showEnrollmentsButton, backButton);
 
-
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         TableView<Student> table = createTable(databaseConnection);
@@ -111,7 +112,6 @@ public class StudentGUI extends Application {
                 System.out.println(e);
             }
         });
-
 
         //eventhandler for updating student
         editStudentButton.setOnAction((event) -> {
@@ -198,8 +198,6 @@ public class StudentGUI extends Application {
         //button to show students enrollments
         showEnrollmentsButton.setOnAction((event) -> {
             
-
-            
             Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
             if (selectedStudent != null) {
@@ -218,6 +216,7 @@ public class StudentGUI extends Application {
                     try {
                         enrollmentGUI.start(enrollmentStage);
 
+                        studentGUI.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -225,13 +224,19 @@ public class StudentGUI extends Application {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
+            } else {
+
+                //Error message that shows when user presses button for enrollments without selecting a student
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Geen student geselecteerd");
+                errorAlert.setContentText("Selecteer een student om deze optie te gebruiken");
+                errorAlert.showAndWait();
             }
 
-            studentGUI.close();
+            
         });
 
     }
-
 
     //method for creating a table with all student data. Uses getAllStudents to get the data from the database
     public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
@@ -291,6 +296,4 @@ public class StudentGUI extends Application {
             System.out.println("Error refreshing table: " + e);
         }
     }
-    
-
 }
