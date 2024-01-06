@@ -35,12 +35,14 @@ public class EnrollmentGUI extends Application {
 
         TableView<Enrollment> table = createTable(databaseConnection);
 
-        table.setPrefWidth(450);
+        table.setPrefWidth(700);
 
-        // Scene scene = new Scene();
+        //test
+        Scene scene = new Scene(table);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
 
-        // enrollmentGUI.setScene(scene);
-        // enrollmentGUI.show();
 
 
 
