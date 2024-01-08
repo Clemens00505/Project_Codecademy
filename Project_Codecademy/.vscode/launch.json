@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "gui.App",
+            "projectName": "Project_Codecademy_7f4bd44f"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -13,12 +20,10 @@
         {
             "type": "java",
             "name": "App",
-
             "vmArgs": "-p ../lib/javafx-sdk-11.0.2/lib --add-modules javafx.controls",
             "request": "launch",
             "mainClass": "GUI.App",
             "projectName": "Project_Codecademy_7f4bd44f"
-            
         }
     ]
 }
