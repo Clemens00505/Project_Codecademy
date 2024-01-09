@@ -1,136 +1,51 @@
-package Database;
+package database;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import java.sql.*;
 
-// import javax.swing.text.AbstractDocument.Content;
-
-/**
- * Dit is een voorbeeld Java toepassing waarin je verbinding maakt met een
- * SQLServer database.
- */
-public class databaseConnection {
+public class DatabaseConnection {
 
     private Connection connection;
     private Statement statement;
 
-    public databaseConnection() {
+    public DatabaseConnection() {
         connection = null;
         statement = null;
     }
 
-    // public static void main(String[] args) {
-    public void test() {
+    public boolean openConnection() { // method to connect to databse
+        boolean result = false;
 
-        // Dit zijn de instellingen voor de verbinding. Vervang de databaseName indien
-        // deze voor jou anders is.
-        String connectionUrl = "jdbc:sqlserver://localhost;databaseName=codecademy;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";
-
-        // Connection beheert informatie over de connectie met de database.
-        Connection connection = null;
-
-        // Statement zorgt dat we een SQL query kunnen uitvoeren.
-        Statement statement = null;
-
-        // ResultSet is de tabel die we van de database terugkrijgen.
-        // We kunnen door de rows heen stappen en iedere kolom lezen.
-        ResultSet resultSet = null;
-
-        try {
-            // 'Importeer' de driver die je gedownload hebt.
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            // Maak de verbinding met de database.
-            connection = DriverManager.getConnection(connectionUrl);
-
-            // Stel een SQL query samen.
-            String SQL = "SELECT * FROM Students";
-            statement = connection.createStatement();
-            // Voer de query uit op de database.
-            resultSet = statement.executeQuery(SQL);
-
-            // System.out.print(String.format("| %7s | %-32s | \n", " ", " ", " ").replace("
-            // ", "-"));
-
-            // Als de resultset waarden bevat dan lopen we hier door deze waarden en printen
-            // ze.
-            while (resultSet.next()) {
-                // Vraag per row de kolommen in die row op.
-                int ContentId = resultSet.getInt("ContentId");
-                String ContentType = resultSet.getString("ContentType");
-
-                // Print de kolomwaarden.
-                // System.out.println(ContentId + " " + ContentType);
-
-                // Met 'format' kun je de string die je print het juiste formaat geven, als je
-                // dat wilt.
-                // %d = decimal, %s = string, %-32s = string, links uitgelijnd, 32 characters
-                // breed.
-                System.out.format("| %7d | %-10s | \n", ContentId, ContentType);
-            }
-            System.out.println(String.format("| %7s | %-14s | \n", " ", " ", " ").replace(" ", "-"));
-
-        }
-
-        // Handle any errors that may have occurred.
-        catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSet != null)
-                try {
-                    resultSet.close();
-                } catch (Exception e) {
-                }
-            if (statement != null)
-                try {
-                    statement.close();
-                } catch (Exception e) {
-                }
-            if (connection != null)
-                try {
-                    connection.close();
-                } catch (Exception e) {
-                }
-        }
-    }
-
-        /**
-         * @return
-         */
-        public boolean openConnection() {
-            boolean result = false;
-
-            if (connection == null) {
-                try {
-                    // 'Importeer' de driver die je gedownload hebt.
+        if (connection == null) {
+            try {
+                // Import driver
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                // Try to create a connection with the library database
-                String connectionUrl = "jdbc:sqlserver://localhost;databaseName=codecademy;integratedSecurity=true;encrypt=true;trustServerCertificate=true;";
-                //connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=codecademy;integratedSecurity=true;");
+                //connecting to the server
+                String connectionUrl = "jdbc:sqlserver://aei-sql2.avans.nl:1443;databaseName=CodecademyClemens;user=Clemens;password=wachtwoord1;encrypt=false;";
                 connection = DriverManager.getConnection(connectionUrl);
-                // "jdbc:mysql://localhost/library" , "biblio1", "boekje");
 
                 if (connection != null) {
                     statement = connection.createStatement();
+                    result = true;
+                    System.out.println("verbonden");
                 }
 
-                result = true;
             } catch (SQLException e) {
                 System.out.println(e);
                 result = false;
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(databaseConnection.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DatabaseConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             result = true;
         }
+        // System.out.println("verbinding gemaakt");
 
         return result;
     }
 
-    public boolean connectionIsOpen() {
+    public boolean connectionIsOpen() { // method to check connection to database
         boolean open = false;
 
         if (connection != null && statement != null) {
@@ -144,4 +59,42 @@ public class databaseConnection {
 
         return open;
     }
+
+    public void closeConnection() { // method to close connection to database
+        try {
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        statement = null;
+        connection = null;
+    }
+
+    public ResultSet executeSQLSelectStatement(String query) { // method for using a query
+        ResultSet resultSet = null;
+
+        if (query != null && connectionIsOpen()) {
+            try {
+                resultSet = statement.executeQuery(query);
+            } catch (SQLException e) {
+                resultSet = null;
+            }
+        }
+
+        // System.out.println("Resultset gemaakt");
+        return resultSet;
+    }
+
+    public void executeSQLStatement(String query) {
+        if (query != null && connectionIsOpen()) {
+            try {
+                statement.executeQuery(query);
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
 }
