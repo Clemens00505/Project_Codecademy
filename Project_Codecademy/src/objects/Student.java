@@ -7,13 +7,20 @@ import database.DatabaseConnection;
 public class Student {
     private String email;
     private String name;
-    private String gender;
+    private Gender gender;
     private Date dateOfBirth;
+
+    public Student(String email, String name, Gender gender, Date dateOfBirth) {
+        this.email = email;
+        this.name = name;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+    }
 
     public Student(String email, String name, String gender, Date dateOfBirth) {
         this.email = email;
         this.name = name;
-        this.gender = gender;
+        this.gender = Gender.valueOf(gender);
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -27,11 +34,17 @@ public class Student {
     }
 
      public String getGender() {
-        return gender;
+        return gender.toString();
     }
 
     public Date getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    // Zet een String om in Gender Enum zodat het in de gui class werkt
+    public static Gender stringToGender(String string) {
+        Gender toGender = Gender.valueOf(string);
+        return toGender;
     }
 
     public void addStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { //method for adding student to database
