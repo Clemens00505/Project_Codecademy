@@ -17,5 +17,6 @@ public class Enrollment {
         this.grade = grade;
         this.enrollmentDate = enrollmentDate;
         this.enrollmentId = enrollmentId;
+        //test
     }
 }
