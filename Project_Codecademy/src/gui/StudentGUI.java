@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -39,6 +40,12 @@ public class StudentGUI extends Application {
         TextField emailInput = new TextField();
         TextField nameInput = new TextField();
         TextField genderInput = new TextField();
+        // ObservableList<String> gender = new ObservableList(
+        //     "man",
+        //     "vrouw",
+        //     "anders"
+        // );
+        // final ComboBox dropdownGender = new ComboBox(gender);
         TextField dateOfBirthInput = new TextField();
 
         //add prompttext

@@ -7,22 +7,22 @@ import database.DatabaseConnection;
 public class Student {
     private String email;
     private String name;
-    private Gender gender;
+    private String gender;
     private Date dateOfBirth;
 
-    public Student(String email, String name, Gender gender, Date dateOfBirth) {
+    public Student(String email, String name, String gender, Date dateOfBirth) {
         this.email = email;
         this.name = name;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Student(String email, String name, String gender, Date dateOfBirth) {
-        this.email = email;
-        this.name = name;
-        this.gender = Gender.valueOf(gender);
-        this.dateOfBirth = dateOfBirth;
-    }
+    // public Student(String email, String name, String gender, Date dateOfBirth) {
+    //     this.email = email;
+    //     this.name = name;
+    //     this.gender = Gender.valueOf(gender);
+    //     this.dateOfBirth = dateOfBirth;
+    // }
 
     //getters 
     public String getEmail() {

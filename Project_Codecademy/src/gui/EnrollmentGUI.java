@@ -70,18 +70,16 @@ public class EnrollmentGUI extends Application {
         TableColumn<Enrollment, String> studentMailCol = new TableColumn("Student email");
         TableColumn<Enrollment, String> courseNameCol = new TableColumn("Cursusnaam");
         TableColumn<Enrollment, String> percentageCol = new TableColumn("Percentage");
-        TableColumn<Enrollment, String> gradeCol = new TableColumn("Cijfer");
         TableColumn<Enrollment, String> enrollmentDateCol = new TableColumn("Inschrijfdatum");
         TableColumn<Enrollment, String> enrollmentIdCol = new TableColumn("InschrijvingsID");
 
         studentMailCol.setCellValueFactory(new PropertyValueFactory<>("StudentMail"));
         courseNameCol.setCellValueFactory(new PropertyValueFactory<>("CourseName"));
         percentageCol.setCellValueFactory(new PropertyValueFactory<>("Percentage"));
-        gradeCol.setCellValueFactory(new PropertyValueFactory<>("Grade"));
         enrollmentDateCol.setCellValueFactory(new PropertyValueFactory<>("EnrollmentDate"));
         enrollmentIdCol.setCellValueFactory(new PropertyValueFactory<>("EnrollmentId"));
 
-        table.getColumns().addAll(studentMailCol, courseNameCol, percentageCol, gradeCol, enrollmentDateCol, enrollmentIdCol);
+        table.getColumns().addAll(studentMailCol, courseNameCol, percentageCol, enrollmentDateCol, enrollmentIdCol);
 
         table.setItems(data);
 
