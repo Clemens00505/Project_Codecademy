@@ -229,14 +229,7 @@ public class StudentGUI extends Application {
             Stage codecademyStage = new Stage();
             codecademyStage.setTitle("Menu");
 
-            try {
-                codecademyGUI.start(codecademyStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // close current stage
-            studentGUI.close();
+            genericGUI.switchScreen(studentGUI, codecademyStage, codecademyGUI);
         });
 
         // button to show students enrollments

@@ -4,10 +4,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import objects.Student;
 
 public class ContentGUI extends Application {
  @Override
     public void start(Stage contentGUI) throws Exception {
+        // Create a GenericGUI
+        GenericGUI<Student> genericGUI = new GenericGUI<>();
+
         contentGUI.setTitle("Content");
 
 
@@ -27,6 +31,8 @@ public class ContentGUI extends Application {
 
             Stage codecademyStage = new Stage();
             codecademyStage.setTitle("Menu");
+
+            genericGUI.switchScreen(contentGUI, codecademyStage, codecademyGUI);
 
             try {
                 codecademyGUI.start(codecademyStage);
