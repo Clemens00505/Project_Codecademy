@@ -17,10 +17,14 @@ public class Student {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Student() {
+        
+    }
+
     // public Student(String email, String name, String gender, Date dateOfBirth) {
     //     this.email = email;
     //     this.name = name;
-    //     this.gender = Gender.valueOf(gender);
+    //     this.gender = gender
     //     this.dateOfBirth = dateOfBirth;
     // }
 

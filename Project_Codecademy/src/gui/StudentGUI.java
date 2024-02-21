@@ -3,6 +3,9 @@ package gui;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import database.DatabaseConnection;
 import objects.Student;
 import javafx.application.Application;
@@ -79,7 +82,41 @@ public class StudentGUI extends Application {
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
-        TableView<Student> table = createTable(databaseConnection);
+        //create columns for the table
+        TableColumn<Student, String> emailCol = new TableColumn<>("Email");
+        TableColumn<Student, String> nameCol = new TableColumn<>("Naam");
+        TableColumn<Student, String> genderCol = new TableColumn<>("Gender");
+        TableColumn<Student, Date> dateOfBirthCol = new TableColumn<>("Geboortedatum");
+
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+
+        //add columns to a list 
+        List<TableColumn<Student, ?>> columns = new ArrayList<>();
+        columns.add(emailCol);
+        columns.add(nameCol);
+        columns.add(genderCol);
+        columns.add(dateOfBirthCol);
+
+        // Create a GenericGUI 
+        GenericGUI<Student> genericGUI = new GenericGUI<>();
+
+        //create the table
+        TableView<Student> table = genericGUI.createTable(columns);
+
+        //gets the data from the database as a resultset
+        databaseConnection.openConnection();
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
+        databaseConnection.connectionIsOpen();
+
+        // puts the data from the resultset in an observablelist
+        ObservableList<Student> data = genericGUI.getData(resultSet, Student.class);
+
+        //displays data in the table
+        table.setItems(data);
+        
 
         table.setPrefWidth(450);
 
@@ -114,7 +151,7 @@ public class StudentGUI extends Application {
                 genderInput.setText(null);
                 dateOfBirthInput.setText(null);
                 
-                refreshTable(databaseConnection, table);                
+                // refreshTable(databaseConnection, table);                
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -147,7 +184,7 @@ public class StudentGUI extends Application {
 
                     try {
                         studentUpdated.updateStudent(studentUpdated, databaseConnection);
-                        refreshTable(databaseConnection, table);
+                        // refreshTable(databaseConnection, table);
 
                         if (selectedStudent != null) {
                             emailInput.setText(null);
@@ -177,7 +214,7 @@ public class StudentGUI extends Application {
 
                     student.deleteStudent(email, databaseConnection);
                     
-                    refreshTable(databaseConnection, table);
+                    // refreshTable(databaseConnection, table);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -245,62 +282,62 @@ public class StudentGUI extends Application {
 
     }
 
-    //method for creating a table with all student data. Uses getAllStudents to get the data from the database
-    public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
+    // //method for creating a table with all student data. Uses getAllStudents to get the data from the database
+    // public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
 
-        ObservableList<Student> data = getAllStudents(databaseConnection);
+    //     ObservableList<Student> data = getAllStudents(databaseConnection);
         
-        TableView<Student> table = new TableView();
-        TableColumn<Student, String> emailCol = new TableColumn("Email");
-        TableColumn<Student, String> nameCol = new TableColumn("Naam");
-        TableColumn<Student, String> genderCol = new TableColumn("Gender");
-        TableColumn<Student, String> dateOfBirthCol = new TableColumn("Geboortedatum");
+    //     TableView<Student> table = new TableView();
+    //     TableColumn<Student, String> emailCol = new TableColumn("Email");
+    //     TableColumn<Student, String> nameCol = new TableColumn("Naam");
+    //     TableColumn<Student, String> genderCol = new TableColumn("Gender");
+    //     TableColumn<Student, String> dateOfBirthCol = new TableColumn("Geboortedatum");
 
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("Gender"));
-        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("DateOfBirth"));
+    //     emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
+    //     nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
+    //     genderCol.setCellValueFactory(new PropertyValueFactory<>("Gender"));
+    //     dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("DateOfBirth"));
 
-        table.getColumns().addAll(emailCol, nameCol, genderCol, dateOfBirthCol);
+    //     table.getColumns().addAll(emailCol, nameCol, genderCol, dateOfBirthCol);
 
-        table.setItems(data);
+    //     table.setItems(data);
 
-        return table;
-    }
+    //     return table;
+    // }
 
-    //method to get all student information
-    public ObservableList<Student> getAllStudents(DatabaseConnection databaseConnection) throws SQLException, ClassNotFoundException { 
-        ObservableList<Student> students = FXCollections.observableArrayList();
+    // //method to get all student information
+    // public ObservableList<Student> getAllStudents(DatabaseConnection databaseConnection) throws SQLException, ClassNotFoundException { 
+    //     ObservableList<Student> students = FXCollections.observableArrayList();
 
-        databaseConnection.openConnection();
+    //     databaseConnection.openConnection();
 
-        String selectStatement = "SELECT * FROM Student"; //Statement to get all student information
+    //     String selectStatement = "SELECT * FROM Student"; //Statement to get all student information
 
-        try { //execute select statement 
-            ResultSet resultSet = databaseConnection.executeSQLSelectStatement(selectStatement);
+    //     try { //execute select statement 
+    //         ResultSet resultSet = databaseConnection.executeSQLSelectStatement(selectStatement);
 
-            while (resultSet.next()) {
-                Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
-                students.add(student);
-            }
+    //         while (resultSet.next()) {
+    //             Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
+    //             students.add(student);
+    //         }
             
-        } catch (SQLException e) {
-            System.out.println("SQL select query was niet succesvol: " + e);
-            //Shows exception
-            throw e;
-        }
+    //     } catch (SQLException e) {
+    //         System.out.println("SQL select query was niet succesvol: " + e);
+    //         //Shows exception
+    //         throw e;
+    //     }
 
-        databaseConnection.closeConnection();
-        return students;
-    }
+    //     databaseConnection.closeConnection();
+    //     return students;
+    // }
 
-    public void refreshTable(DatabaseConnection databaseConnection, TableView<Student> table) {
-        try {
-            ObservableList<Student> data = getAllStudents(databaseConnection);
-            table.setItems(data);
-            table.refresh();
-        } catch (Exception e) {
-            System.out.println("Error refreshing table: " + e);
-        }
-    }
+    // public void refreshTable(DatabaseConnection databaseConnection, TableView<Student> table) {
+    //     try {
+    //         ObservableList<Student> data = getAllStudents(databaseConnection);
+    //         table.setItems(data);
+    //         table.refresh();
+    //     } catch (Exception e) {
+    //         System.out.println("Error refreshing table: " + e);
+    //     }
+    // }
 }
