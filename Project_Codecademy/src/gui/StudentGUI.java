@@ -33,35 +33,35 @@ public class StudentGUI extends Application {
         studentGUI.show();
         studentGUI.setTitle("Studenten");
 
-        //labels for the textfields
+        // labels for the textfields
         Label emailLabel = new Label("Email: ");
         Label nameLabel = new Label("Naam: ");
         Label genderLabel = new Label("Gender: ");
         Label dateOfBirthLabel = new Label("Geboortedatum: ");
-       
-        //add textfields
+
+        // add textfields
         TextField emailInput = new TextField();
         TextField nameInput = new TextField();
         TextField genderInput = new TextField();
         // ObservableList<String> gender = new ObservableList(
-        //     "man",
-        //     "vrouw",
-        //     "anders"
+        // "man",
+        // "vrouw",
+        // "anders"
         // );
         // final ComboBox dropdownGender = new ComboBox(gender);
         TextField dateOfBirthInput = new TextField();
 
-        //add prompttext
+        // add prompttext
         emailInput.setPromptText("abcdefg@gmail.com");
         nameInput.setPromptText("abcdefg");
         genderInput.setPromptText("man/vrouw/anders");
         dateOfBirthInput.setPromptText("yyyy-mm-dd");
 
-        //alles wat te maken heeft met input in een VBox zetten
-        VBox inputFields = new VBox(emailLabel, emailInput, nameLabel, nameInput, genderLabel, genderInput, dateOfBirthLabel, dateOfBirthInput);
+        // alles wat te maken heeft met input in een VBox zetten
+        VBox inputFields = new VBox(emailLabel, emailInput, nameLabel, nameInput, genderLabel, genderInput,
+                dateOfBirthLabel, dateOfBirthInput);
 
-        
-        //Create buttons
+        // Create buttons
         Button addStudentButton = new Button("Student toevoegen");
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
@@ -77,12 +77,13 @@ public class StudentGUI extends Application {
         showEnrollmentsButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
-        //put buttons in a vbox
-        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton, showEnrollmentsButton, backButton);
+        // put buttons in a vbox
+        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton,
+                showEnrollmentsButton, backButton);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
-        //create columns for the table
+        // create columns for the table
         TableColumn<Student, String> emailCol = new TableColumn<>("Email");
         TableColumn<Student, String> nameCol = new TableColumn<>("Naam");
         TableColumn<Student, String> genderCol = new TableColumn<>("Gender");
@@ -93,20 +94,20 @@ public class StudentGUI extends Application {
         genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
         dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
 
-        //add columns to a list 
+        // add columns to a list
         List<TableColumn<Student, ?>> columns = new ArrayList<>();
         columns.add(emailCol);
         columns.add(nameCol);
         columns.add(genderCol);
         columns.add(dateOfBirthCol);
 
-        // Create a GenericGUI 
+        // Create a GenericGUI
         GenericGUI<Student> genericGUI = new GenericGUI<>();
 
-        //create the table
+        // create the table
         TableView<Student> table = genericGUI.createTable(columns);
 
-        //gets the data from the database as a resultset
+        // gets the data from the database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
         databaseConnection.connectionIsOpen();
@@ -114,9 +115,8 @@ public class StudentGUI extends Application {
         // puts the data from the resultset in an observablelist
         ObservableList<Student> data = genericGUI.getData(resultSet, Student.class);
 
-        //displays data in the table
+        // displays data in the table
         table.setItems(data);
-        
 
         table.setPrefWidth(450);
 
@@ -130,7 +130,7 @@ public class StudentGUI extends Application {
 
         studentGUI.setScene(scene);
 
-        //eventhandler for adding student
+        // eventhandler for adding student
         addStudentButton.setOnAction((event) -> {
             try {
                 // System.out.println(databaseConnection.connectionIsOpen());
@@ -150,14 +150,14 @@ public class StudentGUI extends Application {
                 nameInput.setText(null);
                 genderInput.setText(null);
                 dateOfBirthInput.setText(null);
-                
-                // refreshTable(databaseConnection, table);                
+
+                refreshTable(data, table, genericGUI, databaseConnection);
             } catch (Exception e) {
                 System.out.println(e);
             }
         });
 
-        //eventhandler for updating student
+        // eventhandler for updating student
         editStudentButton.setOnAction((event) -> {
             Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
@@ -191,15 +191,17 @@ public class StudentGUI extends Application {
                             nameInput.setText(null);
                             genderInput.setText(null);
                             dateOfBirthInput.setText(null);
+
+                            refreshTable(data, table, genericGUI, databaseConnection);
                         }
                     } catch (SQLException e) {
                         System.out.println(e);
                     }
                 });
-            }            
+            }
         });
 
-        //eventhandler for deleting student
+        // eventhandler for deleting student
         deleteStudentButton.setOnAction((event) -> {
             Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
@@ -213,16 +215,17 @@ public class StudentGUI extends Application {
                     Student student = new Student(email, name, gender, dateOfBirth);
 
                     student.deleteStudent(email, databaseConnection);
-                    
+                    refreshTable(data, table, genericGUI, databaseConnection);
+
                     // refreshTable(databaseConnection, table);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-                
-            }       
+
+            }
         });
 
-        //eventhandler for button to return to menu
+        // eventhandler for button to return to menu
         backButton.setOnAction((event) -> {
             CodecademyGUI codecademyGUI = new CodecademyGUI();
 
@@ -235,13 +238,13 @@ public class StudentGUI extends Application {
                 e.printStackTrace();
             }
 
-            //close current stage
+            // close current stage
             studentGUI.close();
         });
 
-        //button to show students enrollments
+        // button to show students enrollments
         showEnrollmentsButton.setOnAction((event) -> {
-            
+
             Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
             if (selectedStudent != null) {
@@ -270,74 +273,29 @@ public class StudentGUI extends Application {
                 }
             } else {
 
-                //Error message that shows when user presses button for enrollments without selecting a student
+                // Error message that shows when user presses button for enrollments without
+                // selecting a student
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Geen student geselecteerd");
                 errorAlert.setContentText("Selecteer een student om deze optie te gebruiken");
                 errorAlert.showAndWait();
             }
 
-            
         });
 
     }
 
-    // //method for creating a table with all student data. Uses getAllStudents to get the data from the database
-    // public TableView createTable(DatabaseConnection databaseConnection) throws ClassNotFoundException, SQLException {
+    // method for refreshing the table
+    private void refreshTable(ObservableList<Student> data, TableView<Student> table, GenericGUI<Student> genericGUI,
+            DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
+        databaseConnection.connectionIsOpen();
 
-    //     ObservableList<Student> data = getAllStudents(databaseConnection);
-        
-    //     TableView<Student> table = new TableView();
-    //     TableColumn<Student, String> emailCol = new TableColumn("Email");
-    //     TableColumn<Student, String> nameCol = new TableColumn("Naam");
-    //     TableColumn<Student, String> genderCol = new TableColumn("Gender");
-    //     TableColumn<Student, String> dateOfBirthCol = new TableColumn("Geboortedatum");
+        data = genericGUI.getData(resultSet, Student.class);
 
-    //     emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
-    //     nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-    //     genderCol.setCellValueFactory(new PropertyValueFactory<>("Gender"));
-    //     dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("DateOfBirth"));
-
-    //     table.getColumns().addAll(emailCol, nameCol, genderCol, dateOfBirthCol);
-
-    //     table.setItems(data);
-
-    //     return table;
-    // }
-
-    // //method to get all student information
-    // public ObservableList<Student> getAllStudents(DatabaseConnection databaseConnection) throws SQLException, ClassNotFoundException { 
-    //     ObservableList<Student> students = FXCollections.observableArrayList();
-
-    //     databaseConnection.openConnection();
-
-    //     String selectStatement = "SELECT * FROM Student"; //Statement to get all student information
-
-    //     try { //execute select statement 
-    //         ResultSet resultSet = databaseConnection.executeSQLSelectStatement(selectStatement);
-
-    //         while (resultSet.next()) {
-    //             Student student = new Student(resultSet.getString("Email"), resultSet.getString("Name"), resultSet.getString("Gender"), resultSet.getDate("DateOfBirth"));
-    //             students.add(student);
-    //         }
-            
-    //     } catch (SQLException e) {
-    //         System.out.println("SQL select query was niet succesvol: " + e);
-    //         //Shows exception
-    //         throw e;
-    //     }
-
-    //     databaseConnection.closeConnection();
-    //     return students;
-    // }
-
-    // public void refreshTable(DatabaseConnection databaseConnection, TableView<Student> table) {
-    //     try {
-    //         ObservableList<Student> data = getAllStudents(databaseConnection);
-    //         table.setItems(data);
-    //         table.refresh();
-    //     } catch (Exception e) {
-    //         System.out.println("Error refreshing table: " + e);
-    //     }
-    // }
+        // displays new data in the table
+        table.setItems(data);
+        table.refresh();
+    }
 }

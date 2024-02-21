@@ -42,4 +42,9 @@ public class GenericGUI<T> {
         System.out.println("Data verzameld: " + data.toString());
         return data;
     }
+
+    //method for refreshing the tables
+    public void refreshTable(ObservableList<T> data, TableView<T> table) {
+        table.setItems(data);
+    }
 }
