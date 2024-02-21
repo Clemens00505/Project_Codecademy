@@ -5,12 +5,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import objects.Student;
 
 public class CodecademyGUI extends Application {
+    
 
     @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle("Menu");
+    public void start(Stage codecademyGUI) throws Exception {
+        // Create a GenericGUI
+        GenericGUI<Student> genericGUI = new GenericGUI<>();
+
+        codecademyGUI.setTitle("Menu");
 
         Button studentenButton = new Button("Studenten");
         Button contentButton = new Button("Content");
@@ -20,8 +25,8 @@ public class CodecademyGUI extends Application {
 
         Scene scene = new Scene(box, 100, 200);
 
-        stage.setScene(scene);
-        stage.show();
+        codecademyGUI.setScene(scene);
+        codecademyGUI.show();
 
 
         //Buttons that open different screens
@@ -31,14 +36,7 @@ public class CodecademyGUI extends Application {
             Stage studentStage = new Stage();
             studentStage.setTitle("Studenten");
 
-            try {
-                studentGUI.start(studentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            //close current stage
-            stage.close();
+            genericGUI.switchScreen(codecademyGUI, studentStage, studentGUI);
         });
 
         contentButton.setOnAction((event) -> {
@@ -47,13 +45,7 @@ public class CodecademyGUI extends Application {
             Stage contentStage = new Stage();
             contentStage.setTitle("Content");
 
-            try {
-                contentGUI.start(contentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            stage.close();
+            genericGUI.switchScreen(codecademyGUI, contentStage, contentGUI);
         });
     
 

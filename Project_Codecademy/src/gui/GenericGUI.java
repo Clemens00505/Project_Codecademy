@@ -5,10 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 public class GenericGUI<T> {
     
@@ -46,5 +48,15 @@ public class GenericGUI<T> {
     //method for refreshing the tables
     public void refreshTable(ObservableList<T> data, TableView<T> table) {
         table.setItems(data);
+    }
+
+    //method for swithing screens
+    public void switchScreen(Stage currentStage, Stage newStage, Application newScreen) {
+        try {
+            newScreen.start(newStage);
+            currentStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
