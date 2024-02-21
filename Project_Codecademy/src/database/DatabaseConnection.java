@@ -80,10 +80,11 @@ public class DatabaseConnection {
                 resultSet = statement.executeQuery(query);
             } catch (SQLException e) {
                 resultSet = null;
+                System.out.println(e.getMessage());
             }
         }
 
-        // System.out.println("Resultset gemaakt");
+        System.out.println("Resultset gemaakt: " + resultSet);
         return resultSet;
     }
 
