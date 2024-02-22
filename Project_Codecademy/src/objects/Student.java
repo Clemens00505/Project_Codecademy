@@ -18,15 +18,8 @@ public class Student {
     }
 
     public Student() {
-        
+       //Used to create table with genericGUI 
     }
-
-    // public Student(String email, String name, String gender, Date dateOfBirth) {
-    //     this.email = email;
-    //     this.name = name;
-    //     this.gender = gender
-    //     this.dateOfBirth = dateOfBirth;
-    // }
 
     //getters 
     public String getEmail() {
@@ -51,7 +44,8 @@ public class Student {
         return toGender;
     }
 
-    public void addStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { //method for adding student to database
+    //method for adding student to database
+    public void addStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { 
         StringBuilder insertStmt = new StringBuilder();
         
         databaseConnection.openConnection();

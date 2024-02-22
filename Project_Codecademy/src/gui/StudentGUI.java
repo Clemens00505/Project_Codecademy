@@ -33,22 +33,10 @@ public class StudentGUI extends Application {
         studentGUI.show();
         studentGUI.setTitle("Studenten");
 
-        // labels for the textfields
-        Label emailLabel = new Label("Email: ");
-        Label nameLabel = new Label("Naam: ");
-        Label genderLabel = new Label("Gender: ");
-        Label dateOfBirthLabel = new Label("Geboortedatum: ");
-
         // add textfields
         TextField emailInput = new TextField();
         TextField nameInput = new TextField();
         TextField genderInput = new TextField();
-        // ObservableList<String> gender = new ObservableList(
-        // "man",
-        // "vrouw",
-        // "anders"
-        // );
-        // final ComboBox dropdownGender = new ComboBox(gender);
         TextField dateOfBirthInput = new TextField();
 
         // add prompttext
@@ -56,10 +44,6 @@ public class StudentGUI extends Application {
         nameInput.setPromptText("abcdefg");
         genderInput.setPromptText("man/vrouw/anders");
         dateOfBirthInput.setPromptText("yyyy-mm-dd");
-
-        // alles wat te maken heeft met input in een VBox zetten
-        VBox inputFields = new VBox(emailLabel, emailInput, nameLabel, nameInput, genderLabel, genderInput,
-                dateOfBirthLabel, dateOfBirthInput);
 
         // Create buttons
         Button addStudentButton = new Button("Student toevoegen");
@@ -76,10 +60,6 @@ public class StudentGUI extends Application {
         confirmButton.setMinWidth(equalWidth);
         showEnrollmentsButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
-
-        // put buttons in a vbox
-        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton,
-                showEnrollmentsButton, backButton);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
@@ -117,12 +97,15 @@ public class StudentGUI extends Application {
 
         table.setPrefWidth(450);
 
-        VBox rightSide = new VBox(inputFields, buttons);
 
+        // placing everything in the screen
+        // put buttons in a vbox
+        VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton,
+        showEnrollmentsButton, backButton);
+        VBox rightSide = new VBox(buttons);
         rightSide.setPrefWidth(250);
-
         HBox box = new HBox(table, rightSide);
-
+        
         Scene scene = new Scene(box);
 
         studentGUI.setScene(scene);
