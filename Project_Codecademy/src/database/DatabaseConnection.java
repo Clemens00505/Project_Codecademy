@@ -32,7 +32,7 @@ public class DatabaseConnection {
                 }
 
             } catch (SQLException e) {
-                System.out.println(e);
+                e.printStackTrace();
                 result = false;
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(DatabaseConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,7 +40,6 @@ public class DatabaseConnection {
         } else {
             result = true;
         }
-        // System.out.println("verbinding gemaakt");
 
         return result;
     }
@@ -52,7 +51,7 @@ public class DatabaseConnection {
             try {
                 open = !connection.isClosed() && !statement.isClosed();
             } catch (SQLException e) {
-                System.out.println(e);
+                e.printStackTrace();
                 open = false;
             }
         }
@@ -65,7 +64,7 @@ public class DatabaseConnection {
             statement.close();
             connection.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         statement = null;
@@ -80,7 +79,7 @@ public class DatabaseConnection {
                 resultSet = statement.executeQuery(query);
             } catch (SQLException e) {
                 resultSet = null;
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -93,7 +92,7 @@ public class DatabaseConnection {
             try {
                 statement.executeQuery(query);
             } catch (SQLException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
     }

@@ -12,7 +12,7 @@ public class CodecademyGUI extends Application {
 
     @Override
     public void start(Stage codecademyGUI) throws Exception {
-        // Create a GenericGUI
+        // Create a GenericGUI for the generic methods
         GenericGUI<Student> genericGUI = new GenericGUI<>();
 
         codecademyGUI.setTitle("Menu");

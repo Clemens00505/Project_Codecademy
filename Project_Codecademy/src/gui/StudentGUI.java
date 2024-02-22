@@ -150,7 +150,7 @@ public class StudentGUI extends Application {
 
                 refreshTable(data, table, genericGUI, databaseConnection);
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         });
 
@@ -192,7 +192,7 @@ public class StudentGUI extends Application {
                             refreshTable(data, table, genericGUI, databaseConnection);
                         }
                     } catch (SQLException e) {
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 });
             }
@@ -216,7 +216,7 @@ public class StudentGUI extends Application {
 
                     // refreshTable(databaseConnection, table);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
 
             }
@@ -259,7 +259,7 @@ public class StudentGUI extends Application {
                     }
 
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             } else {
 

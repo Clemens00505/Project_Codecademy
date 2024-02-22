@@ -103,7 +103,7 @@ public class EnrollmentGUI extends Application {
             }
             
         } catch (SQLException e) {
-            System.out.println("SQL select query was niet succesvol: " + e);
+            System.out.println("SQL select query was niet succesvol: " + e.getMessage());
             //Shows exception
             throw e;
         }
