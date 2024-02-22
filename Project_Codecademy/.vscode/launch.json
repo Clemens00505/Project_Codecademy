@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "gui.Main",
+            "projectName": "Project_Codecademy_7f4bd44f"
+        },
+        {
+            "type": "java",
             "name": "App",
             "request": "launch",
             "mainClass": "gui.App",

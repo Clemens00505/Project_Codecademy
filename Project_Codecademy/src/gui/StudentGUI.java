@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -97,44 +96,55 @@ public class StudentGUI extends Application {
 
         table.setPrefWidth(450);
 
-
         // placing everything in the screen
         // put buttons in a vbox
         VBox buttons = new VBox(addStudentButton, editStudentButton, deleteStudentButton, confirmButton,
-        showEnrollmentsButton, backButton);
+                showEnrollmentsButton, backButton);
         VBox rightSide = new VBox(buttons);
         rightSide.setPrefWidth(250);
         HBox box = new HBox(table, rightSide);
-        
+
         Scene scene = new Scene(box);
 
         studentGUI.setScene(scene);
 
         // eventhandler for adding student
         addStudentButton.setOnAction((event) -> {
+
             try {
-                // System.out.println(databaseConnection.connectionIsOpen());
 
-                String email = emailInput.getText();
-                String name = nameInput.getText();
-                String gender = genderInput.getText();
-                String dateOfBirthString = dateOfBirthInput.getText();
-                Date dateOfBirth = Date.valueOf(dateOfBirthString);
+                ControllerStudentGUI controllerStudentGUI = new ControllerStudentGUI();
+                Stage controllerStudentStage = new Stage();
 
-                Student student = new Student(email, name, gender, dateOfBirth);
-
-                student.addStudent(student, databaseConnection);
-                System.out.println(student);
-
-                emailInput.setText(null);
-                nameInput.setText(null);
-                genderInput.setText(null);
-                dateOfBirthInput.setText(null);
-
-                refreshTable(data, table, genericGUI, databaseConnection);
+                controllerStudentStage.setTitle("Student toevoegen");
+                genericGUI.openPopupScreen(controllerStudentStage, controllerStudentGUI);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            // try {
+            // // System.out.println(databaseConnection.connectionIsOpen());
+
+            // String email = emailInput.getText();
+            // String name = nameInput.getText();
+            // String gender = genderInput.getText();
+            // String dateOfBirthString = dateOfBirthInput.getText();
+            // Date dateOfBirth = Date.valueOf(dateOfBirthString);
+
+            // Student student = new Student(email, name, gender, dateOfBirth);
+
+            // student.addStudent(student, databaseConnection);
+            // System.out.println(student);
+
+            // emailInput.setText(null);
+            // nameInput.setText(null);
+            // genderInput.setText(null);
+            // dateOfBirthInput.setText(null);
+
+            // refreshTable(data, table, genericGUI, databaseConnection);
+            // } catch (Exception e) {
+            // e.printStackTrace();
+            // }
         });
 
         // eventhandler for updating student

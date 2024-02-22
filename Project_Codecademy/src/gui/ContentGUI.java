@@ -7,13 +7,12 @@ import javafx.stage.Stage;
 import objects.Student;
 
 public class ContentGUI extends Application {
- @Override
+    @Override
     public void start(Stage contentGUI) throws Exception {
         // Create a GenericGUI
         GenericGUI<Student> genericGUI = new GenericGUI<>();
 
         contentGUI.setTitle("Content");
-
 
         Button allContentButton = new Button("Alle content");
         Button webcastButton = new Button("Alle webcasts");
@@ -24,8 +23,7 @@ public class ContentGUI extends Application {
         contentGUI.setScene(scene);
         contentGUI.show();
 
-
-        //eventhandler for button to return to main menu
+        // eventhandler for button to return to main menu
         backButton.setOnAction((event) -> {
             CodecademyGUI codecademyGUI = new CodecademyGUI();
 
@@ -40,10 +38,9 @@ public class ContentGUI extends Application {
                 e.printStackTrace();
             }
 
-            //close current stage
+            // close current stage
             contentGUI.close();
         });
-    
+
     }
 }
-

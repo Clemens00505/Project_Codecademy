@@ -59,4 +59,12 @@ public class GenericGUI<T> {
             e.printStackTrace();
         }
     }
+
+    public void openPopupScreen(Stage popupStage, Application popupScreen) {
+        try {
+            popupScreen.start(popupStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
