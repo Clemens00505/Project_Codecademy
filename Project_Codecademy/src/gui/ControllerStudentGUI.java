@@ -3,7 +3,6 @@ package gui;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -21,8 +20,6 @@ import objects.Student;
 public class ControllerStudentGUI extends Application {
     @Override
     public void start(Stage controllerStudentGUI) throws Exception {
-
-        
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         controllerStudentGUI.setTitle("Student toevoegen");
@@ -71,7 +68,6 @@ public class ControllerStudentGUI extends Application {
         controllerStudentGUI.setScene(scene);
         controllerStudentGUI.show();
 
-
         //If cancelButton is pressed, the screen will be closed
         cancelButton.setOnAction((event) -> {
             controllerStudentGUI.close();
@@ -95,6 +91,5 @@ public class ControllerStudentGUI extends Application {
                     e.printStackTrace();
                 }
         });
-
     }
 }

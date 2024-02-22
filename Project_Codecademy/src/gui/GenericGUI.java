@@ -60,6 +60,7 @@ public class GenericGUI<T> {
         }
     }
 
+    //method for opening a popup window
     public void openPopupScreen(Stage popupStage, Application popupScreen) {
         try {
             popupScreen.start(popupStage);
