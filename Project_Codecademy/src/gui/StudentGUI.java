@@ -83,6 +83,7 @@ public class StudentGUI extends Application {
         // create the table
         TableView<Student> table = genericGUI.createTable(columns);
 
+
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
@@ -109,7 +110,7 @@ public class StudentGUI extends Application {
         studentGUI.setScene(scene);
 
         // eventhandler for adding student
-        addStudentButton.setOnAction((event) -> {
+        addStudentButton.setOnAction((addStudentEvent) -> {
 
             try {
 
@@ -118,33 +119,20 @@ public class StudentGUI extends Application {
 
                 controllerStudentStage.setTitle("Student toevoegen");
                 genericGUI.openPopupScreen(controllerStudentStage, controllerStudentGUI);
+
+                controllerStudentStage.setOnCloseRequest((closingEvent) -> {
+                    try {
+                        refreshTable(data, table, genericGUI, databaseConnection);
+                        System.out.println("gelukt");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
             } catch (Exception e) {
                 e.printStackTrace();
+
             }
-
-            // try {
-            // // System.out.println(databaseConnection.connectionIsOpen());
-
-            // String email = emailInput.getText();
-            // String name = nameInput.getText();
-            // String gender = genderInput.getText();
-            // String dateOfBirthString = dateOfBirthInput.getText();
-            // Date dateOfBirth = Date.valueOf(dateOfBirthString);
-
-            // Student student = new Student(email, name, gender, dateOfBirth);
-
-            // student.addStudent(student, databaseConnection);
-            // System.out.println(student);
-
-            // emailInput.setText(null);
-            // nameInput.setText(null);
-            // genderInput.setText(null);
-            // dateOfBirthInput.setText(null);
-
-            // refreshTable(data, table, genericGUI, databaseConnection);
-            // } catch (Exception e) {
-            // e.printStackTrace();
-            // }
         });
 
         // eventhandler for updating student

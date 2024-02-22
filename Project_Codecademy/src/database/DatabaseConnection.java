@@ -97,4 +97,14 @@ public class DatabaseConnection {
         }
     }
 
+    public void executeSQLInsertStatement(String query) {
+        if (query != null && connectionIsOpen()) {
+            try {
+                statement.executeUpdate(query);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

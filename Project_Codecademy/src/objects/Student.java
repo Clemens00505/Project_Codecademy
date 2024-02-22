@@ -38,12 +38,6 @@ public class Student {
         return dateOfBirth;
     }
 
-    // Zet een String om in Gender Enum zodat het in de gui class werkt
-    public static Gender stringToGender(String string) {
-        Gender toGender = Gender.valueOf(string);
-        return toGender;
-    }
-
     //method for adding student to database
     public void addStudent(Student student, DatabaseConnection databaseConnection) throws SQLException { 
         StringBuilder insertStmt = new StringBuilder();
@@ -59,12 +53,12 @@ public class Student {
         insertStmt.append("', '");
         insertStmt.append(student.getGender());
         insertStmt.append("', '");
-        insertStmt.append(student.getDateOfBirth());
+        insertStmt.append(student.getDateOfBirth().toString());
         insertStmt.append("')");
 
         System.out.println(insertStmt.toString());
 
-        databaseConnection.executeSQLStatement(insertStmt.toString());
+        databaseConnection.executeSQLInsertStatement(insertStmt.toString());
         databaseConnection.closeConnection();
     }
 
