@@ -7,10 +7,10 @@ import database.DatabaseConnection;
 public class Student {
     private String email;
     private String name;
-    private String gender;
+    private Gender gender;
     private Date dateOfBirth;
 
-    public Student(String email, String name, String gender, Date dateOfBirth) {
+    public Student(String email, String name, Gender gender, Date dateOfBirth) {
         this.email = email;
         this.name = name;
         this.gender = gender;
@@ -30,8 +30,8 @@ public class Student {
         return name;
     }
 
-     public String getGender() {
-        return gender.toString();
+     public Gender getGender() {
+        return gender;
     }
 
     public Date getDateOfBirth() {
