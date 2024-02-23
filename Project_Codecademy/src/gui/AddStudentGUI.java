@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import objects.Gender;
 import objects.Student;
 
-public class addStudentGUI extends Application {
+public class AddStudentGUI extends Application {
     @Override
     public void start(Stage addStudentGUI) throws Exception {
         DatabaseConnection databaseConnection = new DatabaseConnection();

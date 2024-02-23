@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 import objects.Gender;
 import objects.Student;
 
-public class editStudentGUI extends Application {
+public class EditStudentGUI extends Application {
     private Student student;
 
     public editStudentGUI(Student student) {
