@@ -12,12 +12,9 @@ import objects.Student;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -107,7 +104,7 @@ public class StudentGUI extends Application {
                 Stage addStudentStage = new Stage();
 
                 addStudentStage.setTitle("Student toevoegen");
-                genericGUI.openPopupScreen(addStudentStage, AddStudentGUI);
+                genericGUI.openPopupScreen(addStudentStage, addStudentGUI);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -128,46 +125,55 @@ public class StudentGUI extends Application {
                 Student student = new Student(email, name, gender, dateOfBirth);
 
                 try {
-                    ed
+                    EditStudentGUI editStudentGUI = new EditStudentGUI(student);
+                    Stage editStudentStage = new Stage();
+
+                    editStudentStage.setTitle("Student bewerken");
+                    genericGUI.openPopupScreen(editStudentStage, editStudentGUI);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 
             }
         });
 
-        // // eventhandler for deleting student
-        // deleteStudentButton.setOnAction((deleteStudentEvent) -> {
-        //     Student selectedStudent = table.getSelectionModel().getSelectedItem();
+        // eventhandler for deleting student
+        deleteStudentButton.setOnAction((deleteStudentEvent) -> {
+            Student selectedStudent = table.getSelectionModel().getSelectedItem();
 
-        //     if (selectedStudent != null) {
-        //         try {
-        //             String email = selectedStudent.getEmail();
-        //             String name = selectedStudent.getName();
-        //             String gender = selectedStudent.getGender();
-        //             Date dateOfBirth = selectedStudent.getDateOfBirth();
+            if (selectedStudent != null) {
+                try {
+                    String email = selectedStudent.getEmail();
+                    String name = selectedStudent.getName();
+                    Gender gender = selectedStudent.getGender();
+                    Date dateOfBirth = selectedStudent.getDateOfBirth();
 
-        //             Student student = new Student(email, name, gender, dateOfBirth);
+                    Student student = new Student(email, name, gender, dateOfBirth);
 
-        //             student.deleteStudent(email, databaseConnection);
-        //             refreshTable(data, table, genericGUI, databaseConnection);
+                    student.deleteStudent(email, databaseConnection);
+                    refreshTable(data, table, genericGUI, databaseConnection);
 
-        //             // refreshTable(databaseConnection, table);
-        //         } catch (Exception e) {
-        //             e.printStackTrace();
-        //         }
+                    refreshTable(data, table, genericGUI, databaseConnection);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-        //     }
-        // });
+            }
+        });
 
-        // // eventhandler for button to return to menu
-        // backButton.setOnAction((returnButtonEvent) -> {
-        //     CodecademyGUI codecademyGUI = new CodecademyGUI();
+        // eventhandler for button to return to menu
+        backButton.setOnAction((returnButtonEvent) -> {
+            CodecademyGUI codecademyGUI = new CodecademyGUI();
 
-        //     Stage codecademyStage = new Stage();
-        //     codecademyStage.setTitle("Menu");
+            Stage codecademyStage = new Stage();
+            codecademyStage.setTitle("Menu");
 
-        //     genericGUI.switchScreen(studentGUI, codecademyStage, codecademyGUI);
-        // });
+            genericGUI.switchScreen(studentGUI, codecademyStage, codecademyGUI);
+        });
+
+
+        //TODO: Methode uitwerken
 
         // // button to show students enrollments
         // showEnrollmentsButton.setOnAction((showStudentsEnrollmentsEvent) -> {

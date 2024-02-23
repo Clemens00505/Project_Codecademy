@@ -2,8 +2,6 @@ package gui;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 import database.DatabaseConnection;
 import javafx.application.Application;
@@ -24,7 +22,7 @@ import objects.Student;
 public class EditStudentGUI extends Application {
     private Student student;
 
-    public editStudentGUI(Student student) {
+    public EditStudentGUI(Student student) {
         this.student = student;
     }
 
@@ -32,10 +30,13 @@ public class EditStudentGUI extends Application {
     public void start(Stage editStudentGUI) throws Exception {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
-        editStudentGUI.setTitle("Student toevoegen");
+        // Stores old email. Used to update student 
+        String oldEmail = student.getEmail();
+
+        editStudentGUI.setTitle("Student bewerken");
 
         // buttons for saving and cancelling
-        Button saveButton = new Button("Opslaan");
+        Button confirmButton = new Button("Opslaan");
         Button cancelButton = new Button("Annuleren");
 
         // add textfields and combobox using the enum objects.Gender.java for input and
@@ -43,7 +44,11 @@ public class EditStudentGUI extends Application {
         TextField emailInput = new TextField(student.getEmail());
         TextField nameInput = new TextField(student.getName());
         ComboBox<Gender> genderInput = new ComboBox<>(FXCollections.observableArrayList(Gender.values()));
-        DatePicker dateOfBirthInput = new DatePicker(student.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        DatePicker dateOfBirthInput = new DatePicker(student.getDateOfBirth().toLocalDate());
+
+        //make dateOfBirth an gender not editable
+        genderInput.setDisable(true);
+        dateOfBirthInput.setDisable(true);
 
         genderInput.setValue(student.getGender());
 
@@ -65,7 +70,7 @@ public class EditStudentGUI extends Application {
         editStudentGUIGridPane.addRow(1, nameInputLabel, nameInput);
         editStudentGUIGridPane.addRow(2, genderInputLabel, genderInput);
         editStudentGUIGridPane.addRow(3, dateOfBirthInputLabel, dateOfBirthInput);
-        editStudentGUIGridPane.addRow(4, cancelButton, saveButton);
+        editStudentGUIGridPane.addRow(4, cancelButton, confirmButton);
 
         // gaps and padding in the gridpane
         editStudentGUIGridPane.setHgap(10);
@@ -82,8 +87,8 @@ public class EditStudentGUI extends Application {
             editStudentGUI.close();
         });
 
-        // If saveButton is pressed, the student is saved to the databse
-        saveButton.setOnAction((event) -> {
+        // If confirmButton is pressed, the student is edited in the databse
+        confirmButton.setOnAction((event) -> {
             try {
                 String email = emailInput.getText();
                 String name = nameInput.getText();
@@ -99,7 +104,7 @@ public class EditStudentGUI extends Application {
                 } else {
                     Student student = new Student(email, name, gender, dateOfBirth);
 
-                    student.addStudent(student, databaseConnection);
+                    student.updateStudent(oldEmail, student, databaseConnection);
 
                     editStudentGUI.close();
                 }

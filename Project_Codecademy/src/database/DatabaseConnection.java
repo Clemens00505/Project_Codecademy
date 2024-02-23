@@ -97,7 +97,7 @@ public class DatabaseConnection {
         }
     }
 
-    public void executeSQLInsertStatement(String query) {
+    public void executeSQLInsertUpdateDeleteStatement(String query) {
         if (query != null && connectionIsOpen()) {
             try {
                 statement.executeUpdate(query);
