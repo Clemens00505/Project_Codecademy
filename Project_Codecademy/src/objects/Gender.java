@@ -1,9 +1,9 @@
 package objects;
 
 public enum Gender {
-    MAN("man"),
-    VROUW("vrouw"),
-    ANDERS("anders");
+    MAN("MAN"),
+    VROUW("VROUW"),
+    ANDERS("ANDERS");
 
     private final String text;
 
@@ -17,9 +17,11 @@ public enum Gender {
 
     //method to change text from database to Gender type
     public static Gender fromString(String text) {
-        for (Gender gender : Gender.values()) {
-            if (gender.text.equalsIgnoreCase(text)) {
-                return gender;
+        if (text != null) {
+            for (Gender gender : Gender.values()) {
+                if (text.equalsIgnoreCase(gender.toString())) {
+                    return gender;
+                }
             }
         }
         throw new IllegalArgumentException("No constant with text " + text + " found");

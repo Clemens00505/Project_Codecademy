@@ -47,11 +47,12 @@ public class AddStudentGUI extends Application {
         // times to get to their date of birth
         LocalDate defaultDate = LocalDate.now().minusYears(20);
         dateOfBirthInput.setValue(defaultDate);
+        
+        genderInput.setValue(Gender.values()[0]);
 
         // add prompttext
         emailInput.setPromptText("abcdefg@gmail.com");
         nameInput.setPromptText("abcdefg");
-        genderInput.setPromptText("MAN");
         dateOfBirthInput.setPromptText("Geboortedatum");
         postalCodeInput.setPromptText("ABCD12");
         houseNumberInput.setPromptText("0");

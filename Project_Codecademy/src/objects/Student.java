@@ -88,6 +88,8 @@ public class Student {
         insertStmt.append("', '");
         insertStmt.append(student.getCountry());
         insertStmt.append("')");
+        
+        System.out.println(insertStmt.toString());
 
         databaseConnection.executeSQLInsertUpdateDeleteStatement(insertStmt.toString());
         databaseConnection.closeConnection();
