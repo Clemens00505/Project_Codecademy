@@ -55,11 +55,21 @@ public class StudentGUI extends Application {
         TableColumn<Student, String> nameCol = new TableColumn<>("Naam");
         TableColumn<Student, Gender> genderCol = new TableColumn<>("Gender");
         TableColumn<Student, Date> dateOfBirthCol = new TableColumn<>("Geboortedatum");
+        TableColumn<Student, String> postalCodeCol = new TableColumn<>("Postcode");
+        TableColumn<Student, Integer> houseNumberCol = new TableColumn<>("Huisnummer");
+        TableColumn<Student, String> cityCol = new TableColumn<>("Woonplaats");
+        TableColumn<Student, String> countryCol = new TableColumn<>("Land");
 
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
         dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+        postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        houseNumberCol.setCellValueFactory(new PropertyValueFactory<>("houseNumber"));
+        cityCol.setCellValueFactory(new PropertyValueFactory<>("city"));
+        countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
+
+
 
         // add columns to a list
         List<TableColumn<Student, ?>> columns = new ArrayList<>();
@@ -67,6 +77,10 @@ public class StudentGUI extends Application {
         columns.add(nameCol);
         columns.add(genderCol);
         columns.add(dateOfBirthCol);
+        columns.add(postalCodeCol);
+        columns.add(houseNumberCol);
+        columns.add(cityCol);
+        columns.add(countryCol);
 
         // create the table
         TableView<Student> table = genericGUI.createTable(columns);
@@ -83,14 +97,14 @@ public class StudentGUI extends Application {
         // displays data in the table
         table.setItems(data);
 
-        table.setPrefWidth(450);
+        table.setPrefWidth(700);
 
         // placing everything in the screen
         // put buttons in a vbox
         VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, confirmButton,
                 showEnrollmentsButton, backButton);
         VBox rightSide = new VBox(buttons);
-        rightSide.setPrefWidth(250);
+        rightSide.setPrefWidth(200);
         HBox box = new HBox(table, rightSide);
 
         Scene scene = new Scene(box);
@@ -121,8 +135,12 @@ public class StudentGUI extends Application {
                 String name = selectedStudent.getName();
                 Gender gender = selectedStudent.getGender();
                 Date dateOfBirth = selectedStudent.getDateOfBirth();
+                String postalCode = selectedStudent.getPostalCode();
+                Integer houseNumber = selectedStudent.getHouseNumber();
+                String city = selectedStudent.getCity();
+                String country = selectedStudent.getCountry();
 
-                Student student = new Student(email, name, gender, dateOfBirth);
+                Student student = new Student(email, name, gender, dateOfBirth, postalCode, houseNumber, city, country);
 
                 try {
                     EditStudentGUI editStudentGUI = new EditStudentGUI(student);
@@ -148,8 +166,12 @@ public class StudentGUI extends Application {
                     String name = selectedStudent.getName();
                     Gender gender = selectedStudent.getGender();
                     Date dateOfBirth = selectedStudent.getDateOfBirth();
+                    String postalCode = selectedStudent.getPostalCode();
+                    Integer houseNumber = selectedStudent.getHouseNumber();
+                    String city = selectedStudent.getCity();
+                    String country = selectedStudent.getCountry();
 
-                    Student student = new Student(email, name, gender, dateOfBirth);
+                    Student student = new Student(email, name, gender, dateOfBirth, postalCode, houseNumber, city, country);
 
                     student.deleteStudent(email, databaseConnection);
                     refreshTable(data, table, genericGUI, databaseConnection);
