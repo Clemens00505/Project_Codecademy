@@ -1,8 +1,11 @@
 package gui;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Student;
 
@@ -17,25 +20,31 @@ public class ChooseContentGUI extends Application {
 
         chooseContentGUI.setTitle("Content");
 
-        Button allContentButton = new Button("Alle content");
-        Button webcastButton = new Button("Alle webcasts");
+        Label text = new Label("Welke content wil je bekijken?");
+
+        //buttons for navigating
+        Button coursesButton = new Button("Cursussen");
+        Button modulesButton = new Button("Modules");
+        Button webcastsButton = new Button("Webcasts");
         Button backButton = new Button("Terug");
 
-        Scene scene = new Scene(backButton);
+        //setting equal width for all buttons
+        int equalWidth = 175;
+        coursesButton.setPrefWidth(equalWidth);
+        modulesButton.setPrefWidth(equalWidth);
+        webcastsButton.setPrefWidth(equalWidth);
+        backButton.setPrefWidth(equalWidth);
+
+        VBox buttons = new VBox(text, coursesButton, modulesButton, webcastsButton, backButton);
+
+        buttons.setPadding(new Insets(15));
+
+        Scene scene = new Scene(buttons);
 
         chooseContentGUI.setScene(scene);
         chooseContentGUI.show();
-
-        allContentButton.setOnAction((allContentButtonEvent) -> {
-            AllContentGUI allContentGUI = new AllContentGUI();
-
-            Stage allContentStage = new Stage();
-            allContentStage.setTitle("Alle content");
-
-            genericGUI.switchScreen(chooseContentGUI, allContentStage, allContentGUI);
-        });
         
-        webcastButton.setOnAction((webcastButtonEvent) -> {
+        webcastsButton.setOnAction((webcastButtonEvent) -> {
             WebcastGUI webcastGUI = new WebcastGUI();
 
             Stage webcastStage = new Stage();
