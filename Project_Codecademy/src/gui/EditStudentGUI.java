@@ -28,13 +28,13 @@ public class EditStudentGUI extends Application {
     }
 
     @Override
-    public void start(Stage editStudentGUI) throws Exception {
+    public void start(Stage editStudentStage) throws Exception {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         // Stores old email. Used to update student 
         String oldEmail = student.getEmail();
 
-        editStudentGUI.setTitle("Student bewerken");
+        editStudentStage.setTitle("Student bewerken");
 
         // buttons for saving and cancelling
         Button confirmButton = new Button("Opslaan");
@@ -106,12 +106,12 @@ public class EditStudentGUI extends Application {
 
         Scene scene = new Scene(editStudentGUIGridPane, 300, 350);
 
-        editStudentGUI.setScene(scene);
-        editStudentGUI.show();
+        editStudentStage.setScene(scene);
+        editStudentStage.show();
 
         // If cancelButton is pressed, the screen will be closed
         cancelButton.setOnAction((event) -> {
-            editStudentGUI.close();
+            editStudentStage.close();
         });
 
         // If confirmButton is pressed, the student is edited in the databse
@@ -137,7 +137,7 @@ public class EditStudentGUI extends Application {
 
                     student.updateStudent(oldEmail, student, databaseConnection);
 
-                    editStudentGUI.close();
+                    editStudentStage.close();
                 }
 
 

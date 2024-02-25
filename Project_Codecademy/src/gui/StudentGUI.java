@@ -200,6 +200,8 @@ public class StudentGUI extends Application {
             genericGUI.switchScreen(studentGUI, codecademyStage, codecademyGUI);
         });
 
+
+        //eventhandler for refreshbutton
         refreshButton.setOnAction((refreshTableEvent) -> {
             try {
                 refreshTable(data, table, genericGUI, databaseConnection);

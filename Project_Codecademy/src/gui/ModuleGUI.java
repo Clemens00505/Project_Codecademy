@@ -2,6 +2,7 @@ package gui;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +24,9 @@ import objects.Student;
 public class ModuleGUI extends Application {
 
     @Override
-    public void start(Stage modulesStage) throws Exception {
-        modulesStage.show();
-        modulesStage.setTitle("Modules");
+    public void start(Stage moduleStage) throws Exception {
+        moduleStage.show();
+        moduleStage.setTitle("Modules");
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
         GenericGUI<Module> genericGUI = new GenericGUI<>();
@@ -107,8 +108,46 @@ public class ModuleGUI extends Application {
 
         Scene scene = new Scene(box);
 
-        modulesStage.setScene(scene);
+        moduleStage.setScene(scene);
 
+        // eventhandler for adding module
+        addModuleButton.setOnAction((addModuleEvent) -> {
+            try {
+                AddModuleGUI addModuleGUI = new AddModuleGUI();
+                Stage addModuleStage = new Stage();
+
+                addModuleStage.setTitle("Module toevoegen");
+                genericGUI.openPopupScreen(addModuleStage, addModuleGUI);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        });
+
+        //eventhandler for refreshing table
+        refreshButton.setOnAction((refreshButtonEvent) -> {
+            try {
+                refreshTable(data, table, genericGUI, databaseConnection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    // method for refreshing the table
+    private void refreshTable(ObservableList<Module> data, TableView<Module> table, GenericGUI<Module> genericGUI,
+            DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
+        databaseConnection.connectionIsOpen();
+
+        data = genericGUI.getData(resultSet, Module.class);
+
+        // displays new data in the table
+        table.setItems(data);
+        table.refresh();
     }
 
 }

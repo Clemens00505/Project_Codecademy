@@ -3,6 +3,7 @@ package gui;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -20,12 +21,13 @@ import javafx.stage.Stage;
 import objects.Gender;
 import objects.Student;
 
-public class AddStudentGUI extends Application {
+public class AddModuleGUI extends Application {
+
     @Override
-    public void start(Stage addStudentStage) throws Exception {
+    public void start(Stage addModuleStage) throws Exception {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
-        addStudentStage.setTitle("Student toevoegen");
+        addModuleStage.setTitle("Module toevoegen");
 
         // buttons for saving and cancelling
         Button saveButton = new Button("Opslaan");
@@ -81,30 +83,30 @@ public class AddStudentGUI extends Application {
         Label countryInputLabel = new Label("Land:");
 
         // Create gridpane with a layout
-        GridPane addStudentGUIGridPane = new GridPane();
-        addStudentGUIGridPane.addRow(0, emailInputLabel, emailInput);
-        addStudentGUIGridPane.addRow(1, nameInputLabel, nameInput);
-        addStudentGUIGridPane.addRow(2, genderInputLabel, genderInput);
-        addStudentGUIGridPane.addRow(3, dateOfBirthInputLabel, dateOfBirthInput);
-        addStudentGUIGridPane.addRow(4, postalCodeInputLabel, postalCodeInput);
-        addStudentGUIGridPane.addRow(5, houseNumberInputLabel, houseNumberInput);
-        addStudentGUIGridPane.addRow(6, cityInputLabel, cityInput);
-        addStudentGUIGridPane.addRow(7, countryInputLabel, countryInput);
-        addStudentGUIGridPane.addRow(8, cancelButton, saveButton);
+        GridPane addModuleGUIGridPane = new GridPane();
+        addModuleGUIGridPane.addRow(0, emailInputLabel, emailInput);
+        addModuleGUIGridPane.addRow(1, nameInputLabel, nameInput);
+        addModuleGUIGridPane.addRow(2, genderInputLabel, genderInput);
+        addModuleGUIGridPane.addRow(3, dateOfBirthInputLabel, dateOfBirthInput);
+        addModuleGUIGridPane.addRow(4, postalCodeInputLabel, postalCodeInput);
+        addModuleGUIGridPane.addRow(5, houseNumberInputLabel, houseNumberInput);
+        addModuleGUIGridPane.addRow(6, cityInputLabel, cityInput);
+        addModuleGUIGridPane.addRow(7, countryInputLabel, countryInput);
+        addModuleGUIGridPane.addRow(8, cancelButton, saveButton);
 
         // gaps and padding in the gridpane
-        addStudentGUIGridPane.setHgap(10);
-        addStudentGUIGridPane.setVgap(10);
-        addStudentGUIGridPane.setPadding(new javafx.geometry.Insets(10));
+        addModuleGUIGridPane.setHgap(10);
+        addModuleGUIGridPane.setVgap(10);
+        addModuleGUIGridPane.setPadding(new javafx.geometry.Insets(10));
 
-        Scene scene = new Scene(addStudentGUIGridPane, 300, 350);
+        Scene scene = new Scene(addModuleGUIGridPane, 300, 350);
 
-        addStudentStage.setScene(scene);
-        addStudentStage.show();
+        addModuleStage.setScene(scene);
+        addModuleStage.show();
 
         // If cancelButton is pressed, the screen will be closed
         cancelButton.setOnAction((event) -> {
-            addStudentStage.close();
+            addModuleStage.close();
         });
 
         // If saveButton is pressed, the student is saved to the databse
@@ -130,7 +132,7 @@ public class AddStudentGUI extends Application {
 
                     student.addStudent(student, databaseConnection);
 
-                    addStudentStage.close();
+                    addModuleStage.close();
                 }
 
 
@@ -139,4 +141,6 @@ public class AddStudentGUI extends Application {
             }
         });
     }
+    
+
 }
