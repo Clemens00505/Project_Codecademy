@@ -68,8 +68,6 @@ public class StudentGUI extends Application {
         cityCol.setCellValueFactory(new PropertyValueFactory<>("city"));
         countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
 
-
-
         // add columns to a list
         List<TableColumn<Student, ?>> columns = new ArrayList<>();
         columns.add(emailCol);
@@ -96,7 +94,14 @@ public class StudentGUI extends Application {
         // displays data in the table
         table.setItems(data);
 
-        table.setPrefWidth(700);
+
+        //Gives the table and columns a good size on the screen
+        table.setPrefWidth(950);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        table.getColumns().forEach(column -> {
+            column.setPrefWidth(TableView.USE_COMPUTED_SIZE); 
+        });
 
         // placing everything in the screen
         // put buttons in a vbox

@@ -8,10 +8,14 @@ import java.util.List;
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Status;
 import objects.Student;
@@ -25,6 +29,22 @@ public class ModuleGUI extends Application {
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
         GenericGUI<Module> genericGUI = new GenericGUI<>();
+
+        //create buttons
+        Button refreshButton = new Button("Tabel verversen");
+        Button addModuleButton = new Button("module toevoegen");
+        Button editModuleButton = new Button("module bewerken");
+        Button deleteModuleButton = new Button("module verwijderen");
+        Button confirmButton = new Button("Aanpassing bevestigen");
+        Button backButton = new Button("Terug naar hoofdmenu");
+
+        int equalWidth = 175;
+        refreshButton.setMinWidth(equalWidth);
+        addModuleButton.setMinWidth(equalWidth);
+        editModuleButton.setMinWidth(equalWidth);
+        deleteModuleButton.setMinWidth(equalWidth);
+        confirmButton.setMinWidth(equalWidth);
+        backButton.setMinWidth(equalWidth);
 
         //create columns for the table
         TableColumn<Module, String> titleCol = new TableColumn<>("Titel");
@@ -67,12 +87,27 @@ public class ModuleGUI extends Application {
         // displays data in the table
         table.setItems(data);
 
-        table.setPrefWidth(700);
+        //Gives the table and columns a good size on the screen
+        table.setPrefWidth(950);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        Scene scene = new Scene(table);
+        table.getColumns().forEach(column -> {
+            column.setPrefWidth(TableView.USE_COMPUTED_SIZE); 
+        });
+
+        // placing everything in the screen
+        // put buttons in a vbox
+        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton, confirmButton, backButton);
+
+        buttons.setPadding(new Insets(10));
+
+        VBox rightSide = new VBox(buttons);
+        rightSide.setPrefWidth(200);
+        HBox box = new HBox(table, rightSide);
+
+        Scene scene = new Scene(box);
 
         modulesStage.setScene(scene);
-
 
     }
 
