@@ -194,50 +194,6 @@ public class StudentGUI extends Application {
             genericGUI.switchScreen(studentGUI, codecademyStage, codecademyGUI);
         });
 
-
-        //TODO: Methode uitwerken
-
-        // // button to show students enrollments
-        // showEnrollmentsButton.setOnAction((showStudentsEnrollmentsEvent) -> {
-
-        //     Student selectedStudent = table.getSelectionModel().getSelectedItem();
-
-        //     if (selectedStudent != null) {
-        //         try {
-        //             String email = selectedStudent.getEmail();
-        //             String name = selectedStudent.getName();
-        //             String gender = selectedStudent.getGender();
-        //             Date dateOfBirth = selectedStudent.getDateOfBirth();
-
-        //             Student student = new Student(email, name, gender, dateOfBirth);
-
-        //             EnrollmentGUI enrollmentGUI = new EnrollmentGUI(student);
-        //             Stage enrollmentStage = new Stage();
-        //             enrollmentStage.setTitle("Inschrijvingen");
-
-        //             try {
-        //                 enrollmentGUI.start(enrollmentStage);
-
-        //                 studentGUI.close();
-        //             } catch (Exception e) {
-        //                 e.printStackTrace();
-        //             }
-
-        //         } catch (Exception e) {
-        //             e.printStackTrace();
-        //         }
-        //     } else {
-
-        //         // Error message that shows when user presses button for enrollments without
-        //         // selecting a student
-        //         Alert errorAlert = new Alert(AlertType.ERROR);
-        //         errorAlert.setHeaderText("Geen student geselecteerd");
-        //         errorAlert.setContentText("Selecteer een student om deze optie te gebruiken");
-        //         errorAlert.showAndWait();
-        //     }
-
-        // });
-
         refreshButton.setOnAction((refreshTableEvent) -> {
             try {
                 refreshTable(data, table, genericGUI, databaseConnection);
