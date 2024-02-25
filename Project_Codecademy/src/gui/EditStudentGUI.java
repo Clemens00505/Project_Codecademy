@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -45,6 +46,10 @@ public class EditStudentGUI extends Application {
         TextField nameInput = new TextField(student.getName());
         ComboBox<Gender> genderInput = new ComboBox<>(FXCollections.observableArrayList(Gender.values()));
         DatePicker dateOfBirthInput = new DatePicker(student.getDateOfBirth().toLocalDate());
+        TextField postalCodeInput = new TextField(student.getPostalCode());
+        Spinner<Integer> houseNumberInput = new Spinner<>(1, 999, student.getHouseNumber());
+        TextField cityInput = new TextField(student.getCity());
+        TextField countryInput = new TextField(student.getCountry());
 
         //make dateOfBirth an gender not editable
         genderInput.setDisable(true);
@@ -55,29 +60,51 @@ public class EditStudentGUI extends Application {
         // add prompttext
         emailInput.setPromptText("abcdefg@gmail.com");
         nameInput.setPromptText("abcdefg");
-        genderInput.setPromptText("MAN");
         dateOfBirthInput.setPromptText("Geboortedatum");
+        postalCodeInput.setPromptText("ABCD12");
+        houseNumberInput.setPromptText("0");
+        cityInput.setPromptText("Woonplaats");
+        countryInput.setPromptText("Land");
 
         // labels for input
         Label emailInputLabel = new Label("Email:");
         Label nameInputLabel = new Label("Naam:");
         Label genderInputLabel = new Label("Geslacht:");
         Label dateOfBirthInputLabel = new Label("Geboortedatum:");
+        Label postalCodeInputLabel = new Label("Postcode:");
+        Label houseNumberInputLabel = new Label("Huisnummer:");
+        Label cityInputLabel = new Label("Woonplaats:");
+        Label countryInputLabel = new Label("Land:");
+
+        //sets equal width for input fields
+        int equalWidth = 175;
+        emailInput.setMinWidth(equalWidth);
+        nameInput.setMinWidth(equalWidth);
+        genderInput.setMinWidth(equalWidth);
+        dateOfBirthInput.setMinWidth(equalWidth);
+        postalCodeInput.setMinWidth(equalWidth);
+        houseNumberInput.setMinWidth(equalWidth);
+        cityInput.setMinWidth(equalWidth);
+        countryInput.setMinWidth(equalWidth);
 
         // Create gridpane with a layout
         GridPane editStudentGUIGridPane = new GridPane();
-        editStudentGUIGridPane.addRow(0, emailInputLabel, emailInput);
         editStudentGUIGridPane.addRow(1, nameInputLabel, nameInput);
+        editStudentGUIGridPane.addRow(0, emailInputLabel, emailInput);
         editStudentGUIGridPane.addRow(2, genderInputLabel, genderInput);
         editStudentGUIGridPane.addRow(3, dateOfBirthInputLabel, dateOfBirthInput);
-        editStudentGUIGridPane.addRow(4, cancelButton, confirmButton);
+        editStudentGUIGridPane.addRow(4, postalCodeInputLabel, postalCodeInput);
+        editStudentGUIGridPane.addRow(5, houseNumberInputLabel, houseNumberInput);
+        editStudentGUIGridPane.addRow(6, cityInputLabel, cityInput);
+        editStudentGUIGridPane.addRow(7, countryInputLabel, countryInput);
+        editStudentGUIGridPane.addRow(8, cancelButton, confirmButton);
 
         // gaps and padding in the gridpane
         editStudentGUIGridPane.setHgap(10);
         editStudentGUIGridPane.setVgap(10);
         editStudentGUIGridPane.setPadding(new javafx.geometry.Insets(10));
 
-        Scene scene = new Scene(editStudentGUIGridPane, 300, 200);
+        Scene scene = new Scene(editStudentGUIGridPane, 300, 350);
 
         editStudentGUI.setScene(scene);
         editStudentGUI.show();
@@ -94,6 +121,10 @@ public class EditStudentGUI extends Application {
                 String name = nameInput.getText();
                 Gender gender = genderInput.getValue();
                 Date dateOfBirth = Date.valueOf(dateOfBirthInput.getValue());
+                String postalCode = postalCodeInput.getText();
+                int houseNumber = houseNumberInput.getValue();
+                String city = cityInput.getText();
+                String country = countryInput.getText();
 
                 //controleert of de velden ingevuld zijn
                 if (email.length() == 0 || name.length() == 0) {
@@ -102,7 +133,7 @@ public class EditStudentGUI extends Application {
                     errorAlert.setContentText("Vul alle gegevens in om een student toe te voegen");
                     errorAlert.showAndWait();
                 } else {
-                    Student student = new Student(email, name, gender, dateOfBirth);
+                    Student student = new Student(email, name, gender, dateOfBirth, postalCode, houseNumber, city, country);
 
                     student.updateStudent(oldEmail, student, databaseConnection);
 

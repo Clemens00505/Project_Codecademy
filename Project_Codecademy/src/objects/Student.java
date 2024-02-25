@@ -116,12 +116,14 @@ public class Student {
         StringBuilder updateStmt = new StringBuilder();
         updateStmt.append("UPDATE Student SET ");
         updateStmt.append("Email = '" + student.getEmail() + "', ");
-        updateStmt.append("Name = '" + student.getName() + "' ");
+        updateStmt.append("Name = '" + student.getName() + "', ");
         updateStmt.append("PostalCode = '" + student.getPostalCode() + "', ");
         updateStmt.append("HouseNumber = " + student.getHouseNumber() + ", ");
         updateStmt.append("City = '" + student.getCity() + "', ");
-        updateStmt.append("Country = '" + student.getCountry() + "', ");
+        updateStmt.append("Country = '" + student.getCountry() + "' ");
         updateStmt.append("WHERE Email = '" + oldEmail + "'");
+
+        System.out.println(updateStmt.toString());
 
         databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
         databaseConnection.closeConnection();
