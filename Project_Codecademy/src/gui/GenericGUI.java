@@ -21,7 +21,7 @@ public class GenericGUI<T> {
         return table;
     }
 
-    // method to get data from
+    // method to get data from database
     public ObservableList<T> getData(ResultSet resultSet, Class<T> usedClass) throws SQLException {
         ObservableList<T> data = FXCollections.observableArrayList();
         try {
