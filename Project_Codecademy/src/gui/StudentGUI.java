@@ -11,6 +11,7 @@ import objects.Gender;
 import objects.Student;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -36,7 +37,6 @@ public class StudentGUI extends Application {
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
         Button confirmButton = new Button("Aanpassing bevestigen");
-        Button showEnrollmentsButton = new Button("Inschrijvingen");
         Button backButton = new Button("Terug naar hoofdmenu");
 
         int equalWidth = 175;
@@ -45,7 +45,6 @@ public class StudentGUI extends Application {
         editStudentButton.setMinWidth(equalWidth);
         deleteStudentButton.setMinWidth(equalWidth);
         confirmButton.setMinWidth(equalWidth);
-        showEnrollmentsButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -101,8 +100,10 @@ public class StudentGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, confirmButton,
-                showEnrollmentsButton, backButton);
+        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, confirmButton, backButton);
+
+        buttons.setPadding(new Insets(10));
+
         VBox rightSide = new VBox(buttons);
         rightSide.setPrefWidth(200);
         HBox box = new HBox(table, rightSide);
