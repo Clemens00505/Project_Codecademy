@@ -43,6 +43,15 @@ public class ChooseContentGUI extends Application {
 
         chooseContentGUI.setScene(scene);
         chooseContentGUI.show();
+
+        modulesButton.setOnAction((modulesButtonEvent) -> {
+            ModuleGUI modulesGUI = new ModuleGUI();
+
+            Stage moduleStage = new Stage();
+            moduleStage.setTitle("Modules");
+
+            genericGUI.switchScreen(chooseContentGUI, moduleStage, modulesGUI);
+        });
         
         webcastsButton.setOnAction((webcastButtonEvent) -> {
             WebcastGUI webcastGUI = new WebcastGUI();
