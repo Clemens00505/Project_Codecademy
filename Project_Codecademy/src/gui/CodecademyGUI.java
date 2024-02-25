@@ -40,7 +40,7 @@ public class CodecademyGUI extends Application {
         });
 
         contentButton.setOnAction((event) -> {
-            ContentGUI contentGUI = new ContentGUI();
+            ChooseContentGUI contentGUI = new ChooseContentGUI();
 
             Stage contentStage = new Stage();
             contentStage.setTitle("Content");
