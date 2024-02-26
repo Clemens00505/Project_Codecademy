@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -157,6 +158,36 @@ public class ModuleGUI extends Application {
             } catch (Exception e) {
                 e.printStackTrace();
 
+            }
+        });
+
+        //eventhandler for editing a module
+        editModuleButton.setOnAction((editModuleEvent) -> {
+            ContentModule selectedModule = table.getSelectionModel().getSelectedItem();
+
+            if (selectedModule != null) {
+                String title = selectedModule.getTitle();
+                int version = selectedModule.getVersion();
+                String description = selectedModule.getDescription();
+                String contactPersonName = selectedModule.getContactPersonName();
+                String contactPersonMail = selectedModule.getContactPersonMail();
+                Date publicationDate = selectedModule.getPublicationDate();
+                Status status = selectedModule.getStatus();
+                int indexNumber = selectedModule.getIndexNumber();
+
+                ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
+
+                try {
+                    EditModuleGUI editModuleGUI = new EditModuleGUI(contentModule);
+                    Stage editModuleStage = new Stage();
+
+                    editModuleStage.setTitle("Module bewerken");
+                    genericGUI.openPopupScreen(editModuleStage, editModuleGUI);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
             }
         });
 

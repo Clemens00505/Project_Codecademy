@@ -41,7 +41,7 @@ public class EditStudentGUI extends Application {
         Button cancelButton = new Button("Annuleren");
 
         // add textfields and combobox using the enum objects.Gender.java for input and
-        // datepicker for dateofbirth
+        // datepicker for publicationDate
         TextField emailInput = new TextField(student.getEmail());
         TextField nameInput = new TextField(student.getName());
         ComboBox<Gender> genderInput = new ComboBox<>(FXCollections.observableArrayList(Gender.values()));
@@ -60,7 +60,6 @@ public class EditStudentGUI extends Application {
         // add prompttext
         emailInput.setPromptText("abcdefg@gmail.com");
         nameInput.setPromptText("abcdefg");
-        dateOfBirthInput.setPromptText("Geboortedatum");
         postalCodeInput.setPromptText("ABCD12");
         houseNumberInput.setPromptText("0");
         cityInput.setPromptText("Woonplaats");
@@ -130,7 +129,7 @@ public class EditStudentGUI extends Application {
                 if (email.length() == 0 || name.length() == 0) {
                     Alert errorAlert = new Alert(AlertType.ERROR);
                     errorAlert.setHeaderText("Niet alles ingevuld");
-                    errorAlert.setContentText("Vul alle gegevens in om een student toe te voegen");
+                    errorAlert.setContentText("Vul alle gegevens in om de student te bewerken");
                     errorAlert.showAndWait();
                 } else {
                     Student student = new Student(email, name, gender, dateOfBirth, postalCode, houseNumber, city, country);

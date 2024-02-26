@@ -32,8 +32,8 @@ public class AddModuleGUI extends Application {
         Button saveButton = new Button("Opslaan");
         Button cancelButton = new Button("Annuleren");
 
-        // add textfields and combobox using the enum objects.Gender.java for input and
-        // datepicker for dateofbirth
+        // add textfields and combobox using the enum objects.Status.java for input and
+        // datepicker for publicationDate
         TextField titleInput = new TextField();
         Spinner<Integer> versionInput = new Spinner<>(1, 999, 1);
         TextField descriptionInput = new TextField();
@@ -51,6 +51,7 @@ public class AddModuleGUI extends Application {
         descriptionInput.setPromptText("Beschrijving");
         contactPersonNameInput.setPromptText("Naam contactpersoon");
         contactPersonMailInput.setPromptText("Email contactpersoon");
+        publicationDateInput.setPromptText("Publicatiedatum");
         indexNumberInput.setPromptText("1");
 
         //sets equal width for input

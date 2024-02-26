@@ -15,8 +15,9 @@ public class ContentModule {
     private Status status;
     private int indexNumber;
 
-    //constructor for a ContentModule
-    public ContentModule(String title, int version, String description, String contactPersonName, String contactPersonMail,
+    // constructor for a ContentModule
+    public ContentModule(String title, int version, String description, String contactPersonName,
+            String contactPersonMail,
             Date publicationDate, Status status, int indexNumber) {
         this.title = title;
         this.version = version;
@@ -28,12 +29,11 @@ public class ContentModule {
         this.indexNumber = indexNumber;
     }
 
-    
     public ContentModule() {
 
     }
 
-    //Getters
+    // Getters
     public String getTitle() {
         return title;
     }
@@ -66,14 +66,15 @@ public class ContentModule {
         return indexNumber;
     }
 
-     // method for adding module to database
+    // method for adding module to database
     public void addModule(ContentModule contentModule, DatabaseConnection databaseConnection) throws SQLException {
         StringBuilder insertStmt = new StringBuilder();
 
         databaseConnection.openConnection();
 
         // stringbuilder used for adding a module
-        insertStmt.append("INSERT INTO Module (Title, Version, Description, ContactPersonName, ContactPersonMail, PublicationDate, Status, IndexNumber) ");
+        insertStmt.append(
+                "INSERT INTO Module (Title, Version, Description, ContactPersonName, ContactPersonMail, PublicationDate, Status, IndexNumber) ");
         insertStmt.append("VALUES ('");
         insertStmt.append(contentModule.getTitle());
         insertStmt.append("', '");
@@ -91,10 +92,32 @@ public class ContentModule {
         insertStmt.append("', '");
         insertStmt.append(contentModule.getIndexNumber());
         insertStmt.append("')");
-        
+
         System.out.println(insertStmt.toString());
 
         databaseConnection.executeSQLInsertUpdateDeleteStatement(insertStmt.toString());
+        databaseConnection.closeConnection();
+    }
+
+    // method to update student information in database
+    public void updateModule(String oldTitle, ContentModule contentModule, DatabaseConnection databaseConnection)
+            throws SQLException {
+        databaseConnection.openConnection();
+
+        StringBuilder updateStmt = new StringBuilder();
+        updateStmt.append("UPDATE Module SET ");
+        updateStmt.append("Title = '" + contentModule.getTitle() + "', ");
+        updateStmt.append("Description = '" + contentModule.getDescription() + "', ");
+        updateStmt.append("ContactPersonName = '" + contentModule.getContactPersonName() + "', ");
+        updateStmt.append("ContactPersonMail = '" + contentModule.getContactPersonMail() + "', ");
+        updateStmt.append("Status = '" + contentModule.getStatus() + "', ");
+        updateStmt.append("IndexNumber = '" + contentModule.getIndexNumber() + "' ");
+        updateStmt.append("WHERE Title = '" + oldTitle + "' ");
+        updateStmt.append("AND Version = " + contentModule.getVersion());
+
+        System.out.println(updateStmt.toString());
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
         databaseConnection.closeConnection();
     }
 }

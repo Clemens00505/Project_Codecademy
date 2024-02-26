@@ -35,8 +35,8 @@ public class GenericGUI<T> {
                     field.setAccessible(true);
                     Object value = resultSet.getObject(fieldName);
 
+                    //If statements to check for enum types
                     if (field.getType() == Gender.class) { 
-                        // If field type is Gender enum, convert text to Gender enum
                         value = Gender.fromString((String) value);
                     }
 
