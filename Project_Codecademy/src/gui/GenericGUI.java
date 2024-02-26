@@ -16,47 +16,6 @@ import objects.Status;
 
 public class GenericGUI<T> {
 
-    // public static <T> TableView<T> createTable(List<TableColumn<T, ?>> columns) {
-    //     TableView<T> table = new TableView<>();
-    //     table.getColumns().addAll(columns);
-    //     return table;
-    // }
-
-    // public static <T> ObservableList<T> getData(ResultSet resultSet, Class<T> type) throws SQLException {
-    //     ObservableList<T> data = FXCollections.observableArrayList();
-
-    //     try {
-    //         while (resultSet.next()) {
-    //             T instance = type.getDeclaredConstructor().newInstance();
-    //             setDataFromResultSet(instance, resultSet);
-    //             data.add(instance);
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     return data;
-    // }
-
-    // // Method to set data from ResultSet to object
-    // private static <T> void setDataFromResultSet(T instance, ResultSet resultSet) {
-    //     try {
-    //         for (Field field : instance.getClass().getDeclaredFields()) {
-    //             field.setAccessible(true);
-    //             String fieldName = field.getName();
-    //             Class<?> fieldType = field.getType();
-    //             if (fieldType.isEnum()) {
-    //                 Object value = fieldType.getMethod("fromString", String.class).invoke(null, resultSet.getString(fieldName));
-    //                 field.set(instance, value);
-    //             } else {
-    //                 field.set(instance, resultSet.getObject(fieldName));
-    //             }
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
     public TableView<T> createTable(List<TableColumn<T, ?>> columns) {
         TableView<T> table = new TableView<>();
         table.getColumns().addAll(columns);
