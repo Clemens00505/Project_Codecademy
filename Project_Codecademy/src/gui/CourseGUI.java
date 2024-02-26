@@ -1,6 +1,7 @@
 package gui;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,29 +20,31 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Course;
+import objects.Difficulty;
 
 public class CourseGUI extends Application {
 
     @Override
     public void start(Stage courseStage) throws Exception {
-        //create databaseconnection and genericGUI
+        // create databaseconnection and genericGUI
         DatabaseConnection databaseConnection = new DatabaseConnection();
         GenericGUI<Course> genericGUI = new GenericGUI<>();
 
         courseStage.show();
         courseStage.setTitle("Cursussen");
 
-        //create buttons
+        // create buttons
         Button refreshButton = new Button("Tabel verversen");
         Button addCourseButton = new Button("Cursus toevoegen");
         Button editCourseButton = new Button("Cursus bewerken");
         Button deleteCourseButton = new Button("Cursus verwijderen");
         Button backButton = new Button("Terug naar hoofdmenu");
 
-        // create labels and textareas to show courseName and IntroText since table columns
+        // create labels and textareas to show courseName and IntroText since table
+        // columns
         // are narrow
-        Label courseNameShow = new Label("Titel: ");
-        Label introTextShow = new Label("Beschrijving: ");
+        Label courseNameShow = new Label("Cursusnaa: ");
+        Label introTextShow = new Label("Introductietekst: ");
         TextArea courseNameShowText = new TextArea();
         TextArea introTextShowText = new TextArea();
 
@@ -50,7 +53,7 @@ public class CourseGUI extends Application {
         introTextShowText.setEditable(false);
         introTextShowText.setWrapText(true);
 
-        //sets equal width for buttons
+        // sets equal width for buttons
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
         addCourseButton.setMinWidth(equalWidth);
@@ -58,32 +61,34 @@ public class CourseGUI extends Application {
         deleteCourseButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
-        //create columns for the table
+        // create columns for the table
+        TableColumn<Course, Integer> courseIdCol = new TableColumn<>("CourseID");
         TableColumn<Course, String> courseNameCol = new TableColumn<>("Naam cursus");
         TableColumn<Course, String> subjectCol = new TableColumn<>("Onderwerp");
         TableColumn<Course, String> introTextCol = new TableColumn<>("Introductietekst");
         TableColumn<Course, String> difficultyCol = new TableColumn<>("Niveau");
 
+        courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
         courseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
         subjectCol.setCellValueFactory(new PropertyValueFactory<>("subject"));
         introTextCol.setCellValueFactory(new PropertyValueFactory<>("introText"));
         difficultyCol.setCellValueFactory(new PropertyValueFactory<>("difficulty"));
 
-        //add the columns to a list
+        // add the columns to a list
         List<TableColumn<Course, ?>> columns = new ArrayList<>();
         columns.add(courseNameCol);
         columns.add(subjectCol);
         columns.add(introTextCol);
         columns.add(difficultyCol);
 
-        //create table
+        // create table
         TableView<Course> table = genericGUI.createTable(columns);
 
-        //get data from database as a resultset
+        // get data from database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Course");
 
-        //put data in an observablelist to put into the table
+        // put data in an observablelist to put into the table
         ObservableList<Course> data = genericGUI.getData(resultSet, Course.class);
         table.setItems(data);
 
@@ -125,6 +130,7 @@ public class CourseGUI extends Application {
 
         courseStage.setScene(scene);
 
+        // eventhandler for going back to previous page
         backButton.setOnAction((backButtonEvent) -> {
             ChooseContentGUI chooseContentGUI = new ChooseContentGUI();
 
@@ -133,6 +139,96 @@ public class CourseGUI extends Application {
 
             genericGUI.switchScreen(courseStage, chooseContentStage, chooseContentGUI);
         });
+
+        // eventhandler for adding module
+        addCourseButton.setOnAction((addCourseEvent) -> {
+            try {
+                AddCourseGUI addCourseGUI = new AddCourseGUI();
+                Stage addCourseStage = new Stage();
+
+                addCourseStage.setTitle("Cursus toevoegen");
+                genericGUI.openPopupScreen(addCourseStage, addCourseGUI);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        });
+
+        // eventhandler for refreshing table
+        refreshButton.setOnAction((refreshButtonEvent) -> {
+            try {
+                refreshTable(data, table, genericGUI, databaseConnection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // eventhandler for editing a course
+        editCourseButton.setOnAction((editCourseEvent) -> {
+            Course selectedCourse = table.getSelectionModel().getSelectedItem();
+
+            if (selectedCourse != null) {
+                int courseId = selectedCourse.getCourseId();
+                String courseName = selectedCourse.getCourseName();
+                String subject = selectedCourse.getSubject();
+                String introText = selectedCourse.getIntroText();
+                Difficulty difficulty = selectedCourse.getDifficulty();
+
+                Course course = new Course(courseId, courseName, subject, introText, difficulty);
+
+                try {
+                    EditCourseGUI editCourseGUI = new EditCourseGUI(course);
+                    Stage editCourseStage = new Stage();
+
+                    editCourseStage.setTitle("Module bewerken");
+                    genericGUI.openPopupScreen(editCourseStage, editCourseGUI);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        // eventhandler for deleting course
+        deleteCourseButton.setOnAction((deleteCourseEvent) -> {
+            Course selectedCourse = table.getSelectionModel().getSelectedItem();
+
+            if (selectedCourse != null) {
+                try {
+                    int courseId = selectedCourse.getCourseId();
+                    String courseName = selectedCourse.getCourseName();
+                    String subject = selectedCourse.getSubject();
+                    String introText = selectedCourse.getIntroText();
+                    Difficulty difficulty = selectedCourse.getDifficulty();
+
+                    Course course = new Course(courseId, courseName, subject, introText, difficulty);
+
+                    course.deleteCourse(course, databaseConnection);
+                    refreshTable(data, table, genericGUI, databaseConnection);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    // method for refreshing the table
+    private void refreshTable(ObservableList<Course> data, TableView<Course> table,
+            GenericGUI<Course> genericGUI,
+            DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Course");
+        databaseConnection.connectionIsOpen();
+
+        data = genericGUI.getData(resultSet, Course.class);
+
+        // displays new data in the table
+        table.setItems(data);
+        table.refresh();
     }
 
 }

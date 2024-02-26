@@ -107,4 +107,9 @@ public class DatabaseConnection {
         }
     }
 
+    // Method to get a prepared statement
+    public PreparedStatement getPreparedStatement(String sqlQuery) throws SQLException {
+        return connection.prepareStatement(sqlQuery);
+    }
+
 }

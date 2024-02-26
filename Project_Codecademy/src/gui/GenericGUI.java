@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import objects.Difficulty;
 import objects.Gender;
 import objects.Status;
 
@@ -42,6 +43,10 @@ public class GenericGUI<T> {
 
                     if (field.getType() == Status.class) {
                         value = Status.fromString((String) value);
+                    }
+
+                    if (field.getType() == Difficulty.class) {
+                        value = Difficulty.fromString((String) value);
                     }
 
                     field.set(object, value);

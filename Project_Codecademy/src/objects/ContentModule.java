@@ -99,7 +99,7 @@ public class ContentModule {
         databaseConnection.closeConnection();
     }
 
-    // method to update student information in database
+    // method to update module information in database
     public void updateModule(String oldTitle, ContentModule contentModule, DatabaseConnection databaseConnection)
             throws SQLException {
         databaseConnection.openConnection();

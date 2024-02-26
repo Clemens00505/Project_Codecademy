@@ -114,7 +114,7 @@ public class AddModuleGUI extends Application {
                 Status status = statusInput.getValue();
                 int indexNumber = indexNumberInput.getValue();
 
-                //controleert of de velden ingevuld zijn
+                //checks if all fields are filled
                 if (title.length() == 0 || description.length() == 0 || contactPersonName.length() == 0 || contactPersonMail.length() == 0) {
                     Alert errorAlert = new Alert(AlertType.ERROR);
                     errorAlert.setHeaderText("Niet alles ingevuld");

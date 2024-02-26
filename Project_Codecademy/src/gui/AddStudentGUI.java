@@ -119,7 +119,7 @@ public class AddStudentGUI extends Application {
                 String city = cityInput.getText();
                 String country = countryInput.getText();
 
-                //controleert of de velden ingevuld zijn
+                //checks if all fields are filled
                 if (email.length() == 0 || name.length() == 0 || postalCode.length() < 6 || postalCode.length() > 7 || city.length() == 0 || country.length() == 0) {
                     Alert errorAlert = new Alert(AlertType.ERROR);
                     errorAlert.setHeaderText("Niet alles ingevuld");

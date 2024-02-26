@@ -210,7 +210,6 @@ public class ModuleGUI extends Application {
                     contentModule.deleteModule(contentModule, databaseConnection);
                     refreshTable(data, table, genericGUI, databaseConnection);
 
-                    refreshTable(data, table, genericGUI, databaseConnection);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
