@@ -227,6 +227,15 @@ public class ModuleGUI extends Application {
             }
         });
 
+        backButton.setOnAction((backButtonEvent) -> {
+            ChooseContentGUI chooseContentGUI = new ChooseContentGUI();
+
+            Stage chooseContentStage = new Stage();
+            chooseContentStage.setTitle("Content");
+
+            genericGUI.switchScreen(moduleStage, chooseContentStage, chooseContentGUI);
+        });
+
     }
 
     // method for refreshing the table
