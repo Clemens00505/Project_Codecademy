@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,7 +27,7 @@ public class ModuleGUI extends Application {
 
     @Override
     public void start(Stage moduleStage) throws Exception {
-        //create a GenericGU
+        // create a GenericGU
         GenericGUI<ContentModule> genericGUI = new GenericGUI<>();
 
         moduleStage.show();
@@ -42,10 +43,19 @@ public class ModuleGUI extends Application {
         Button confirmButton = new Button("Aanpassing bevestigen");
         Button backButton = new Button("Terug naar hoofdmenu");
 
-        //create labels to show title and description since table columns are narrow
-        Label titleShow = new Label("");
-        Label descriptionShow = new Label("");
+        // create labels and textareas to show title and description since table columns
+        // are narrow
+        Label titleShow = new Label("Titel: ");
+        Label descriptionShow = new Label("Beschrijving: ");
+        TextArea titleShowText = new TextArea();
+        TextArea descriptionShowText = new TextArea();
 
+        //sets sizes for textareas to wrap text and uneditable
+        titleShowText.setEditable(false);
+        titleShowText.setWrapText(true);
+        descriptionShowText.setEditable(false);
+        descriptionShowText.setWrapText(true);
+        
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
         addModuleButton.setMinWidth(equalWidth);
@@ -94,17 +104,17 @@ public class ModuleGUI extends Application {
         // puts the data from the resultset in an observablelist
         ObservableList<ContentModule> data = genericGUI.getData(resultSet, ContentModule.class);
 
-
         // displays data in the table
         table.setItems(data);
 
+        // displays the title and description on the right side of the screen
         table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                titleShow.setText(newSelection.getTitle());
-                descriptionShow.setText(newSelection.getDescription());
+                titleShowText.setText(newSelection.getTitle());
+                descriptionShowText.setText(newSelection.getDescription());
             } else {
-                titleShow.setText("");
-                descriptionShow.setText(STYLESHEET_CASPIAN);
+                titleShowText.setText("");
+                descriptionShowText.setText("");
             }
         });
 
@@ -119,11 +129,15 @@ public class ModuleGUI extends Application {
         // placing everything in the screen
         // put buttons in a vbox
         VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton, confirmButton,
-                backButton, titleShow, descriptionShow);
+                backButton);
+
+        VBox showData = new VBox(titleShow, titleShowText, descriptionShow, descriptionShowText);
+
+        buttons.setPrefWidth(200);
 
         buttons.setPadding(new Insets(10));
 
-        VBox rightSide = new VBox(buttons);
+        VBox rightSide = new VBox(buttons, showData);
         rightSide.setPrefWidth(200);
         HBox box = new HBox(table, rightSide);
 
@@ -158,7 +172,8 @@ public class ModuleGUI extends Application {
     }
 
     // method for refreshing the table
-    private void refreshTable(ObservableList<ContentModule> data, TableView<ContentModule> table, GenericGUI<ContentModule> genericGUI,
+    private void refreshTable(ObservableList<ContentModule> data, TableView<ContentModule> table,
+            GenericGUI<ContentModule> genericGUI,
             DatabaseConnection databaseConnection) throws SQLException {
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module");

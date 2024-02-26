@@ -110,12 +110,12 @@ public class EditStudentGUI extends Application {
         editStudentStage.show();
 
         // If cancelButton is pressed, the screen will be closed
-        cancelButton.setOnAction((event) -> {
+        cancelButton.setOnAction((cancelButtonEvent) -> {
             editStudentStage.close();
         });
 
         // If confirmButton is pressed, the student is edited in the databse
-        confirmButton.setOnAction((event) -> {
+        confirmButton.setOnAction((confirmButtonEvent) -> {
             try {
                 String email = emailInput.getText();
                 String name = nameInput.getText();
