@@ -54,12 +54,12 @@ public class ChooseContentGUI extends Application {
         });
         
         webcastsButton.setOnAction((webcastButtonEvent) -> {
-            WebcastGUI webcastGUI = new WebcastGUI();
+            ContentWebcastGUI contentWebcastGUI = new ContentWebcastGUI();
 
-            Stage webcastStage = new Stage();
-            webcastStage.setTitle("Webcasts");
+            Stage contentWebcastStage = new Stage();
+            contentWebcastStage.setTitle("Webcasts");
 
-            genericGUI.switchScreen(chooseContentGUI, webcastStage, webcastGUI);
+            genericGUI.switchScreen(chooseContentGUI, contentWebcastStage, contentWebcastGUI);
         });
         
         // eventhandler for button to return to main menu

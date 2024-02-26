@@ -3,10 +3,10 @@ package gui;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class WebcastGUI extends Application{
+public class ContentWebcastGUI extends Application{
 
     @Override
-    public void start(Stage webcastStage) throws Exception {
+    public void start(Stage contentWebcastStage) throws Exception {
         //TODO: scherm invullen
     }
 

@@ -15,7 +15,7 @@ public enum Status {
         return text;
     }
 
-    //method to change text from database to Gender type
+    //method to change text from database to Status type
     public static Status fromString(String text) {
         if (text != null) {
             for (Status status : Status.values()) {
