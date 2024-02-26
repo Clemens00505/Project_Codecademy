@@ -83,7 +83,7 @@ public class DatabaseConnection {
             }
         }
 
-        System.out.println("Resultset gemaakt: " + resultSet);
+        System.out.println("Resultset gemaakt: " + resultSet.toString());
         return resultSet;
     }
 

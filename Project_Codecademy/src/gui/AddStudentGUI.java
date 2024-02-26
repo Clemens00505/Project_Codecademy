@@ -43,9 +43,9 @@ public class AddStudentGUI extends Application {
         TextField countryInput = new TextField();
         
 
-        // setting the defaultdate 20 years back, so that people dont have to click 20
+        // setting the defaultdate 18 years back, so that people dont have to click 18
         // times to get to their date of birth
-        LocalDate defaultDate = LocalDate.now().minusYears(20);
+        LocalDate defaultDate = LocalDate.now().minusYears(18);
         dateOfBirthInput.setValue(defaultDate);
         
         genderInput.setValue(Gender.values()[0]);
@@ -103,12 +103,12 @@ public class AddStudentGUI extends Application {
         addStudentStage.show();
 
         // If cancelButton is pressed, the screen will be closed
-        cancelButton.setOnAction((event) -> {
+        cancelButton.setOnAction((cancelButtonEvent) -> {
             addStudentStage.close();
         });
 
-        // If saveButton is pressed, the student is saved to the databse
-        saveButton.setOnAction((event) -> {
+        // If saveButton is pressed, the student is saved to the database
+        saveButton.setOnAction((saveButtonEvent) -> {
             try {
                 String email = emailInput.getText();
                 String name = nameInput.getText();

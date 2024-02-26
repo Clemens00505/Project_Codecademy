@@ -86,7 +86,6 @@ public class StudentGUI extends Application {
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
-        databaseConnection.connectionIsOpen();
 
         // puts the data from the resultset in an observablelist
         ObservableList<Student> data = genericGUI.getData(resultSet, Student.class);

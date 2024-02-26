@@ -12,32 +12,39 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import objects.ContentModule;
 import objects.Status;
-import objects.Student;
 
 public class ModuleGUI extends Application {
 
     @Override
     public void start(Stage moduleStage) throws Exception {
+        //create a GenericGU
+        GenericGUI<ContentModule> genericGUI = new GenericGUI<>();
+
         moduleStage.show();
         moduleStage.setTitle("Modules");
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        GenericGUI<Module> genericGUI = new GenericGUI<>();
 
-        //create buttons
+        // create buttons
         Button refreshButton = new Button("Tabel verversen");
         Button addModuleButton = new Button("module toevoegen");
         Button editModuleButton = new Button("module bewerken");
         Button deleteModuleButton = new Button("module verwijderen");
         Button confirmButton = new Button("Aanpassing bevestigen");
         Button backButton = new Button("Terug naar hoofdmenu");
+
+        //create labels to show title and description since table columns are narrow
+        Label titleShow = new Label("");
+        Label descriptionShow = new Label("");
 
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
@@ -47,14 +54,15 @@ public class ModuleGUI extends Application {
         confirmButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
-        //create columns for the table
-        TableColumn<Module, String> titleCol = new TableColumn<>("Titel");
-        TableColumn<Module, Integer> versionCol = new TableColumn<>("Versie");
-        TableColumn<Module, String> descriptionCol = new TableColumn<>("Beschrijving");
-        TableColumn<Module, String> contactPersonNameCol = new TableColumn<>("Naam contactpersoon");
-        TableColumn<Module, String> contactPersonMailCol = new TableColumn<>("Mail contactpersoon");
-        TableColumn<Module, Date> publicationDateCol = new TableColumn<>("Publicatiedatum");
-        TableColumn<Module, Status> statusCol = new TableColumn<>("Status");
+        // create columns for the table
+        TableColumn<ContentModule, String> titleCol = new TableColumn<>("Titel");
+        TableColumn<ContentModule, Integer> versionCol = new TableColumn<>("Versie");
+        TableColumn<ContentModule, String> descriptionCol = new TableColumn<>("Beschrijving");
+        TableColumn<ContentModule, String> contactPersonNameCol = new TableColumn<>("Naam contactpersoon");
+        TableColumn<ContentModule, String> contactPersonMailCol = new TableColumn<>("Mail contactpersoon");
+        TableColumn<ContentModule, Date> publicationDateCol = new TableColumn<>("Publicatiedatum");
+        TableColumn<ContentModule, Status> statusCol = new TableColumn<>("Status");
+        TableColumn<ContentModule, Integer> indexNumberCol = new TableColumn<>("Volgnummer");
 
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         versionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
@@ -63,9 +71,10 @@ public class ModuleGUI extends Application {
         contactPersonMailCol.setCellValueFactory(new PropertyValueFactory<>("contactPersonMail"));
         publicationDateCol.setCellValueFactory(new PropertyValueFactory<>("publicationDate"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        indexNumberCol.setCellValueFactory(new PropertyValueFactory<>("indexNumber"));
 
         // add columns to a list
-        List<TableColumn<Module, ?>> columns = new ArrayList<>();
+        List<TableColumn<ContentModule, ?>> columns = new ArrayList<>();
         columns.add(titleCol);
         columns.add(versionCol);
         columns.add(descriptionCol);
@@ -73,32 +82,44 @@ public class ModuleGUI extends Application {
         columns.add(contactPersonMailCol);
         columns.add(publicationDateCol);
         columns.add(statusCol);
+        columns.add(indexNumberCol);
 
         // create the table
-        TableView<Module> table = genericGUI.createTable(columns);
+        TableView<ContentModule> table = genericGUI.createTable(columns);
 
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module");
-        databaseConnection.connectionIsOpen();
 
         // puts the data from the resultset in an observablelist
-        ObservableList<Module> data = genericGUI.getData(resultSet, Module.class);
+        ObservableList<ContentModule> data = genericGUI.getData(resultSet, ContentModule.class);
+
 
         // displays data in the table
         table.setItems(data);
 
-        //Gives the table and columns a good size on the screen
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                titleShow.setText(newSelection.getTitle());
+                descriptionShow.setText(newSelection.getDescription());
+            } else {
+                titleShow.setText("");
+                descriptionShow.setText(STYLESHEET_CASPIAN);
+            }
+        });
+
+        // Gives the table and columns a good size on the screen
         table.setPrefWidth(950);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         table.getColumns().forEach(column -> {
-            column.setPrefWidth(TableView.USE_COMPUTED_SIZE); 
+            column.setPrefWidth(TableView.USE_COMPUTED_SIZE);
         });
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton, confirmButton, backButton);
+        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton, confirmButton,
+                backButton, titleShow, descriptionShow);
 
         buttons.setPadding(new Insets(10));
 
@@ -125,7 +146,7 @@ public class ModuleGUI extends Application {
             }
         });
 
-        //eventhandler for refreshing table
+        // eventhandler for refreshing table
         refreshButton.setOnAction((refreshButtonEvent) -> {
             try {
                 refreshTable(data, table, genericGUI, databaseConnection);
@@ -137,13 +158,13 @@ public class ModuleGUI extends Application {
     }
 
     // method for refreshing the table
-    private void refreshTable(ObservableList<Module> data, TableView<Module> table, GenericGUI<Module> genericGUI,
+    private void refreshTable(ObservableList<ContentModule> data, TableView<ContentModule> table, GenericGUI<ContentModule> genericGUI,
             DatabaseConnection databaseConnection) throws SQLException {
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module");
         databaseConnection.connectionIsOpen();
 
-        data = genericGUI.getData(resultSet, Module.class);
+        data = genericGUI.getData(resultSet, ContentModule.class);
 
         // displays new data in the table
         table.setItems(data);
