@@ -36,7 +36,6 @@ public class StudentGUI extends Application {
         Button addStudentButton = new Button("Student toevoegen");
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
-        Button confirmButton = new Button("Aanpassing bevestigen");
         Button backButton = new Button("Terug naar hoofdmenu");
 
         int equalWidth = 175;
@@ -44,7 +43,6 @@ public class StudentGUI extends Application {
         addStudentButton.setMinWidth(equalWidth);
         editStudentButton.setMinWidth(equalWidth);
         deleteStudentButton.setMinWidth(equalWidth);
-        confirmButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -104,7 +102,7 @@ public class StudentGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, confirmButton, backButton);
+        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, backButton);
 
         buttons.setPadding(new Insets(10));
 

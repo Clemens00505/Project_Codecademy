@@ -40,7 +40,6 @@ public class ModuleGUI extends Application {
         Button addModuleButton = new Button("module toevoegen");
         Button editModuleButton = new Button("module bewerken");
         Button deleteModuleButton = new Button("module verwijderen");
-        Button confirmButton = new Button("Aanpassing bevestigen");
         Button backButton = new Button("Terug naar hoofdmenu");
 
         // create labels and textareas to show title and description since table columns
@@ -56,12 +55,12 @@ public class ModuleGUI extends Application {
         descriptionShowText.setEditable(false);
         descriptionShowText.setWrapText(true);
 
+        //sets equal width for buttons
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
         addModuleButton.setMinWidth(equalWidth);
         editModuleButton.setMinWidth(equalWidth);
         deleteModuleButton.setMinWidth(equalWidth);
-        confirmButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -128,7 +127,7 @@ public class ModuleGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton, confirmButton,
+        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton,
                 backButton);
 
         VBox showData = new VBox(titleShow, titleShowText, descriptionShow, descriptionShowText);
