@@ -9,9 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Student;
 
-//TODO: Andere knoppen en labels toevoegen
-//TODO: buttons op scherm tonen
-
 public class ChooseContentGUI extends Application {
     @Override
     public void start(Stage chooseContentGUI) throws Exception {
@@ -26,16 +23,18 @@ public class ChooseContentGUI extends Application {
         Button coursesButton = new Button("Cursussen");
         Button modulesButton = new Button("Modules");
         Button webcastsButton = new Button("Webcasts");
+        Button coursesModulesButton = new Button("Cursussen en modules koppelen");
         Button backButton = new Button("Terug");
 
         //setting equal width for all buttons
-        int equalWidth = 175;
+        int equalWidth = 200;
         coursesButton.setPrefWidth(equalWidth);
         modulesButton.setPrefWidth(equalWidth);
         webcastsButton.setPrefWidth(equalWidth);
+        coursesModulesButton.setPrefWidth(equalWidth);
         backButton.setPrefWidth(equalWidth);
 
-        VBox buttons = new VBox(text, coursesButton, modulesButton, webcastsButton, backButton);
+        VBox buttons = new VBox(text, coursesButton, modulesButton, webcastsButton, coursesModulesButton, backButton);
 
         buttons.setPadding(new Insets(15));
 
