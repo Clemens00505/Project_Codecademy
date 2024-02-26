@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -51,12 +50,12 @@ public class ModuleGUI extends Application {
         TextArea titleShowText = new TextArea();
         TextArea descriptionShowText = new TextArea();
 
-        //sets sizes for textareas to wrap text and uneditable
+        // sets sizes for textareas to wrap text and uneditable
         titleShowText.setEditable(false);
         titleShowText.setWrapText(true);
         descriptionShowText.setEditable(false);
         descriptionShowText.setWrapText(true);
-        
+
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
         addModuleButton.setMinWidth(equalWidth);
@@ -161,7 +160,7 @@ public class ModuleGUI extends Application {
             }
         });
 
-        //eventhandler for editing a module
+        // eventhandler for editing a module
         editModuleButton.setOnAction((editModuleEvent) -> {
             ContentModule selectedModule = table.getSelectionModel().getSelectedItem();
 
@@ -175,7 +174,8 @@ public class ModuleGUI extends Application {
                 Status status = selectedModule.getStatus();
                 int indexNumber = selectedModule.getIndexNumber();
 
-                ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
+                ContentModule contentModule = new ContentModule(title, version, description, contactPersonName,
+                        contactPersonMail, publicationDate, status, indexNumber);
 
                 try {
                     EditModuleGUI editModuleGUI = new EditModuleGUI(contentModule);
@@ -187,7 +187,35 @@ public class ModuleGUI extends Application {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
+
+            }
+        });
+
+        // eventhandler for deleting module
+        deleteModuleButton.setOnAction((deleteModuleEvent) -> {
+            ContentModule selectedModule = table.getSelectionModel().getSelectedItem();
+
+            if (selectedModule != null) {
+                try {
+                    String title = selectedModule.getTitle();
+                    int version = selectedModule.getVersion();
+                    String description = selectedModule.getDescription();
+                    String contactPersonName = selectedModule.getContactPersonName();
+                    String contactPersonMail = selectedModule.getContactPersonMail();
+                    Date publicationDate = selectedModule.getPublicationDate();
+                    Status status = selectedModule.getStatus();
+                    int indexNumber = selectedModule.getIndexNumber();
+
+                    ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
+
+                    contentModule.deleteModule(contentModule, databaseConnection);
+                    refreshTable(data, table, genericGUI, databaseConnection);
+
+                    refreshTable(data, table, genericGUI, databaseConnection);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 

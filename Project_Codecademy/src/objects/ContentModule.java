@@ -120,4 +120,17 @@ public class ContentModule {
         databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
         databaseConnection.closeConnection();
     }
+
+    // method for deleting module from database
+    public void deleteModule(ContentModule contentModule, DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+
+        StringBuilder deleteStmt = new StringBuilder();
+        deleteStmt.append("DELETE FROM Module ");
+        deleteStmt.append("WHERE Title = '" + contentModule.getTitle() + "' ");
+        deleteStmt.append("AND Version = " + contentModule.getVersion());
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(deleteStmt.toString());
+        databaseConnection.closeConnection();
+    }
 }
