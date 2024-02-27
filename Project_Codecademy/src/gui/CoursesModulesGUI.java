@@ -2,6 +2,7 @@ package gui;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,8 +80,8 @@ public class CoursesModulesGUI extends Application {
         List<TableColumn<Course, ?>> columnsCourse = new ArrayList<>();
         columnsCourse.add(courseIdCol);
         columnsCourse.add(courseNameCol);
-        
-        //columns for Module
+
+        // columns for Module
         TableColumn<ContentModule, String> titleCol = new TableColumn<>("Titel");
         TableColumn<ContentModule, Integer> versionCol = new TableColumn<>("Versie");
         TableColumn<ContentModule, String> descriptionCol = new TableColumn<>("Beschrijving");
@@ -99,12 +100,14 @@ public class CoursesModulesGUI extends Application {
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         indexNumberCol.setCellValueFactory(new PropertyValueFactory<>("indexNumber"));
 
-        //add columns to a list
+        // add columns to a list
         List<TableColumn<ContentModule, ?>> columnsModule = new ArrayList<>();
         columnsModule.add(titleCol);
         columnsModule.add(versionCol);
 
-        //create tables
+        versionCol.setPrefWidth(100);
+
+        // create tables
         TableView<Course> tableCourse = genericGUICourse.createTable(columnsCourse);
         TableView<ContentModule> tableModule = genericGUIModule.createTable(columnsModule);
 
@@ -112,7 +115,8 @@ public class CoursesModulesGUI extends Application {
         databaseConnectionCourse.openConnection();
         databaseConnectionModule.openConnection();
         ResultSet resultSetCourse = databaseConnectionCourse.executeSQLSelectStatement("SELECT * FROM Course");
-        ResultSet resultSetModule = databaseConnectionModule.executeSQLSelectStatement("SELECT * FROM Module WHERE CourseId IS NULL");
+        ResultSet resultSetModule = databaseConnectionModule
+                .executeSQLSelectStatement("SELECT * FROM Module WHERE CourseId IS NULL");
 
         // put data in an observablelist to put into the table
         ObservableList<Course> dataCourse = genericGUICourse.getData(resultSetCourse, Course.class);
@@ -121,7 +125,22 @@ public class CoursesModulesGUI extends Application {
         ObservableList<ContentModule> dataModule = genericGUIModule.getData(resultSetModule, ContentModule.class);
         tableModule.setItems(dataModule);
 
-        // displays the courseName of the selected course on the right side of the screen
+        // Gives the table and columns a good size on the screen
+        tableCourse.setPrefWidth(500);
+        tableModule.setPrefWidth(500);
+        tableCourse.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableModule.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        tableCourse.getColumns().forEach(column -> {
+            column.setPrefWidth(TableView.USE_COMPUTED_SIZE);
+        });
+
+        tableModule.getColumns().forEach(column -> {
+            column.setPrefWidth(TableView.USE_COMPUTED_SIZE);
+        });
+
+        // displays the courseName of the selected course on the right side of the
+        // screen
         tableCourse.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedCourseShowText.setText(newSelection.getCourseName());
@@ -130,35 +149,63 @@ public class CoursesModulesGUI extends Application {
             }
         });
 
-        // displays the title and version of the selected module on the right side of the screen
+        // displays the title and version of the selected module on the right side of
+        // the screen
         tableModule.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                selectedModuleShowText.setText("Titel module: " + newSelection.getTitle() + "\nVersie: " + newSelection.getVersion());
+                selectedModuleShowText
+                        .setText("Titel module: " + newSelection.getTitle() + "\nVersie: " + newSelection.getVersion());
             } else {
                 selectedModuleShowText.setText("");
             }
         });
 
-        //add buttons to a VBox
+        // add buttons to a VBox
         VBox buttons = new VBox(addToCourseButton, backButton);
         buttons.setPadding(new Insets(10));
 
-        //add selected items to a VBox
-        VBox selectedItems = new VBox(selectedCourseShow, selectedCourseShowText, selectedModuleShow, selectedModuleShowText);
-        
-        //create VBox for center part of the screen
+        // add selected items to a VBox
+        VBox selectedItems = new VBox(selectedCourseShow, selectedCourseShowText, selectedModuleShow,
+                selectedModuleShowText);
+
+        // create VBox for center part of the screen
         VBox center = new VBox(buttons, selectedItems);
 
-        //add everything to a HBox
+        // add everything to a HBox
         HBox box = new HBox(tableCourse, center, tableModule);
 
         Scene scene = new Scene(box);
 
         coursesModulesStage.setScene(scene);
 
-        //eventhandler for button for adding a module to a course
+        // eventhandler for button for adding a module to a course
         addToCourseButton.setOnAction((addToCourseButtonEvent) -> {
 
+            // get selectedItems
+            Course selectedCourse = tableCourse.getSelectionModel().getSelectedItem();
+            ContentModule selectedModule = tableModule.getSelectionModel().getSelectedItem();
+
+            if (selectedCourse != null && selectedModule != null) {
+                // get data needed to update module to link to correct course
+                int courseId = selectedCourse.getCourseId();
+
+                String title = selectedModule.getTitle();
+                int version = selectedModule.getVersion();
+
+                StringBuilder updateStmt = new StringBuilder();
+                updateStmt.append("UPDATE Module SET ");
+                updateStmt.append("CourseId = '" + courseId + "' ");
+                updateStmt.append("WHERE Title = '" + title + "' AND Version = '" + version + "'");
+
+                try {
+                    databaseConnectionModule.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
+                    refreshTable(dataModule, tableModule, genericGUIModule, databaseConnectionModule);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                
+            }
         });
 
         // eventhandler for going back to previous page
@@ -172,4 +219,18 @@ public class CoursesModulesGUI extends Application {
         });
     }
 
+    // method for refreshing the table
+    private void refreshTable(ObservableList<ContentModule> data, TableView<ContentModule> table,
+            GenericGUI<ContentModule> genericGUI,
+            DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module WHERE CourseId IS NULL");
+        databaseConnection.connectionIsOpen();
+
+        data = genericGUI.getData(resultSet, ContentModule.class);
+
+        // displays new data in the table
+        table.setItems(data);
+        table.refresh();
+    }
 }
