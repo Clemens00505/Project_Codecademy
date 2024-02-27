@@ -60,43 +60,6 @@ public class GenericGUI<T> {
         return data;
     }
 
-    // public ObservableList<T> getData(ResultSet resultSet, Class<T> usedClass) throws SQLException {
-    //     ObservableList<T> data = FXCollections.observableArrayList();
-    //     try {
-    //         while (resultSet.next()) {
-    //             T object;
-    //             // Check if the class is not java.lang.Module before attempting to create an instance
-    //             if (!usedClass.getName().equals("java.lang.Module")) {
-    //                 object = usedClass.getDeclaredConstructor().newInstance();
-    //                 for (Field field : usedClass.getDeclaredFields()) {
-    //                     String fieldName = field.getName();
-    //                     if (fieldName.equals("serialVersionUID")) {
-    //                         continue;
-    //                     }
-    //                     field.setAccessible(true);
-    //                     Object value = resultSet.getObject(fieldName);
-    
-    //                     if (field.getType() == Gender.class) { 
-    //                         // If field type is Gender enum, convert text to Gender enum
-    //                         value = Gender.fromString((String) value);
-    //                     }
-    
-    //                     if (field.getType() == Status.class) {
-    //                         value = Status.fromString((String) value);
-    //                     }
-    
-    //                     field.set(object, value);
-    //                 }
-    //                 data.add(object);
-    //             }
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    //     System.out.println("Data verzameld: " + data.toString());
-    //     return data;
-    // }
-
     // method for refreshing the tables
     public void refreshTable(ObservableList<T> data, TableView<T> table) {
         table.setItems(data);
