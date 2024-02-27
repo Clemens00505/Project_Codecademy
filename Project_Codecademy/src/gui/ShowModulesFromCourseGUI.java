@@ -21,26 +21,30 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.ContentModule;
+import objects.Course;
 import objects.Status;
 
-public class ModuleGUI extends Application {
+public class ShowModulesFromCourseGUI extends Application {
+    private Course course;
+
+    public ShowModulesFromCourseGUI(Course course) {
+        this.course = course;
+    }
 
     @Override
-    public void start(Stage moduleStage) throws Exception {
+    public void start(Stage showModulesFromCourseStage) throws Exception {
         // create a GenericGU
         GenericGUI<ContentModule> genericGUI = new GenericGUI<>();
 
-        moduleStage.show();
-        moduleStage.setTitle("Modules");
+        showModulesFromCourseStage.show();
+        showModulesFromCourseStage.setTitle("Modules in curus: " + course.getCourseName());
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         // create buttons
         Button refreshButton = new Button("Tabel verversen");
-        Button addModuleButton = new Button("module toevoegen");
-        Button editModuleButton = new Button("module bewerken");
-        Button deleteModuleButton = new Button("module verwijderen");
-        Button backButton = new Button("Terug naar menu");
+        Button deleteModuleButton = new Button("Module verwijderen uit cursus");
+        Button backButton = new Button("Terug naar cursussen");
 
         // create labels and textareas to show title and description since table columns
         // are narrow
@@ -58,8 +62,6 @@ public class ModuleGUI extends Application {
         //sets equal width for buttons
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
-        addModuleButton.setMinWidth(equalWidth);
-        editModuleButton.setMinWidth(equalWidth);
         deleteModuleButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
@@ -100,7 +102,7 @@ public class ModuleGUI extends Application {
 
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module where CourseId = '" + course.getCourseId() + "'");
 
         // puts the data from the resultset in an observablelist
         ObservableList<ContentModule> data = genericGUI.getData(resultSet, ContentModule.class);
@@ -129,7 +131,7 @@ public class ModuleGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton,
+        VBox buttons = new VBox(refreshButton, deleteModuleButton,
                 backButton);
 
         VBox showData = new VBox(titleShow, titleShowText, descriptionShow, descriptionShowText);
@@ -144,75 +146,25 @@ public class ModuleGUI extends Application {
 
         Scene scene = new Scene(box);
 
-        moduleStage.setScene(scene);
-
-        // eventhandler for adding module
-        addModuleButton.setOnAction((addModuleEvent) -> {
-            try {
-                AddModuleGUI addModuleGUI = new AddModuleGUI();
-                Stage addModuleStage = new Stage();
-
-                addModuleStage.setTitle("Module toevoegen");
-                genericGUI.openPopupScreen(addModuleStage, addModuleGUI);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-        });
-
-        // eventhandler for editing a module
-        editModuleButton.setOnAction((editModuleEvent) -> {
-            ContentModule selectedModule = table.getSelectionModel().getSelectedItem();
-
-            if (selectedModule != null) {
-                String title = selectedModule.getTitle();
-                int version = selectedModule.getVersion();
-                String description = selectedModule.getDescription();
-                String contactPersonName = selectedModule.getContactPersonName();
-                String contactPersonMail = selectedModule.getContactPersonMail();
-                Date publicationDate = selectedModule.getPublicationDate();
-                Status status = selectedModule.getStatus();
-                int indexNumber = selectedModule.getIndexNumber();
-
-                ContentModule contentModule = new ContentModule(title, version, description, contactPersonName,
-                        contactPersonMail, publicationDate, status, indexNumber);
-
-                try {
-                    EditModuleGUI editModuleGUI = new EditModuleGUI(contentModule);
-                    Stage editModuleStage = new Stage();
-
-                    editModuleStage.setTitle("Module bewerken");
-                    genericGUI.openPopupScreen(editModuleStage, editModuleGUI);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
+        showModulesFromCourseStage.setScene(scene);
 
         // eventhandler for deleting module
         deleteModuleButton.setOnAction((deleteModuleEvent) -> {
             ContentModule selectedModule = table.getSelectionModel().getSelectedItem();
 
             if (selectedModule != null) {
+                String title = selectedModule.getTitle();
+                int version = selectedModule.getVersion();
+
+                StringBuilder updateStmt = new StringBuilder();
+                updateStmt.append("UPDATE Module SET ");
+                updateStmt.append("CourseId = NULL ");
+                updateStmt.append("WHERE Title = '" + title + "' AND Version = '" + version + "'");
+
                 try {
-                    String title = selectedModule.getTitle();
-                    int version = selectedModule.getVersion();
-                    String description = selectedModule.getDescription();
-                    String contactPersonName = selectedModule.getContactPersonName();
-                    String contactPersonMail = selectedModule.getContactPersonMail();
-                    Date publicationDate = selectedModule.getPublicationDate();
-                    Status status = selectedModule.getStatus();
-                    int indexNumber = selectedModule.getIndexNumber();
-
-                    ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
-
-                    contentModule.deleteModule(contentModule, databaseConnection);
-                    refreshTable(data, table, genericGUI, databaseConnection);
-
-                } catch (Exception e) {
+                    databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
+                    refreshTable(data, table, genericGUI, databaseConnection);  
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
@@ -229,12 +181,12 @@ public class ModuleGUI extends Application {
         });
 
         backButton.setOnAction((backButtonEvent) -> {
-            ChooseContentGUI chooseContentGUI = new ChooseContentGUI();
+            CourseGUI courseGUI = new CourseGUI();
 
-            Stage chooseContentStage = new Stage();
-            chooseContentStage.setTitle("Content");
+            Stage courseStage = new Stage();
+            courseStage.setTitle("Course");
 
-            genericGUI.switchScreen(moduleStage, chooseContentStage, chooseContentGUI);
+            genericGUI.switchScreen(showModulesFromCourseStage, courseStage, courseGUI);
         });
 
     }
@@ -244,7 +196,7 @@ public class ModuleGUI extends Application {
             GenericGUI<ContentModule> genericGUI,
             DatabaseConnection databaseConnection) throws SQLException {
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Module where CourseId = '" + course.getCourseId() + "'");
         databaseConnection.connectionIsOpen();
 
         data = genericGUI.getData(resultSet, ContentModule.class);

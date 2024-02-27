@@ -22,8 +22,6 @@ import javafx.stage.Stage;
 import objects.Course;
 import objects.Difficulty;
 
-//TODO: Button maken om alle modules in een cursus te zien
-
 public class CourseGUI extends Application {
 
     @Override
@@ -40,7 +38,8 @@ public class CourseGUI extends Application {
         Button addCourseButton = new Button("Cursus toevoegen");
         Button editCourseButton = new Button("Cursus bewerken");
         Button deleteCourseButton = new Button("Cursus verwijderen");
-        Button backButton = new Button("Terug naar hoofdmenu");
+        Button showModulesButton = new Button("Toon modules in cursus");
+        Button backButton = new Button("Terug naar menu");
 
         // create labels and textareas to show courseName and IntroText since table
         // columns
@@ -61,6 +60,7 @@ public class CourseGUI extends Application {
         addCourseButton.setMinWidth(equalWidth);
         editCourseButton.setMinWidth(equalWidth);
         deleteCourseButton.setMinWidth(equalWidth);
+        showModulesButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -115,7 +115,7 @@ public class CourseGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton,
+        VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton, showModulesButton,
                 backButton);
 
         VBox showData = new VBox(courseNameShow, courseNameShowText, introTextShow, introTextShowText);
@@ -164,6 +164,17 @@ public class CourseGUI extends Application {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        });
+
+        showModulesButton.setOnAction((showModulesButtonEvent) -> {
+            Course course = table.getSelectionModel().getSelectedItem();
+
+            ShowModulesFromCourseGUI showModulesFromCourseGUI = new ShowModulesFromCourseGUI(course);
+
+            Stage showModulesFromCourseStage = new Stage();
+            showModulesFromCourseStage.setTitle("Modules in curus: " + course.getCourseName());
+
+            genericGUI.switchScreen(courseStage, showModulesFromCourseStage, showModulesFromCourseGUI);
         });
 
         // eventhandler for editing a course
