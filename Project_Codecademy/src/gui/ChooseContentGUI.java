@@ -82,5 +82,15 @@ public class ChooseContentGUI extends Application {
 
         });
 
+        //eventhandler for button to go to screen for adding modules to a course
+        coursesModulesButton.setOnAction((coursesModulesButtonEvent) -> {
+            CoursesModulesGUI coursesModulesGUI = new CoursesModulesGUI();
+            
+            Stage coursesModulesStage = new Stage();
+            coursesModulesStage.setTitle("Cursussen en modules koppelen");
+
+            genericGUI.switchScreen(chooseContentGUI, coursesModulesStage, coursesModulesGUI);
+        });
+
     }
 }

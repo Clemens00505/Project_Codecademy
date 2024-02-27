@@ -43,7 +43,7 @@ public class CourseGUI extends Application {
         // create labels and textareas to show courseName and IntroText since table
         // columns
         // are narrow
-        Label courseNameShow = new Label("Cursusnaa: ");
+        Label courseNameShow = new Label("Cursusnaam: ");
         Label introTextShow = new Label("Introductietekst: ");
         TextArea courseNameShowText = new TextArea();
         TextArea introTextShowText = new TextArea();
