@@ -14,6 +14,7 @@ public class ContentModule {
     private Date publicationDate;
     private Status status;
     private int indexNumber;
+    private Integer courseId;
 
     // constructor for a ContentModule
     public ContentModule(String title, int version, String description, String contactPersonName,
@@ -27,6 +28,7 @@ public class ContentModule {
         this.publicationDate = publicationDate;
         this.status = status;
         this.indexNumber = indexNumber;
+        this.courseId = -1;
     }
 
     public ContentModule() {
@@ -64,6 +66,10 @@ public class ContentModule {
 
     public int getIndexNumber() {
         return indexNumber;
+    }
+
+    public int getCourseId() {
+        return courseId;
     }
 
     // method for adding module to database

@@ -72,6 +72,7 @@ public class ModuleGUI extends Application {
         TableColumn<ContentModule, Date> publicationDateCol = new TableColumn<>("Publicatiedatum");
         TableColumn<ContentModule, Status> statusCol = new TableColumn<>("Status");
         TableColumn<ContentModule, Integer> indexNumberCol = new TableColumn<>("Volgnummer");
+        TableColumn<ContentModule, Integer> courseIdCol = new TableColumn<>("CourseId");
 
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         versionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
@@ -81,6 +82,7 @@ public class ModuleGUI extends Application {
         publicationDateCol.setCellValueFactory(new PropertyValueFactory<>("publicationDate"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         indexNumberCol.setCellValueFactory(new PropertyValueFactory<>("indexNumber"));
+        courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
 
         // add columns to a list
         List<TableColumn<ContentModule, ?>> columns = new ArrayList<>();

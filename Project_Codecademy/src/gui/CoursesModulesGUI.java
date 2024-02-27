@@ -1,5 +1,6 @@
 package gui;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Course;
+import objects.Status;
 import objects.ContentModule;
 
 //TODO: 2 tabellen maken. 1 voor courses en 1 voor modules
@@ -31,7 +33,8 @@ public class CoursesModulesGUI extends Application {
     @Override
     public void start(Stage coursesModulesStage) throws Exception {
         // create databaseconnection and genericGUIs for both course and module
-        DatabaseConnection databaseConnection = new DatabaseConnection();
+        DatabaseConnection databaseConnectionCourse = new DatabaseConnection();
+        DatabaseConnection databaseConnectionModule = new DatabaseConnection();
         GenericGUI<Course> genericGUICourse = new GenericGUI<>();
         GenericGUI<ContentModule> genericGUIModule = new GenericGUI<>();
 
@@ -55,16 +58,22 @@ public class CoursesModulesGUI extends Application {
         selectedModuleShowText.setWrapText(true);
 
         // setting equal widt for the buttons
-        int equalWidth = 175;
+        int equalWidth = 350;
         addToCourseButton.setPrefWidth(equalWidth);
         backButton.setPrefWidth(equalWidth);
 
         // columns for course
-        TableColumn<Course, Integer> courseIdCol = new TableColumn<>("CourseId");
+        TableColumn<Course, Integer> courseIdCol = new TableColumn<>("CourseID");
         TableColumn<Course, String> courseNameCol = new TableColumn<>("Naam cursus");
+        TableColumn<Course, String> subjectCol = new TableColumn<>("Onderwerp");
+        TableColumn<Course, String> introTextCol = new TableColumn<>("Introductietekst");
+        TableColumn<Course, String> difficultyCol = new TableColumn<>("Niveau");
 
         courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
         courseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        subjectCol.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        introTextCol.setCellValueFactory(new PropertyValueFactory<>("introText"));
+        difficultyCol.setCellValueFactory(new PropertyValueFactory<>("difficulty"));
 
         // add columns to a list
         List<TableColumn<Course, ?>> columnsCourse = new ArrayList<>();
@@ -73,10 +82,22 @@ public class CoursesModulesGUI extends Application {
         
         //columns for Module
         TableColumn<ContentModule, String> titleCol = new TableColumn<>("Titel");
-        TableColumn<ContentModule, String> versionCol = new TableColumn<>("Versie");
+        TableColumn<ContentModule, Integer> versionCol = new TableColumn<>("Versie");
+        TableColumn<ContentModule, String> descriptionCol = new TableColumn<>("Beschrijving");
+        TableColumn<ContentModule, String> contactPersonNameCol = new TableColumn<>("Naam contactpersoon");
+        TableColumn<ContentModule, String> contactPersonMailCol = new TableColumn<>("Mail contactpersoon");
+        TableColumn<ContentModule, Date> publicationDateCol = new TableColumn<>("Publicatiedatum");
+        TableColumn<ContentModule, Status> statusCol = new TableColumn<>("Status");
+        TableColumn<ContentModule, Integer> indexNumberCol = new TableColumn<>("Volgnummer");
 
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         versionCol.setCellValueFactory(new PropertyValueFactory<>("version"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        contactPersonNameCol.setCellValueFactory(new PropertyValueFactory<>("contactPersonName"));
+        contactPersonMailCol.setCellValueFactory(new PropertyValueFactory<>("contactPersonMail"));
+        publicationDateCol.setCellValueFactory(new PropertyValueFactory<>("publicationDate"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        indexNumberCol.setCellValueFactory(new PropertyValueFactory<>("indexNumber"));
 
         //add columns to a list
         List<TableColumn<ContentModule, ?>> columnsModule = new ArrayList<>();
@@ -88,9 +109,10 @@ public class CoursesModulesGUI extends Application {
         TableView<ContentModule> tableModule = genericGUIModule.createTable(columnsModule);
 
         // get data from database as a resultset
-        databaseConnection.openConnection();
-        ResultSet resultSetCourse = databaseConnection.executeSQLSelectStatement("SELECT CourseId, CourseName FROM Course");
-        ResultSet resultSetModule = databaseConnection.executeSQLSelectStatement("SELECT Title, Version FROM Module");
+        databaseConnectionCourse.openConnection();
+        databaseConnectionModule.openConnection();
+        ResultSet resultSetCourse = databaseConnectionCourse.executeSQLSelectStatement("SELECT * FROM Course");
+        ResultSet resultSetModule = databaseConnectionModule.executeSQLSelectStatement("SELECT * FROM Module WHERE CourseId IS NULL");
 
         // put data in an observablelist to put into the table
         ObservableList<Course> dataCourse = genericGUICourse.getData(resultSetCourse, Course.class);
@@ -99,9 +121,26 @@ public class CoursesModulesGUI extends Application {
         ObservableList<ContentModule> dataModule = genericGUIModule.getData(resultSetModule, ContentModule.class);
         tableModule.setItems(dataModule);
 
+        // displays the courseName of the selected course on the right side of the screen
+        tableCourse.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectedCourseShowText.setText(newSelection.getCourseName());
+            } else {
+                selectedCourseShowText.setText("");
+            }
+        });
+
+        // displays the title and version of the selected module on the right side of the screen
+        tableModule.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectedModuleShowText.setText("Titel module: " + newSelection.getTitle() + "\nVersie: " + newSelection.getVersion());
+            } else {
+                selectedModuleShowText.setText("");
+            }
+        });
+
         //add buttons to a VBox
         VBox buttons = new VBox(addToCourseButton, backButton);
-        buttons.setPrefWidth(200);
         buttons.setPadding(new Insets(10));
 
         //add selected items to a VBox
@@ -116,6 +155,11 @@ public class CoursesModulesGUI extends Application {
         Scene scene = new Scene(box);
 
         coursesModulesStage.setScene(scene);
+
+        //eventhandler for button for adding a module to a course
+        addToCourseButton.setOnAction((addToCourseButtonEvent) -> {
+
+        });
 
         // eventhandler for going back to previous page
         backButton.setOnAction((backButtonEvent) -> {
