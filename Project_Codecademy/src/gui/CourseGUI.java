@@ -22,6 +22,8 @@ import javafx.stage.Stage;
 import objects.Course;
 import objects.Difficulty;
 
+//TODO: Button maken om alle modules in een cursus te zien
+
 public class CourseGUI extends Application {
 
     @Override
