@@ -15,7 +15,7 @@ public class Course {
         //default constructor
     }
 
-    //constructor with data
+    // constructor with data
     public Course(String courseName, String subject, String introText, Difficulty difficulty) {
         this.courseName = courseName;
         this.subject = subject;
