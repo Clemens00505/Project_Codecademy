@@ -21,7 +21,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import objects.ContentModule;
 import objects.Status;
 import objects.Webcast;
 
@@ -39,9 +38,9 @@ public class ContentWebcastGUI extends Application {
 
         // create buttons
         Button refreshButton = new Button("Tabel verversen");
-        Button addModuleButton = new Button("webcast toevoegen");
-        Button editModuleButton = new Button("webcast bewerken");
-        Button deleteModuleButton = new Button("webcast verwijderen");
+        Button addWebcastButton = new Button("webcast toevoegen");
+        Button editWebcastButton = new Button("webcast bewerken");
+        Button deleteWebcastButton = new Button("webcast verwijderen");
         Button backButton = new Button("Terug naar menu");
 
         // create labels and textareas to show title and description since table columns
@@ -60,9 +59,9 @@ public class ContentWebcastGUI extends Application {
         //sets equal width for buttons
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
-        addModuleButton.setMinWidth(equalWidth);
-        editModuleButton.setMinWidth(equalWidth);
-        deleteModuleButton.setMinWidth(equalWidth);
+        addWebcastButton.setMinWidth(equalWidth);
+        editWebcastButton.setMinWidth(equalWidth);
+        deleteWebcastButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -74,7 +73,7 @@ public class ContentWebcastGUI extends Application {
         TableColumn<Webcast, Status> statusCol = new TableColumn<>("Status");
         TableColumn<Webcast, String> URLCol = new TableColumn<>("URL");
         TableColumn<Webcast, Integer> timesViewedCol = new TableColumn<>("Aantal keer bekeken");
-        TableColumn<Webcast, Integer> courseIdCol = new TableColumn<>("CourseId");
+        TableColumn<Webcast, Integer> contentIdCol = new TableColumn<>("ContentId");
 
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -84,7 +83,7 @@ public class ContentWebcastGUI extends Application {
         statusCol.setCellValueFactory(new PropertyValueFactory<>("Status"));
         URLCol.setCellValueFactory(new PropertyValueFactory<>("URL"));
         timesViewedCol.setCellValueFactory(new PropertyValueFactory<>("timesViewed"));
-        courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+        contentIdCol.setCellValueFactory(new PropertyValueFactory<>("contenId"));
 
         // add columns to a list
         List<TableColumn<Webcast, ?>> columns = new ArrayList<>();
@@ -111,15 +110,15 @@ public class ContentWebcastGUI extends Application {
         table.setItems(data);
 
         // displays the title and description on the right side of the screen
-        // table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-        //     if (newSelection != null) {
-        //         titleShowText.setText(newSelection.getTitle());
-        //         descriptionShowText.setText(newSelection.getDescription());
-        //     } else {
-        //         titleShowText.setText("");
-        //         descriptionShowText.setText("");
-        //     }
-        // });
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                titleShowText.setText(newSelection.getTitle());
+                descriptionShowText.setText(newSelection.getDescription());
+            } else {
+                titleShowText.setText("");
+                descriptionShowText.setText("");
+            }
+        });
 
         // Gives the table and columns a good size on the screen
         table.setPrefWidth(950);
@@ -131,7 +130,7 @@ public class ContentWebcastGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addModuleButton, editModuleButton, deleteModuleButton,
+        VBox buttons = new VBox(refreshButton, addWebcastButton, editWebcastButton, deleteWebcastButton,
                 backButton);
 
         VBox showData = new VBox(titleShow, titleShowText, descriptionShow, descriptionShowText);
@@ -148,23 +147,23 @@ public class ContentWebcastGUI extends Application {
 
         webcastStage.setScene(scene);
 
-        // eventhandler for adding module
-        addModuleButton.setOnAction((addModuleEvent) -> {
-            // try {
-            //     AddModuleGUI addModuleGUI = new AddModuleGUI();
-            //     Stage addModuleStage = new Stage();
+        // eventhandler for adding webcast
+        addWebcastButton.setOnAction((addWebcastEvent) -> {
+            try {
+                AddWebcastGUI addWebcastGUI = new AddWebcastGUI();
+                Stage addWebcastStage = new Stage();
 
-            //     addModuleStage.setTitle("Webcast toevoegen");
-            //     genericGUI.openPopupScreen(addModuleStage, addModuleGUI);
+                addWebcastStage.setTitle("Webcast toevoegen");
+                genericGUI.openPopupScreen(addWebcastStage, addWebcastGUI);
 
-            // } catch (Exception e) {
-            //     e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
 
-            // }
+            }
         });
 
         // eventhandler for editing a webcast
-        editModuleButton.setOnAction((editWebcastEvent) -> {
+        editWebcastButton.setOnAction((editWebcastEvent) -> {
             Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
 
             // if (selectedWebcast != null) {
@@ -195,7 +194,7 @@ public class ContentWebcastGUI extends Application {
         });
 
         // eventhandler for deleting webcast
-        deleteModuleButton.setOnAction((deleteModuleEvent) -> {
+        deleteWebcastButton.setOnAction((deleteModuleEvent) -> {
             Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
 
             // if (selectedWebcast != null) {

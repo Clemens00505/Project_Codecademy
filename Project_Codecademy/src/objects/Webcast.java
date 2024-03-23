@@ -1,9 +1,12 @@
 package objects;
 
 import java.sql.Date;
+import java.sql.SQLException;
+
+import database.DatabaseConnection;
 
 public class Webcast {
-    private int courseId;
+    private int contentId;
     private String title;
     private String description;
     private String speakerName;
@@ -15,7 +18,7 @@ public class Webcast {
     
     //constructors
     public Webcast(String title, String description, String speakerName, String speakerOrganisation,
-            Date publicationDate, Status status, String URL, int timesViewed) {
+            Date publicationDate, Status status, String URL) {
         this.title = title;
         this.description = description;
         this.speakerName = speakerName;
@@ -23,13 +26,13 @@ public class Webcast {
         this.publicationDate = publicationDate;
         this.status = status;
         this.URL = URL;
-        this.timesViewed = timesViewed;
+        this.timesViewed = 0;
     }
 
-    //constructor with courseId
-    public Webcast(int courseId, String title, String description, String speakerName, String speakerOrganisation,
+    //constructor with contentId
+    public Webcast(int contentId, String title, String description, String speakerName, String speakerOrganisation,
             Date publicationDate, Status status, String URL, int timesViewed) {
-        this.courseId = courseId;
+        this.contentId = contentId;
         this.title = title;
         this.description = description;
         this.speakerName = speakerName;
@@ -44,4 +47,73 @@ public class Webcast {
     public Webcast() {
 
     }
+
+    //getters and setters
+    public int getContentId() {
+        return contentId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getSpeakerName() {
+        return speakerName;
+    }
+
+    public String getSpeakerOrganisation() {
+        return speakerOrganisation;
+    }
+
+    public Date getPublicationDate() {
+        return publicationDate;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public int getTimesViewed() {
+        return timesViewed;
+    }
+
+    // method for adding webcast to database
+    public void addWebcast(Webcast webcast, DatabaseConnection databaseConnection) throws SQLException {
+        StringBuilder insertStmt = new StringBuilder();
+
+        databaseConnection.openConnection();
+
+        // stringbuilder used for adding a webcast
+        insertStmt.append(
+                "INSERT INTO Webcast (Title, Description, SpeakerName, SpeakerOrganisation, PublicationDate, Status, URL) ");
+        insertStmt.append("VALUES ('");
+        insertStmt.append(webcast.getTitle());
+        insertStmt.append("', '");
+        insertStmt.append(webcast.getDescription());
+        insertStmt.append("', '");
+        insertStmt.append(webcast.getSpeakerName());
+        insertStmt.append("', '");
+        insertStmt.append(webcast.getSpeakerOrganisation());
+        insertStmt.append("', '");
+        insertStmt.append(webcast.getPublicationDate().toString());
+        insertStmt.append("', '");
+        insertStmt.append(webcast.getStatus());
+        insertStmt.append("', '");
+        insertStmt.append(webcast.getURL());
+        insertStmt.append("')");
+
+        System.out.println(insertStmt.toString());
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(insertStmt.toString());
+        databaseConnection.closeConnection();
+    }
+    
 }
