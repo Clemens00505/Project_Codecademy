@@ -1,6 +1,5 @@
 package gui;
 
-import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +24,6 @@ import objects.Status;
 import objects.Webcast;
 
 public class ContentWebcastGUI extends Application {
-//TODO: CRUD
     @Override
     public void start(Stage webcastStage) throws Exception {
         // create a GenericGU
@@ -195,7 +193,7 @@ public class ContentWebcastGUI extends Application {
         });
 
         // // eventhandler for deleting webcast
-        deleteWebcastButton.setOnAction((deleteModuleEvent) -> {
+        deleteWebcastButton.setOnAction((deleteWebcastEvent) -> {
             Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
 
             if (selectedWebcast != null) {
