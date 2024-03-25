@@ -195,31 +195,21 @@ public class ContentWebcastGUI extends Application {
         });
 
         // // eventhandler for deleting webcast
-        // deleteWebcastButton.setOnAction((deleteModuleEvent) -> {
-        //     Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
+        deleteWebcastButton.setOnAction((deleteModuleEvent) -> {
+            Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
 
-        //     // if (selectedWebcast != null) {
-        //     //     try {
-        //     //         String title = selectedModule.getTitle();
-        //     //         int version = selectedModule.getVersion();
-        //     //         String description = selectedModule.getDescription();
-        //     //         String contactPersonName = selectedModule.getContactPersonName();
-        //     //         String contactPersonMail = selectedModule.getContactPersonMail();
-        //     //         Date publicationDate = selectedModule.getPublicationDate();
-        //     //         Status status = selectedModule.getStatus();
-        //     //         int indexNumber = selectedModule.getIndexNumber();
+            if (selectedWebcast != null) {
+                try {
 
-        //     //         ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
+                    selectedWebcast.deleteWebcast(selectedWebcast, databaseConnection);
+                    refreshTable(data, table, genericGUI, databaseConnection);
 
-        //     //         contentModule.deleteModule(contentModule, databaseConnection);
-        //     //         refreshTable(data, table, genericGUI, databaseConnection);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-        //     //     } catch (Exception e) {
-        //     //         e.printStackTrace();
-        //     //     }
-
-        //     // }
-        // });
+            }
+        });
 
         // eventhandler for refreshing table
         refreshButton.setOnAction((refreshButtonEvent) -> {

@@ -140,5 +140,17 @@ public class Webcast {
         databaseConnection.closeConnection();
     }
 
+    // method for deleting webcast from database
+    public void deleteWebcast(Webcast webcast, DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+
+        StringBuilder deleteStmt = new StringBuilder();
+        deleteStmt.append("DELETE FROM Webcast WHERE ContentId LIKE ");
+        deleteStmt.append(webcast.getContentId());
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(deleteStmt.toString());
+        databaseConnection.closeConnection();
+    }
+
     
 }
