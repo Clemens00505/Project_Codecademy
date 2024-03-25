@@ -43,6 +43,8 @@ public class Webcast {
         this.timesViewed = timesViewed;
     }
 
+    
+
     //default constructor
     public Webcast() {
 
@@ -115,5 +117,28 @@ public class Webcast {
         databaseConnection.executeSQLInsertUpdateDeleteStatement(insertStmt.toString());
         databaseConnection.closeConnection();
     }
+
+    // method to update webcast information in database
+    public void updateWebcast(int ContentId, Webcast webcast, DatabaseConnection databaseConnection)
+            throws SQLException {
+        databaseConnection.openConnection();
+
+        StringBuilder updateStmt = new StringBuilder();
+        updateStmt.append("UPDATE Webcast SET ");
+        updateStmt.append("Title = '" + webcast.getTitle() + "', ");
+        updateStmt.append("Description = '" + webcast.getDescription() + "', ");
+        updateStmt.append("SpeakerName = '" + webcast.getSpeakerName() + "', ");
+        updateStmt.append("SpeakerOrganisation = '" + webcast.getSpeakerOrganisation() + "', ");
+        updateStmt.append("Status = '" + webcast.getStatus() + "', "); // Enclose Status in single quotes
+        updateStmt.append("Url = '" + webcast.getURL() + "', ");
+        updateStmt.append("TimesViewed = " + webcast.getTimesViewed() + " ");
+        updateStmt.append("WHERE ContentId = " + contentId);
+
+        System.out.println(updateStmt.toString());
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
+        databaseConnection.closeConnection();
+    }
+
     
 }

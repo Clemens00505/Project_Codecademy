@@ -166,59 +166,60 @@ public class ContentWebcastGUI extends Application {
         editWebcastButton.setOnAction((editWebcastEvent) -> {
             Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
 
-            // if (selectedWebcast != null) {
-            //     String title = selectedModule.getTitle();
-            //     int version = selectedModule.getVersion();
-            //     String description = selectedModule.getDescription();
-            //     String contactPersonName = selectedModule.getContactPersonName();
-            //     String contactPersonMail = selectedModule.getContactPersonMail();
-            //     Date publicationDate = selectedModule.getPublicationDate();
-            //     Status status = selectedModule.getStatus();
-            //     int indexNumber = selectedModule.getIndexNumber();
+            if (selectedWebcast != null) {
+                int contentId = selectedWebcast.getContentId();
+                String title = selectedWebcast.getTitle();
+                String description = selectedWebcast.getDescription();
+                String speakerName = selectedWebcast.getSpeakerName();
+                String speakerOrganisation = selectedWebcast.getSpeakerOrganisation();
+                Date publicationDate = selectedWebcast.getPublicationDate();
+                Status status = selectedWebcast.getStatus();
+                String URL = selectedWebcast.getURL();
+                int timesViewed = selectedWebcast.getTimesViewed();
 
-            //     ContentModule contentModule = new ContentModule(title, version, description, contactPersonName,
-            //             contactPersonMail, publicationDate, status, indexNumber);
+                Webcast webcast = new Webcast(contentId, title, description, speakerName, speakerOrganisation,
+                        publicationDate, status, URL, timesViewed);
 
-            //     try {
-            //         EditModuleGUI editModuleGUI = new EditModuleGUI(contentModule);
-            //         Stage editModuleStage = new Stage();
+                try {
+                    EditWebcastGUI editWebcastGUI = new EditWebcastGUI(webcast);
+                    Stage editWebcastStage = new Stage();
 
-            //         editModuleStage.setTitle("Module bewerken");
-            //         genericGUI.openPopupScreen(editModuleStage, editModuleGUI);
+                    editWebcastStage.setTitle("Webcast bewerken");
+                    genericGUI.openPopupScreen(editWebcastStage, editWebcastGUI);
 
-            //     } catch (Exception e) {
-            //         e.printStackTrace();
-            //     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            // }
+            }
         });
 
-        // eventhandler for deleting webcast
-        deleteWebcastButton.setOnAction((deleteModuleEvent) -> {
-            Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
+        // // eventhandler for deleting webcast
+        // deleteWebcastButton.setOnAction((deleteModuleEvent) -> {
+        //     Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
 
-            // if (selectedWebcast != null) {
-            //     try {
-            //         String title = selectedModule.getTitle();
-            //         int version = selectedModule.getVersion();
-            //         String description = selectedModule.getDescription();
-            //         String contactPersonName = selectedModule.getContactPersonName();
-            //         String contactPersonMail = selectedModule.getContactPersonMail();
-            //         Date publicationDate = selectedModule.getPublicationDate();
-            //         Status status = selectedModule.getStatus();
-            //         int indexNumber = selectedModule.getIndexNumber();
+        //     // if (selectedWebcast != null) {
+        //     //     try {
+        //     //         String title = selectedModule.getTitle();
+        //     //         int version = selectedModule.getVersion();
+        //     //         String description = selectedModule.getDescription();
+        //     //         String contactPersonName = selectedModule.getContactPersonName();
+        //     //         String contactPersonMail = selectedModule.getContactPersonMail();
+        //     //         Date publicationDate = selectedModule.getPublicationDate();
+        //     //         Status status = selectedModule.getStatus();
+        //     //         int indexNumber = selectedModule.getIndexNumber();
 
-            //         ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
+        //     //         ContentModule contentModule = new ContentModule(title, version, description, contactPersonName, contactPersonMail, publicationDate, status, indexNumber);
 
-            //         contentModule.deleteModule(contentModule, databaseConnection);
-            //         refreshTable(data, table, genericGUI, databaseConnection);
+        //     //         contentModule.deleteModule(contentModule, databaseConnection);
+        //     //         refreshTable(data, table, genericGUI, databaseConnection);
 
-            //     } catch (Exception e) {
-            //         e.printStackTrace();
-            //     }
+        //     //     } catch (Exception e) {
+        //     //         e.printStackTrace();
+        //     //     }
 
-            // }
-        });
+        //     // }
+        // });
 
         // eventhandler for refreshing table
         refreshButton.setOnAction((refreshButtonEvent) -> {
