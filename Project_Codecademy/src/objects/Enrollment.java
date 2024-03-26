@@ -60,9 +60,6 @@ public class Enrollment {
             System.out.println("closed");
         }
     
-        // Get the courseId by name
-        // int courseId = getCourseIdByName(enrollment.getCourseName(), databaseConnection);
-    
         // StringBuilder used for constructing the SQL INSERT statement
         insertStmt.append("INSERT INTO Enrollment (StudentMail, CourseId, EnrollmentDate) ");
         insertStmt.append("VALUES ('");
