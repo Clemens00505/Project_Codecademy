@@ -54,7 +54,7 @@ public class CodecademyGUI extends Application {
             genericGUI.switchScreen(codecademyGUI, contentStage, contentGUI);
         });
     
-        contentButton.setOnAction((event) -> {
+        enrollmentButton.setOnAction((event) -> {
             EnrollmentGUI enrollmentGUI = new EnrollmentGUI();
 
             Stage enrollmentStage = new Stage();
