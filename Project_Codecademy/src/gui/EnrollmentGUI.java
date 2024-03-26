@@ -173,8 +173,14 @@ public class EnrollmentGUI extends Application {
             }
         });
 
-        backButton.setOnAction((backButtonEvent) -> {
-            // Implement back button functionality here
+        // eventhandler for button to return to menu
+        backButton.setOnAction((returnButtonEvent) -> {
+            CodecademyGUI codecademyGUI = new CodecademyGUI();
+
+            Stage codecademyStage = new Stage();
+            codecademyStage.setTitle("Menu");
+
+            genericGUI.switchScreen(enrollmentStage, codecademyStage, codecademyGUI);
         });
     }
 

@@ -19,11 +19,17 @@ public class CodecademyGUI extends Application {
 
         Button studentenButton = new Button("Studenten");
         Button contentButton = new Button("Content");
+        Button enrollmentButton = new Button("Inschrijvingen");
         
         VBox box = new VBox();
-        box.getChildren().addAll(studentenButton, contentButton);
+        box.getChildren().addAll(studentenButton, contentButton, enrollmentButton);
 
         Scene scene = new Scene(box, 100, 200);
+
+        int width = 150;
+        studentenButton.setPrefWidth(width);
+        contentButton.setPrefWidth(width);
+        enrollmentButton.setPrefWidth(width);
 
         codecademyGUI.setScene(scene);
         codecademyGUI.show();
@@ -48,6 +54,14 @@ public class CodecademyGUI extends Application {
             genericGUI.switchScreen(codecademyGUI, contentStage, contentGUI);
         });
     
+        contentButton.setOnAction((event) -> {
+            EnrollmentGUI enrollmentGUI = new EnrollmentGUI();
+
+            Stage enrollmentStage = new Stage();
+            enrollmentStage.setTitle("Inschrijvingen");
+
+            genericGUI.switchScreen(codecademyGUI, enrollmentStage, enrollmentGUI);
+        });
 
     }
 }
