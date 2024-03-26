@@ -95,10 +95,8 @@ public class AddEnrollmentGUI extends Application {
 
                     // Retrieve the course ID based on the course name
                     int courseId = enrollment.getCourseIdByName(courseName, databaseConnection);
-                    // Set the retrieved course ID
                     enrollment.setCourseId(courseId);
 
-                    // Save the enrollment to the database
                     enrollment.addEnrollment(enrollment, databaseConnection);
 
                     addEnrollmentStage.close();

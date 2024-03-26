@@ -61,14 +61,14 @@ public class Enrollment {
         }
     
         // Get the courseId by name
-        int courseId = getCourseIdByName(enrollment.getCourseName(), databaseConnection);
+        // int courseId = getCourseIdByName(enrollment.getCourseName(), databaseConnection);
     
         // StringBuilder used for constructing the SQL INSERT statement
         insertStmt.append("INSERT INTO Enrollment (StudentMail, CourseId, EnrollmentDate) ");
         insertStmt.append("VALUES ('");
         insertStmt.append(enrollment.getStudentMail());
         insertStmt.append("', ");
-        insertStmt.append(courseId);
+        insertStmt.append(enrollment.getCourseId());
         insertStmt.append(", '");
         insertStmt.append(enrollment.getEnrollmentDate().toString());
         insertStmt.append("')");
