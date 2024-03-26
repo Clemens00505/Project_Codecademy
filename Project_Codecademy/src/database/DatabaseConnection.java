@@ -1,5 +1,7 @@
 package database;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
@@ -21,7 +23,7 @@ public class DatabaseConnection {
             try {
                 // Import driver
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                //connecting to the server
+                // connecting to the server
                 String connectionUrl = "jdbc:sqlserver://aei-sql2.avans.nl:1443;databaseName=CodecademyClemens;user=Clemens;password=wachtwoord1;encrypt=false;";
                 connection = DriverManager.getConnection(connectionUrl);
 
@@ -61,12 +63,16 @@ public class DatabaseConnection {
 
     public void closeConnection() { // method to close connection to database
         try {
-            statement.close();
-            connection.close();
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    
         statement = null;
         connection = null;
     }
@@ -90,13 +96,13 @@ public class DatabaseConnection {
     public void executeSQLStatement(String query) {
         if (query != null && connectionIsOpen()) {
             try {
-                statement.executeQuery(query);
+                statement.execute(query);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-
+    
     public void executeSQLInsertUpdateDeleteStatement(String query) {
         if (query != null && connectionIsOpen()) {
             try {
@@ -107,9 +113,76 @@ public class DatabaseConnection {
         }
     }
 
+    // Method to get all student emails from the database
+    public List<String> getAllStudentEmails() throws SQLException {
+        List<String> emails = new ArrayList<>();
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT Email FROM Student";
+            resultSet = executeSQLSelectStatement(query);
+            while (resultSet.next()) {
+                emails.add(resultSet.getString("Email"));
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+        return emails;
+    }
+
+    // Method to fetch all existing course names from the database
+    public List<String> getAllCourseNames() throws SQLException {
+        List<String> courseNames = new ArrayList<>();
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT CourseName FROM Course";
+            resultSet = executeSQLSelectStatement(query);
+            while (resultSet.next()) {
+                courseNames.add(resultSet.getString("CourseName"));
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+        return courseNames;
+    }
+
     // Method to get a prepared statement
     public PreparedStatement getPreparedStatement(String sqlQuery) throws SQLException {
         return connection.prepareStatement(sqlQuery);
     }
+
+    // Method to get the course ID by name
+public int getCourseIdByName(String courseName) throws SQLException {
+    int courseId = -1; // Default value if course is not found or an error occurs
+    ResultSet resultSet = null;
+    PreparedStatement preparedStatement = null;
+    
+    try {
+        openConnection(); // Ensure the connection is open before executing the query
+
+        String query = "SELECT CourseId FROM Course WHERE CourseName = ?";
+        preparedStatement = getPreparedStatement(query);
+        preparedStatement.setString(1, courseName);
+
+        resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.next()) {
+            courseId = resultSet.getInt("CourseId");
+        }
+    } finally {
+        if (resultSet != null) {
+            resultSet.close();
+        }
+        if (preparedStatement != null) {
+            preparedStatement.close();
+        }
+        closeConnection(); // Close the connection after executing the query
+    }
+
+    return courseId;
+}
 
 }

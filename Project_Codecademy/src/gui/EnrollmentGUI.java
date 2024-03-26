@@ -8,22 +8,17 @@ import java.util.List;
 
 import database.DatabaseConnection;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Enrollment;
-import objects.Status;
 
 public class EnrollmentGUI extends Application {
 
@@ -58,12 +53,14 @@ public class EnrollmentGUI extends Application {
         TableColumn<Enrollment, Integer> percentageCol = new TableColumn<>("Percentage");
         TableColumn<Enrollment, Date> enrollmentDateCol = new TableColumn<>("Inschrijfdatum");
         TableColumn<Enrollment, Integer> enrollmentIdCol = new TableColumn<>("Inschrijvings-ID");
+        TableColumn<Enrollment, Integer> courseIdCol = new TableColumn<>("CursusId");
 
         studentMailCol.setCellValueFactory(new PropertyValueFactory<>("studentMail"));
         courseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
         percentageCol.setCellValueFactory(new PropertyValueFactory<>("percentage"));
         enrollmentDateCol.setCellValueFactory(new PropertyValueFactory<>("enrollmentDate"));
         enrollmentIdCol.setCellValueFactory(new PropertyValueFactory<>("enrollmentId"));
+        courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
 
         // add columns to a list
         List<TableColumn<Enrollment, ?>> columns = new ArrayList<>();
@@ -77,8 +74,11 @@ public class EnrollmentGUI extends Application {
 
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Enrollment");
-
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement(
+                "SELECT Enrollment.CourseId, Enrollment.StudentMail, Enrollment.EnrollmentDate, Enrollment.Percentage, Course.CourseName, Enrollment.EnrollmentId\r\n"
+                        + //
+                        "FROM Enrollment\r\n" + //
+                        "JOIN Course ON Enrollment.CourseId = Course.CourseId;");
         // puts the data from the resultset in an observablelist
         ObservableList<Enrollment> data = genericGUI.getData(resultSet, Enrollment.class);
 
@@ -98,7 +98,6 @@ public class EnrollmentGUI extends Application {
         VBox buttons = new VBox(refreshButton, addEnrollmentButton, editEnrollmentButton, deleteEnrollmentButton,
                 backButton);
 
-
         buttons.setPrefWidth(200);
         buttons.setPadding(new Insets(10));
 
@@ -111,29 +110,58 @@ public class EnrollmentGUI extends Application {
         enrollmentStage.setScene(scene);
 
         // eventhandler for adding enrollment
-        // addEnrollmentButton.setOnAction((addEnrollmentEvent) -> {
-        //     // try {
-        //     //     if (selectedStudentMail != null) {
-        //     //         AddEnrollmentGUI addEnrollmentGUI = new AddEnrollmentGUI(selectedStudentMail);
-        //     //         Stage addEnrollmentStage = new Stage();
+        addEnrollmentButton.setOnAction((addEnrollmentEvent) -> {
+            try {
+                AddEnrollmentGUI addEnrollmentGUI = new AddEnrollmentGUI();
+                Stage addEnrollmentStage = new Stage();
 
-        //     //         addEnrollmentStage.setTitle("Enrollment toevoegen");
-        //     //         genericGUI.openPopupScreen(addEnrollmentStage, addEnrollmentGUI);
-        //     //     } else {
-        //         }
-        //     } catch (Exception e) {
-        //         e.printStackTrace();
-        //     }
-        // });
+                addEnrollmentStage.setTitle("Inschrijving toevoegen");
+                genericGUI.openPopupScreen(addEnrollmentStage, addEnrollmentGUI);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        });
 
         // eventhandler for editing an enrollment
-        // editEnrollmentButton.setOnAction((editEnrollmentEvent) -> {
-            // Implement editing logic here
-        // });
+        editEnrollmentButton.setOnAction((editEnrollmentEvent) -> {
+            Enrollment selectedEnrollment = table.getSelectionModel().getSelectedItem();
+
+            if (selectedEnrollment != null) {
+                String studentMail = selectedEnrollment.getStudentMail();
+                String courseName = selectedEnrollment.getCourseName();
+                int percentage = selectedEnrollment.getPercentage();
+                Date enrollmentDate = selectedEnrollment.getEnrollmentDate();
+                int enrollmentId = selectedEnrollment.getEnrollmentId();
+                int courseId = selectedEnrollment.getCourseId();
+
+                Enrollment enrollment = new Enrollment(studentMail, courseName, percentage, enrollmentDate, enrollmentId, courseId);
+
+                try {
+                    EditEnrollmentGUI editEnrollmentGUI = new EditEnrollmentGUI(enrollment);
+                    Stage editEnrollmentStage = new Stage();
+
+                    editEnrollmentStage.setTitle("Inschrijving bewerken");
+                    genericGUI.openPopupScreen(editEnrollmentStage, editEnrollmentGUI);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            
+        });
 
         // eventhandler for deleting an enrollment
         deleteEnrollmentButton.setOnAction((deleteEnrollmentEvent) -> {
-            // Implement deletion logic here
+            Enrollment selectedEnrollment = table.getSelectionModel().getSelectedItem();
+
+            try {
+                selectedEnrollment.deleteEnrollment(selectedEnrollment, databaseConnection);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         // eventhandler for refreshing table
@@ -152,16 +180,20 @@ public class EnrollmentGUI extends Application {
 
     // method for refreshing the table
     private void refreshTable(ObservableList<Enrollment> data, TableView<Enrollment> table,
-                                  GenericGUI<Enrollment> genericGUI,
-                                  DatabaseConnection databaseConnection) throws SQLException {
-            databaseConnection.openConnection();
-            ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Enrollment");
-            databaseConnection.connectionIsOpen();
-        
-            data = genericGUI.getData(resultSet, Enrollment.class);
-        
-            // displays new data in the table
-            table.setItems(data);
-            table.refresh();
-        }
+            GenericGUI<Enrollment> genericGUI,
+            DatabaseConnection databaseConnection) throws SQLException {
+        databaseConnection.openConnection();
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement(
+                "SELECT Enrollment.CourseId, Enrollment.StudentMail, Enrollment.EnrollmentDate, Enrollment.Percentage, Course.CourseName, Enrollment.EnrollmentId\r\n"
+                        + //
+                        "FROM Enrollment\r\n" + //
+                        "JOIN Course ON Enrollment.CourseId = Course.CourseId;");
+        databaseConnection.connectionIsOpen();
+
+        data = genericGUI.getData(resultSet, Enrollment.class);
+
+        // displays new data in the table
+        table.setItems(data);
+        table.refresh();
+    }
 }
