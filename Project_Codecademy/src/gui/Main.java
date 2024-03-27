@@ -4,7 +4,7 @@ import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
-        Application.launch(CertificateGUI.class);
+        Application.launch(CodecademyGUI.class);
 
     }
 }
