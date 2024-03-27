@@ -79,7 +79,7 @@ public class DatabaseConnection {
 
     public ResultSet executeSQLSelectStatement(String query) { // method for using a query
         ResultSet resultSet = null;
-
+    
         if (query != null && connectionIsOpen()) {
             try {
                 resultSet = statement.executeQuery(query);
@@ -88,8 +88,13 @@ public class DatabaseConnection {
                 e.printStackTrace();
             }
         }
-
-        System.out.println("Resultset gemaakt: " + resultSet.toString());
+    
+        if (resultSet != null) {
+            System.out.println("Resultset gemaakt: " + resultSet.toString());
+        } else {
+            System.out.println("Resultset gemaakt: null");
+        }
+        
         return resultSet;
     }
 
