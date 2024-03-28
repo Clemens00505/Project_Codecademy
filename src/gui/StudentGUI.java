@@ -37,6 +37,7 @@ public class StudentGUI extends Application {
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
         Button viewCertificatesButton = new Button("Bekijk certificaten");
+        Button showViewedWebcastsButton = new Button("Bekeken webcasts");
         Button backButton = new Button("Terug naar hoofdmenu");
 
         int equalWidth = 175;
@@ -45,6 +46,7 @@ public class StudentGUI extends Application {
         editStudentButton.setMinWidth(equalWidth);
         deleteStudentButton.setMinWidth(equalWidth);
         viewCertificatesButton.setMinWidth(equalWidth);
+        showViewedWebcastsButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -102,7 +104,7 @@ public class StudentGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, viewCertificatesButton, backButton);
+        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, viewCertificatesButton, showViewedWebcastsButton, backButton);
 
         buttons.setPadding(new Insets(10));
 
@@ -222,6 +224,21 @@ public class StudentGUI extends Application {
             try {
                 refreshTable(data, table, genericGUI, databaseConnection);
             } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        showViewedWebcastsButton.setOnAction((showViewedWebcastsButtonEvent) -> {
+            Student student = table.getSelectionModel().getSelectedItem();
+
+            try {
+                StudentWebcastProgressGUI studentWebcastProgressGUI = new StudentWebcastProgressGUI(student);
+
+                Stage studentWebcastProgressStage = new Stage();
+                studentWebcastProgressStage.setTitle("Bekeken webcasts van: " + student.getEmail());
+
+                genericGUI.switchScreen(studentGUI, studentWebcastProgressStage, studentWebcastProgressGUI);
+            } catch (Exception e){
                 e.printStackTrace();
             }
         });
