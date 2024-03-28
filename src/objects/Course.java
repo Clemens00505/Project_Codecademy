@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DatabaseConnection;
-import javafx.scene.chart.PieChart.Data;
 
 public class Course {
     private int courseId;

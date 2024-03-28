@@ -124,7 +124,7 @@ public class CourseGUI extends Application {
         VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton, showModulesButton, timesCompletedButton,
                 backButton);
 
-        VBox showData = new VBox(courseNameShow, courseNameShowText, introTextShow, introTextShowText, timesCompletedName, timesCompleted);
+        VBox showData = new VBox(timesCompletedName, timesCompleted, courseNameShow, courseNameShowText, introTextShow, introTextShowText);
 
         buttons.setPrefWidth(200);
 
@@ -236,9 +236,6 @@ public class CourseGUI extends Application {
 
         timesCompletedButton.setOnAction((timesCompletedButtonEvent) -> {
             Course course = table.getSelectionModel().getSelectedItem();
-
-            int courseId = course.getCourseId();
-            String courseName = course.getCourseName();
 
             try {
                 int amountCompleted = course.getAmountCompleted(course, databaseConnection);
