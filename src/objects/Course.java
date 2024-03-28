@@ -1,8 +1,10 @@
 package objects;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DatabaseConnection;
+import javafx.scene.chart.PieChart.Data;
 
 public class Course {
     private int courseId;
@@ -12,7 +14,7 @@ public class Course {
     private Difficulty difficulty;
 
     public Course() {
-        //default constructor
+        // default constructor
     }
 
     // constructor with data
@@ -23,8 +25,8 @@ public class Course {
         this.difficulty = difficulty;
     }
 
-     //constructor with courseId
-     public Course(int courseId, String courseName, String subject, String introText, Difficulty difficulty) {
+    // constructor with courseId
+    public Course(int courseId, String courseName, String subject, String introText, Difficulty difficulty) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.subject = subject;
@@ -108,5 +110,22 @@ public class Course {
         databaseConnection.closeConnection();
     }
 
-    
+    public int getAmountCompleted(Course course, DatabaseConnection databaseConnection) {
+        databaseConnection.openConnection();
+        int amountCompleted = 0;
+        String selectStmt = "SELECT COUNT(*) AS amountCompleted FROM Certificate WHERE EnrollmentId in (SELECT EnrollmentId FROM Enrollment WHERE CourseId = " + course.getCourseId() + ")";
+
+        try (ResultSet resultSet = databaseConnection.executeSQLSelectStatement(selectStmt)) {
+            if (resultSet.next()) {
+                amountCompleted = resultSet.getInt("amountCompleted");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            databaseConnection.closeConnection();
+        }
+
+        return amountCompleted;
+    }
+
 }

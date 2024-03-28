@@ -39,6 +39,7 @@ public class CourseGUI extends Application {
         Button editCourseButton = new Button("Cursus bewerken");
         Button deleteCourseButton = new Button("Cursus verwijderen");
         Button showModulesButton = new Button("Toon modules in cursus");
+        Button timesCompletedButton = new Button("Aantal keer gehaald");
         Button backButton = new Button("Terug naar menu");
 
         // create labels and textareas to show courseName and IntroText since table
@@ -48,6 +49,10 @@ public class CourseGUI extends Application {
         Label introTextShow = new Label("Introductietekst: ");
         TextArea courseNameShowText = new TextArea();
         TextArea introTextShowText = new TextArea();
+
+        //label for showing times completed
+        Label timesCompletedName = new Label("Cursus");
+        Label timesCompleted = new Label("Aantal keer behaald: ");
 
         courseNameShowText.setEditable(false);
         courseNameShowText.setWrapText(true);
@@ -61,6 +66,7 @@ public class CourseGUI extends Application {
         editCourseButton.setMinWidth(equalWidth);
         deleteCourseButton.setMinWidth(equalWidth);
         showModulesButton.setMinWidth(equalWidth);
+        timesCompletedButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -115,10 +121,10 @@ public class CourseGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton, showModulesButton,
+        VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton, showModulesButton, timesCompletedButton,
                 backButton);
 
-        VBox showData = new VBox(courseNameShow, courseNameShowText, introTextShow, introTextShowText);
+        VBox showData = new VBox(courseNameShow, courseNameShowText, introTextShow, introTextShowText, timesCompletedName, timesCompleted);
 
         buttons.setPrefWidth(200);
 
@@ -225,6 +231,22 @@ public class CourseGUI extends Application {
                     e.printStackTrace();
                 }
 
+            }
+        });
+
+        timesCompletedButton.setOnAction((timesCompletedButtonEvent) -> {
+            Course course = table.getSelectionModel().getSelectedItem();
+
+            int courseId = course.getCourseId();
+            String courseName = course.getCourseName();
+
+            try {
+                int amountCompleted = course.getAmountCompleted(course, databaseConnection);
+
+                timesCompleted.setText("Aantal keer behaald: " + amountCompleted);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
