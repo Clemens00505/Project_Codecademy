@@ -1,6 +1,5 @@
 package gui;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,18 +21,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import objects.Status;
 import objects.Student;
-import objects.Webcast;
+import objects.StudentWebcast;
 
 public class StudentWebcastProgressGUI extends Application {
     private Student student;
-    
+
     public StudentWebcastProgressGUI(Student student) {
         this.student = student;
     }
 
     public void start(Stage studentWebcastProgressStage) throws Exception {
         // create a GenericGU
-        GenericGUI<Webcast> genericGUI = new GenericGUI<>();
+        GenericGUI<StudentWebcast> genericGUI = new GenericGUI<>();
 
         studentWebcastProgressStage.show();
         studentWebcastProgressStage.setTitle("Voortgang webcasts van " + student.getEmail());
@@ -59,7 +58,7 @@ public class StudentWebcastProgressGUI extends Application {
         descriptionShowText.setEditable(false);
         descriptionShowText.setWrapText(true);
 
-        //sets equal width for buttons
+        // sets equal width for buttons
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
         addWebcastToStudentButton.setMinWidth(equalWidth);
@@ -67,22 +66,23 @@ public class StudentWebcastProgressGUI extends Application {
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
-        TableColumn<Webcast, String> emailCol = new TableColumn<>("Email");
-        TableColumn<Webcast, String> titleCol = new TableColumn<>("Titel");
-        TableColumn<Webcast, String> descriptionCol = new TableColumn<>("Beschrijving");
-        TableColumn<Webcast, Integer> progressCol = new TableColumn<>("Voortgang");
-        TableColumn<Webcast, Status> webcastIdCol = new TableColumn<>("WebcastId");
-        TableColumn<Webcast, String> studentWebcastIdCol = new TableColumn<>("StudentWebcastId");
+        TableColumn<StudentWebcast, String> emailCol = new TableColumn<>("Email");
+        TableColumn<StudentWebcast, String> titleCol = new TableColumn<>("Titel");
+        TableColumn<StudentWebcast, String> descriptionCol = new TableColumn<>("Beschrijving");
+        TableColumn<StudentWebcast, Integer> progressCol = new TableColumn<>("Voortgang");
+        TableColumn<StudentWebcast, Status> webcastIdCol = new TableColumn<>("WebcastId");
+        TableColumn<StudentWebcast, String> studentWebcastIdCol = new TableColumn<>("StudentWebcastId");
 
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));;
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         progressCol.setCellValueFactory(new PropertyValueFactory<>("progressPercentage"));
-        webcastIdCol.setCellValueFactory(new PropertyValueFactory<>("webcastContentId"));
-        studentWebcastIdCol.setCellValueFactory(new PropertyValueFactory<>("studentWebcastProgressId"));
+        webcastIdCol.setCellValueFactory(new PropertyValueFactory<>("contentId"));
+        studentWebcastIdCol.setCellValueFactory(new PropertyValueFactory<>("studentWebcastProgressid"));
+
 
         // add columns to a list
-        List<TableColumn<Webcast, ?>> columns = new ArrayList<>();
+        List<TableColumn<StudentWebcast, ?>> columns = new ArrayList<>();
         columns.add(emailCol);
         columns.add(titleCol);
         columns.add(descriptionCol);
@@ -91,18 +91,21 @@ public class StudentWebcastProgressGUI extends Application {
         columns.add(studentWebcastIdCol);
 
         // create the table
-        TableView<Webcast> table = genericGUI.createTable(columns);
+        TableView<StudentWebcast> table = genericGUI.createTable(columns);
 
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT Webcast.Title, Webcast.Description, StudentWebcastProgress.ProgressPercentage, StudentWebcastProgress.StudentWebcastProgressId, Student.Email, StudentWebcastProgress.WebcastContentId\n" + //
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement(
+                "SELECT Webcast.Title, Webcast.Description, Webcast.ContentId, StudentWebcastProgress.ProgressPercentage, StudentWebcastProgress.StudentWebcastProgressId, Student.Email \n"
+                        + //
                         "FROM Webcast \n" + //
                         "JOIN StudentWebcastProgress on Webcast.ContentId = StudentWebcastProgress.WebcastContentId\n" + //
                         "JOIN Student on StudentWebcastProgress.StudentMail = Student.Email\n" + //
                         "WHERE Student.Email = '" + student.getEmail() + "';");
 
+
         // puts the data from the resultset in an observablelist
-        ObservableList<Webcast> data = genericGUI.getData(resultSet, Webcast.class);
+        ObservableList<StudentWebcast> data = genericGUI.getData(resultSet, StudentWebcast.class);
 
         // displays data in the table
         table.setItems(data);
@@ -163,36 +166,18 @@ public class StudentWebcastProgressGUI extends Application {
 
         // eventhandler for editing a webcast
         editWebcastButton.setOnAction((editWebcastEvent) -> {
-            Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
+            StudentWebcast webcast = table.getSelectionModel().getSelectedItem();
 
-            if (selectedWebcast != null) {
-                int contentId = selectedWebcast.getContentId();
-                String title = selectedWebcast.getTitle();
-                String description = selectedWebcast.getDescription();
-                String speakerName = selectedWebcast.getSpeakerName();
-                String speakerOrganisation = selectedWebcast.getSpeakerOrganisation();
-                Date publicationDate = selectedWebcast.getPublicationDate();
-                Status status = selectedWebcast.getStatus();
-                String URL = selectedWebcast.getURL();
-                int timesViewed = selectedWebcast.getTimesViewed();
+            try {
+                EditWebcastProgressGUI editWebcastProgressGUI = new EditWebcastProgressGUI(webcast);
+                Stage editWebcastProgressStage = new Stage();
+                editWebcastProgressStage.setTitle("Voortgang aanpassen");
 
-                Webcast webcast = new Webcast(contentId, title, description, speakerName, speakerOrganisation,
-                        publicationDate, status, URL, timesViewed);
-
-                try {
-                    EditWebcastGUI editWebcastGUI = new EditWebcastGUI(webcast);
-                    Stage editWebcastStage = new Stage();
-
-                    editWebcastStage.setTitle("Webcast bewerken");
-                    genericGUI.openPopupScreen(editWebcastStage, editWebcastGUI);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                genericGUI.openPopupScreen(studentWebcastProgressStage, editWebcastProgressGUI);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
-
 
         backButton.setOnAction((backButtonEvent) -> {
             StudentGUI studentGUI = new StudentGUI();
@@ -206,20 +191,24 @@ public class StudentWebcastProgressGUI extends Application {
     }
 
     // method for refreshing the table
-    private void refreshTable(ObservableList<Webcast> data, TableView<Webcast> table,
-            GenericGUI<Webcast> genericGUI,
+    private void refreshTable(ObservableList<StudentWebcast> data, TableView<StudentWebcast> table,
+            GenericGUI<StudentWebcast> genericGUI,
             DatabaseConnection databaseConnection) throws SQLException {
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Webcast");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement(
+                "SELECT Webcast.Title, Webcast.Description, Webcast.ContentId, StudentWebcastProgress.ProgressPercentage, StudentWebcastProgress.StudentWebcastProgressId, Student.Email \n"
+                        + //
+                        "FROM Webcast \n" + //
+                        "JOIN StudentWebcastProgress on Webcast.ContentId = StudentWebcastProgress.WebcastContentId\n" + //
+                        "JOIN Student on StudentWebcastProgress.StudentMail = Student.Email\n" + //
+                        "WHERE Student.Email = '" + student.getEmail() + "';");
         databaseConnection.connectionIsOpen();
 
-        data = genericGUI.getData(resultSet, Webcast.class);
+        data = genericGUI.getData(resultSet, StudentWebcast.class);
 
         // displays new data in the table
         table.setItems(data);
         table.refresh();
     }
 
-
 }
-

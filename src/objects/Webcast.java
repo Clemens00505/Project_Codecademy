@@ -15,7 +15,9 @@ public class Webcast {
     private Status status;
     private String URL;
     private int timesViewed;
-    
+
+  
+
     //constructors
     public Webcast(String title, String description, String speakerName, String speakerOrganisation,
             Date publicationDate, Status status, String URL) {

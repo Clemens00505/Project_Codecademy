@@ -84,6 +84,8 @@ public class AddWebcastToStudentGUI extends Application {
             if (selectedWebcast != null) {
                 selectedWebcast.addToStudent(selectedWebcast, student, databaseConnection);
 
+                addWebcastToStudentStage.close();
+
             } else {
                 // If no webcast is selected, display an error message
                 Alert errorAlert = new Alert(AlertType.ERROR);
