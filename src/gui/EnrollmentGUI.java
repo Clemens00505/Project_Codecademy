@@ -11,6 +11,8 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -18,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import objects.Certificate;
 import objects.Enrollment;
 
 public class EnrollmentGUI extends Application {
@@ -37,6 +40,7 @@ public class EnrollmentGUI extends Application {
         Button addEnrollmentButton = new Button("Enrollment toevoegen");
         Button editEnrollmentButton = new Button("Enrollment bewerken");
         Button deleteEnrollmentButton = new Button("Enrollment verwijderen");
+        Button createCertificateButton = new Button("Certificaat maken");
         Button backButton = new Button("Terug naar menu");
 
         // sets equal width for buttons
@@ -45,6 +49,7 @@ public class EnrollmentGUI extends Application {
         addEnrollmentButton.setMinWidth(equalWidth);
         editEnrollmentButton.setMinWidth(equalWidth);
         deleteEnrollmentButton.setMinWidth(equalWidth);
+        createCertificateButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -54,6 +59,7 @@ public class EnrollmentGUI extends Application {
         TableColumn<Enrollment, Date> enrollmentDateCol = new TableColumn<>("Inschrijfdatum");
         TableColumn<Enrollment, Integer> enrollmentIdCol = new TableColumn<>("Inschrijvings-ID");
         TableColumn<Enrollment, Integer> courseIdCol = new TableColumn<>("CursusId");
+        TableColumn<Enrollment, Integer> certificateCreatedCol = new TableColumn<>("CertificateCreated");
 
         studentMailCol.setCellValueFactory(new PropertyValueFactory<>("studentMail"));
         courseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
@@ -61,6 +67,7 @@ public class EnrollmentGUI extends Application {
         enrollmentDateCol.setCellValueFactory(new PropertyValueFactory<>("enrollmentDate"));
         enrollmentIdCol.setCellValueFactory(new PropertyValueFactory<>("enrollmentId"));
         courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+        certificateCreatedCol.setCellValueFactory(new PropertyValueFactory<>("certificateCreated"));
 
         // add columns to a list
         List<TableColumn<Enrollment, ?>> columns = new ArrayList<>();
@@ -75,10 +82,7 @@ public class EnrollmentGUI extends Application {
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement(
-                "SELECT Enrollment.CourseId, Enrollment.StudentMail, Enrollment.EnrollmentDate, Enrollment.Percentage, Course.CourseName, Enrollment.EnrollmentId\r\n"
-                        + //
-                        "FROM Enrollment\r\n" + //
-                        "JOIN Course ON Enrollment.CourseId = Course.CourseId;");
+                "SELECT Enrollment.CourseId, Enrollment.StudentMail, Enrollment.EnrollmentDate, Enrollment.Percentage, Enrollment.HasCertificate, Course.CourseName, Enrollment.EnrollmentId FROM Enrollment JOIN Course ON Enrollment.CourseId = Course.CourseId;");
         // puts the data from the resultset in an observablelist
         ObservableList<Enrollment> data = genericGUI.getData(resultSet, Enrollment.class);
 
@@ -95,7 +99,7 @@ public class EnrollmentGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addEnrollmentButton, editEnrollmentButton, deleteEnrollmentButton,
+        VBox buttons = new VBox(refreshButton, addEnrollmentButton, editEnrollmentButton, deleteEnrollmentButton, createCertificateButton,
                 backButton);
 
         buttons.setPrefWidth(200);
@@ -136,7 +140,8 @@ public class EnrollmentGUI extends Application {
                 int enrollmentId = selectedEnrollment.getEnrollmentId();
                 int courseId = selectedEnrollment.getCourseId();
 
-                Enrollment enrollment = new Enrollment(studentMail, courseName, percentage, enrollmentDate, enrollmentId, courseId);
+                Enrollment enrollment = new Enrollment(studentMail, courseName, percentage, enrollmentDate,
+                        enrollmentId, courseId);
 
                 try {
                     EditEnrollmentGUI editEnrollmentGUI = new EditEnrollmentGUI(enrollment);
@@ -149,7 +154,6 @@ public class EnrollmentGUI extends Application {
                 }
             }
 
-            
         });
 
         // eventhandler for deleting an enrollment
@@ -173,6 +177,42 @@ public class EnrollmentGUI extends Application {
             }
         });
 
+        createCertificateButton.setOnAction((createCertificateButtonEvent) -> {
+            Enrollment enrollment = table.getSelectionModel().getSelectedItem();
+
+            String studentMail = enrollment.getStudentMail();
+            int enrollmentId = enrollment.getEnrollmentId();
+            int hasCertificate = enrollment.getHasCertificate();
+            int percentage = enrollment.getPercentage();
+
+            //checks if certificate can be created
+            if (percentage != 100) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("Curusus niet voltooid");
+                    errorAlert.setContentText("Haal 100% om een certificaat te geven");
+                    errorAlert.showAndWait();
+            } else if (hasCertificate != 0) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("Certificaat al gemaakt");
+                    errorAlert.setContentText("Er is al een certificaat voor deze inschrijving");
+                    errorAlert.showAndWait();
+            } else {
+                //insert certificate into database
+                Certificate certificate = new Certificate(studentMail, enrollmentId);
+                certificate.insertIntoDatabase(certificate, databaseConnection);
+
+                //sets hasCertificate to 1 so that we know that there is a certificate
+                enrollment.setCertificateCreated(enrollment, databaseConnection);
+
+                try {
+                    refreshTable(data, table, genericGUI, databaseConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         // eventhandler for button to return to menu
         backButton.setOnAction((returnButtonEvent) -> {
             CodecademyGUI codecademyGUI = new CodecademyGUI();
@@ -190,7 +230,7 @@ public class EnrollmentGUI extends Application {
             DatabaseConnection databaseConnection) throws SQLException {
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement(
-                "SELECT Enrollment.CourseId, Enrollment.StudentMail, Enrollment.EnrollmentDate, Enrollment.Percentage, Course.CourseName, Enrollment.EnrollmentId\r\n"
+                "SELECT Enrollment.CourseId, Enrollment.StudentMail, Enrollment.EnrollmentDate, Enrollment.Percentage, Course.CourseName, Enrollment.EnrollmentId, Enrollment.HasCertificate\r\n"
                         + //
                         "FROM Enrollment\r\n" + //
                         "JOIN Course ON Enrollment.CourseId = Course.CourseId;");

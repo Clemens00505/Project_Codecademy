@@ -1,7 +1,6 @@
 package gui;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,15 +31,10 @@ public class CertificateGUI extends Application {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         // create buttons
-        Button refreshButton = new Button("Tabel verversen");
-        Button createCertificatesButton = new Button("Certificaten aanmaken");
-
         Button backButton = new Button("Terug naar menu");
 
         // sets equal width for buttons
         int equalWidth = 175;
-        refreshButton.setMinWidth(equalWidth);
-        createCertificatesButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -80,7 +74,7 @@ public class CertificateGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, createCertificatesButton, backButton);
+        VBox buttons = new VBox(backButton);
 
         buttons.setPrefWidth(200);
         buttons.setPadding(new Insets(10));
@@ -93,44 +87,6 @@ public class CertificateGUI extends Application {
 
         certificateStage.setScene(scene);
 
-        // eventhandler for adding enrollment
-        createCertificatesButton.setOnAction((createCertificatesButtonEvent) -> {
-            try {
-                String query = "SELECT StudentMail, EnrollmentId FROM Enrollment WHERE Percentage = 100";
-                
-                // Execute the query
-                ResultSet resultSetCompleted = databaseConnection.executeSQLSelectStatement(query);
-                
-                // Iterate through the result set
-                while (resultSetCompleted.next()) {
-                    String studentMail = resultSetCompleted.getString("StudentMail");
-                    int enrollmentId = resultSetCompleted.getInt("EnrollmentId");
-                
-                    // Create a Certificate object
-                    Certificate certificate = new Certificate(studentMail, enrollmentId);
-        
-                    // Insert the certificate into the database
-                    certificate.insertIntoDatabase(certificate, databaseConnection);
-                
-                    // Print some information for verification
-                    System.out.println("Certificate created for Student: " + studentMail + ", Enrollment ID: " + enrollmentId);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
-        
-
-        // eventhandler for refreshing table
-        refreshButton.setOnAction((refreshButtonEvent) -> {
-            try {
-                refreshTable(data, table, genericGUI, databaseConnection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         // eventhandler for button to return to menu
         backButton.setOnAction((returnButtonEvent) -> {
             CodecademyGUI codecademyGUI = new CodecademyGUI();
@@ -142,18 +98,4 @@ public class CertificateGUI extends Application {
         });
     }
 
-    // method for refreshing the table
-    private void refreshTable(ObservableList<Certificate> data, TableView<Certificate> table,
-            GenericGUI<Certificate> genericGUI,
-            DatabaseConnection databaseConnection) throws SQLException {
-        databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Certificate");
-        databaseConnection.connectionIsOpen();
-
-        data = genericGUI.getData(resultSet, Certificate.class);
-
-        // displays new data in the table
-        table.setItems(data);
-        table.refresh();
-    }
 }

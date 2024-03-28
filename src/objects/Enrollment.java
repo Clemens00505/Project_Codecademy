@@ -12,6 +12,7 @@ public class Enrollment {
     private Date enrollmentDate;
     private int enrollmentId;
     private int courseId;
+    private int hasCertificate;
 
     public Enrollment() {
 
@@ -126,9 +127,9 @@ public class Enrollment {
         return enrollmentId;
     }
 
-    
-
-    
+    public int getHasCertificate() {
+        return hasCertificate;
+    }
 
     public int getCourseIdByName(String courseName, DatabaseConnection databaseConnection) throws SQLException {
         // Query the database to get the course ID
@@ -163,6 +164,20 @@ public class Enrollment {
 
     public int getCourseId() {
         return courseId;
+    }
+
+    public void setCertificateCreated(Enrollment enrollment, DatabaseConnection databaseConnection) {
+        databaseConnection.openConnection();
+
+        StringBuilder updateStmt = new StringBuilder();
+        updateStmt.append("UPDATE Enrollment SET ");
+        updateStmt.append("HasCertificate = 1 ");
+        updateStmt.append("WHERE EnrollmentId = " + enrollment.getEnrollmentId());
+
+        System.out.println(updateStmt.toString());
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
+        databaseConnection.closeConnection();
     }
     
 }
