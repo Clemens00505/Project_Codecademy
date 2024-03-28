@@ -20,9 +20,10 @@ public class CodecademyGUI extends Application {
         Button studentenButton = new Button("Studenten");
         Button contentButton = new Button("Content");
         Button enrollmentButton = new Button("Inschrijvingen");
+        Button showCertificatesButton = new Button("Certificaten");
         
         VBox box = new VBox();
-        box.getChildren().addAll(studentenButton, contentButton, enrollmentButton);
+        box.getChildren().addAll(studentenButton, contentButton, enrollmentButton, showCertificatesButton);
 
         Scene scene = new Scene(box, 100, 200);
 
@@ -30,6 +31,7 @@ public class CodecademyGUI extends Application {
         studentenButton.setPrefWidth(width);
         contentButton.setPrefWidth(width);
         enrollmentButton.setPrefWidth(width);
+        showCertificatesButton.setPrefWidth(width);;
 
         codecademyGUI.setScene(scene);
         codecademyGUI.show();
@@ -61,6 +63,15 @@ public class CodecademyGUI extends Application {
             enrollmentStage.setTitle("Inschrijvingen");
 
             genericGUI.switchScreen(codecademyGUI, enrollmentStage, enrollmentGUI);
+        });
+
+        showCertificatesButton.setOnAction((event) -> {
+            CertificateGUI certificateGUI = new CertificateGUI();
+            
+            Stage certificateStage = new Stage();
+            certificateStage.setTitle("Certificaten");
+
+            genericGUI.switchScreen(codecademyGUI, certificateStage, certificateGUI);
         });
 
     }
