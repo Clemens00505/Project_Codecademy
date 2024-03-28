@@ -21,17 +21,19 @@ public class CodecademyGUI extends Application {
         Button contentButton = new Button("Content");
         Button enrollmentButton = new Button("Inschrijvingen");
         Button showCertificatesButton = new Button("Certificaten");
+        Button showPercentageCompletedByGender = new Button("Overzicht percentage behaald per geslacht");
         
         VBox box = new VBox();
-        box.getChildren().addAll(studentenButton, contentButton, enrollmentButton, showCertificatesButton);
+        box.getChildren().addAll(studentenButton, contentButton, enrollmentButton, showCertificatesButton, showPercentageCompletedByGender);
 
-        Scene scene = new Scene(box, 100, 200);
+        Scene scene = new Scene(box, 250, 200);
 
-        int width = 150;
+        int width = 250;
         studentenButton.setPrefWidth(width);
         contentButton.setPrefWidth(width);
         enrollmentButton.setPrefWidth(width);
-        showCertificatesButton.setPrefWidth(width);;
+        showCertificatesButton.setPrefWidth(width);
+        showPercentageCompletedByGender.setPrefWidth(width);
 
         codecademyGUI.setScene(scene);
         codecademyGUI.show();
@@ -72,6 +74,14 @@ public class CodecademyGUI extends Application {
             certificateStage.setTitle("Certificaten");
 
             genericGUI.switchScreen(codecademyGUI, certificateStage, certificateGUI);
+        });
+
+        showPercentageCompletedByGender.setOnAction((showPercentageCompletedByGenderEvent) -> {
+            CompletedPercentageByGenderGUI completedPercentageByGenderGUI = new CompletedPercentageByGenderGUI();
+            Stage completedPercentageByGenderStage = new Stage();
+
+            completedPercentageByGenderStage.setTitle("Percentage behaalde cursussen per geslacht");
+            genericGUI.switchScreen(codecademyGUI, completedPercentageByGenderStage, completedPercentageByGenderGUI);
         });
 
     }
