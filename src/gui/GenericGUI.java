@@ -1,10 +1,5 @@
 package gui;
 
-import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +9,11 @@ import javafx.stage.Stage;
 import objects.Difficulty;
 import objects.Gender;
 import objects.Status;
+
+import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 public class GenericGUI<T> {
 
@@ -36,17 +36,9 @@ public class GenericGUI<T> {
                     field.setAccessible(true);
                     Object value = resultSet.getObject(fieldName);
 
-                    // If statements to check for enum types
-                    if (field.getType() == Gender.class) {
-                        value = Gender.fromString((String) value);
-                    }
-
-                    if (field.getType() == Status.class) {
-                        value = Status.fromString((String) value);
-                    }
-
-                    if (field.getType() == Difficulty.class) {
-                        value = Difficulty.fromString((String) value);
+                    // If statement to check for enum types
+                    if (field.getType().isEnum()) {
+                        value = Enum.valueOf((Class<Enum>) field.getType(), (String) value);
                     }
 
                     field.set(object, value);
