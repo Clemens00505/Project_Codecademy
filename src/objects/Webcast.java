@@ -50,6 +50,12 @@ public class Webcast {
 
     }
 
+    public Webcast(int contentId, String title, String description) {
+        this.contentId = contentId;
+        this.title = title;
+        this.description = description;
+    }
+
     //getters and setters
     public int getContentId() {
         return contentId;

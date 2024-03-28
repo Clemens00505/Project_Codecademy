@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import objects.Webcast;
+
 import java.sql.*;
 
 public class DatabaseConnection {
@@ -72,14 +75,14 @@ public class DatabaseConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         statement = null;
         connection = null;
     }
 
     public ResultSet executeSQLSelectStatement(String query) { // method for using a query
         ResultSet resultSet = null;
-    
+
         if (query != null && connectionIsOpen()) {
             try {
                 resultSet = statement.executeQuery(query);
@@ -88,13 +91,13 @@ public class DatabaseConnection {
                 e.printStackTrace();
             }
         }
-    
+
         if (resultSet != null) {
             System.out.println("Resultset gemaakt: " + resultSet.toString());
         } else {
             System.out.println("Resultset gemaakt: null");
         }
-        
+
         return resultSet;
     }
 
@@ -107,7 +110,7 @@ public class DatabaseConnection {
             }
         }
     }
-    
+
     public void executeSQLInsertUpdateDeleteStatement(String query) {
         if (query != null && connectionIsOpen()) {
             try {
@@ -160,34 +163,34 @@ public class DatabaseConnection {
     }
 
     // Method to get the course ID by name
-public int getCourseIdByName(String courseName) throws SQLException {
-    int courseId = -1; // Default value if course is not found or an error occurs
-    ResultSet resultSet = null;
-    PreparedStatement preparedStatement = null;
-    
-    try {
-        openConnection(); // Ensure the connection is open before executing the query
+    public int getCourseIdByName(String courseName) throws SQLException {
+        int courseId = -1; // Default value if course is not found or an error occurs
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
 
-        String query = "SELECT CourseId FROM Course WHERE CourseName = ?";
-        preparedStatement = getPreparedStatement(query);
-        preparedStatement.setString(1, courseName);
+        try {
+            openConnection(); // Ensure the connection is open before executing the query
 
-        resultSet = preparedStatement.executeQuery();
+            String query = "SELECT CourseId FROM Course WHERE CourseName = ?";
+            preparedStatement = getPreparedStatement(query);
+            preparedStatement.setString(1, courseName);
 
-        if (resultSet.next()) {
-            courseId = resultSet.getInt("CourseId");
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                courseId = resultSet.getInt("CourseId");
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            closeConnection(); // Close the connection after executing the query
         }
-    } finally {
-        if (resultSet != null) {
-            resultSet.close();
-        }
-        if (preparedStatement != null) {
-            preparedStatement.close();
-        }
-        closeConnection(); // Close the connection after executing the query
+
+        return courseId;
     }
-
-    return courseId;
-}
 
 }

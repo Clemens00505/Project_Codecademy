@@ -41,8 +41,9 @@ public class StudentWebcastProgressGUI extends Application {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         // create buttons
+        Button refreshButton = new Button("Tabel verversen");
+        Button addWebcastToStudentButton = new Button("Webcast toevoegen");
         Button editWebcastButton = new Button("Voortgang bewerken");
-
         Button backButton = new Button("Terug naar studenten");
 
         // create labels and textareas to show title and description since table columns
@@ -60,6 +61,8 @@ public class StudentWebcastProgressGUI extends Application {
 
         //sets equal width for buttons
         int equalWidth = 175;
+        refreshButton.setMinWidth(equalWidth);
+        addWebcastToStudentButton.setMinWidth(equalWidth);
         editWebcastButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
@@ -125,7 +128,7 @@ public class StudentWebcastProgressGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(editWebcastButton, backButton);
+        VBox buttons = new VBox(refreshButton, addWebcastToStudentButton, editWebcastButton, backButton);
 
         VBox showData = new VBox(titleShow, titleShowText, descriptionShow, descriptionShowText);
 
@@ -140,6 +143,23 @@ public class StudentWebcastProgressGUI extends Application {
         Scene scene = new Scene(box);
 
         studentWebcastProgressStage.setScene(scene);
+
+        addWebcastToStudentButton.setOnAction((addWebcastToStudentButtonEvent) -> {
+            AddWebcastToStudentGUI addWebcastToStudentGUI = new AddWebcastToStudentGUI();
+            Stage addWebcastToStudentStage = new Stage();
+            addWebcastToStudentStage.setTitle("Webcast toevoegen aan student");
+
+            genericGUI.openPopupScreen(addWebcastToStudentStage, addWebcastToStudentGUI);
+        });
+
+        // eventhandler for refreshing table
+        refreshButton.setOnAction((refreshButtonEvent) -> {
+            try {
+                refreshTable(data, table, genericGUI, databaseConnection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
 
         // eventhandler for editing a webcast
         editWebcastButton.setOnAction((editWebcastEvent) -> {
