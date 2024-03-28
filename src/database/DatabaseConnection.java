@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import objects.Webcast;
-
 import java.sql.*;
 
 public class DatabaseConnection {

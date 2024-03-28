@@ -10,14 +10,23 @@ import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import objects.Student;
 import objects.Webcast;
 
 public class AddWebcastToStudentGUI extends Application {
+
+    private Student student;
+
+    public AddWebcastToStudentGUI(Student student) {
+        this.student = student;
+    }
 
     @Override
     public void start(Stage addWebcastToStudentStage) throws Exception {
@@ -67,8 +76,23 @@ public class AddWebcastToStudentGUI extends Application {
         });
 
         // If saveButton is pressed, the Webcast is saved to the database
-            
-        
+        saveButton.setOnAction((saveButtonEvent) -> {
+            // Retrieve the selected webcast from the ComboBox
+            Webcast selectedWebcast = webcastInput.getValue();
+
+            // Check if a webcast is selected
+            if (selectedWebcast != null) {
+                selectedWebcast.addToStudent(selectedWebcast, student, databaseConnection);
+
+            } else {
+                // If no webcast is selected, display an error message
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Geen webcast geselecteerd");
+                errorAlert.setContentText("Selecteer een webcast voordat u opslaat.");
+                errorAlert.showAndWait();
+            }
+        });
+
     }
 
     // Method to fetch webcasts from the database
@@ -111,6 +135,5 @@ public class AddWebcastToStudentGUI extends Application {
             throw new UnsupportedOperationException("Not supported");
         }
     }
-    
 
 }

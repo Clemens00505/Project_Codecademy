@@ -158,5 +158,16 @@ public class Webcast {
         databaseConnection.closeConnection();
     }
 
+    public void addToStudent(Webcast webcast, Student student, DatabaseConnection databaseConnection) {
+        databaseConnection.openConnection();
+
+        StringBuilder insertStmt = new StringBuilder();
+        insertStmt.append("INSERT INTO StudentWebcastProgress (StudentMail, WebcastContentId) VALUES ('");
+        insertStmt.append(student.getEmail() + "', '" + webcast.getContentId() + "')");
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(insertStmt.toString());
+        databaseConnection.closeConnection();
+    }
+
     
 }

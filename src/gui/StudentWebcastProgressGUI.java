@@ -145,7 +145,7 @@ public class StudentWebcastProgressGUI extends Application {
         studentWebcastProgressStage.setScene(scene);
 
         addWebcastToStudentButton.setOnAction((addWebcastToStudentButtonEvent) -> {
-            AddWebcastToStudentGUI addWebcastToStudentGUI = new AddWebcastToStudentGUI();
+            AddWebcastToStudentGUI addWebcastToStudentGUI = new AddWebcastToStudentGUI(student);
             Stage addWebcastToStudentStage = new Stage();
             addWebcastToStudentStage.setTitle("Webcast toevoegen aan student");
 
