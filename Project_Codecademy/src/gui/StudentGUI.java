@@ -36,6 +36,7 @@ public class StudentGUI extends Application {
         Button addStudentButton = new Button("Student toevoegen");
         Button editStudentButton = new Button("Student bewerken");
         Button deleteStudentButton = new Button("Student verwijderen");
+        Button viewCertificatesButton = new Button("Bekijk certificaten");
         Button backButton = new Button("Terug naar hoofdmenu");
 
         int equalWidth = 175;
@@ -43,6 +44,7 @@ public class StudentGUI extends Application {
         addStudentButton.setMinWidth(equalWidth);
         editStudentButton.setMinWidth(equalWidth);
         deleteStudentButton.setMinWidth(equalWidth);
+        viewCertificatesButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -80,7 +82,6 @@ public class StudentGUI extends Application {
         // create the table
         TableView<Student> table = genericGUI.createTable(columns);
 
-
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
         ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Student");
@@ -91,18 +92,17 @@ public class StudentGUI extends Application {
         // displays data in the table
         table.setItems(data);
 
-
-        //Gives the table and columns a good size on the screen
+        // Gives the table and columns a good size on the screen
         table.setPrefWidth(950);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         table.getColumns().forEach(column -> {
-            column.setPrefWidth(TableView.USE_COMPUTED_SIZE); 
+            column.setPrefWidth(TableView.USE_COMPUTED_SIZE);
         });
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, backButton);
+        VBox buttons = new VBox(refreshButton, addStudentButton, editStudentButton, deleteStudentButton, viewCertificatesButton, backButton);
 
         buttons.setPadding(new Insets(10));
 
@@ -155,7 +155,6 @@ public class StudentGUI extends Application {
                     e.printStackTrace();
                 }
 
-                
             }
         });
 
@@ -174,7 +173,8 @@ public class StudentGUI extends Application {
                     String city = selectedStudent.getCity();
                     String country = selectedStudent.getCountry();
 
-                    Student student = new Student(email, name, gender, dateOfBirth, postalCode, houseNumber, city, country);
+                    Student student = new Student(email, name, gender, dateOfBirth, postalCode, houseNumber, city,
+                            country);
 
                     student.deleteStudent(email, databaseConnection);
                     refreshTable(data, table, genericGUI, databaseConnection);
@@ -184,6 +184,26 @@ public class StudentGUI extends Application {
                     e.printStackTrace();
                 }
 
+            }
+        });
+
+        // Event handler for button to show certificates
+        viewCertificatesButton.setOnAction((viewCertificatesEvent) -> {
+            // get  the student
+            Student selectedStudent = table.getSelectionModel().getSelectedItem();
+            if (selectedStudent != null) {
+                String studentEmail = selectedStudent.getEmail();
+                try {
+                    // Open the new gui
+                    CertificatesStudentGUI certificatesStudentGUI = new CertificatesStudentGUI(studentEmail);
+                    Stage certificatesStudentStage = new Stage();
+                    certificatesStudentStage.setTitle("Certificaten van " + selectedStudent.getName());
+
+                    genericGUI.switchScreen(studentGUI, certificatesStudentStage, certificatesStudentGUI);
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -197,8 +217,7 @@ public class StudentGUI extends Application {
             genericGUI.switchScreen(studentGUI, codecademyStage, codecademyGUI);
         });
 
-
-        //eventhandler for refreshbutton
+        // eventhandler for refreshbutton
         refreshButton.setOnAction((refreshTableEvent) -> {
             try {
                 refreshTable(data, table, genericGUI, databaseConnection);
