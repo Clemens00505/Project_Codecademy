@@ -2,7 +2,6 @@ package gui;
 
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,24 +22,20 @@ import javafx.stage.Stage;
 import objects.Status;
 import objects.Webcast;
 
-public class ContentWebcastGUI extends Application {
+public class MostViewedWebcastsGUI extends Application{
+
     @Override
-    public void start(Stage webcastStage) throws Exception {
+    public void start(Stage mostViewedWebcastsStage) throws Exception {
         // create a GenericGU
         GenericGUI<Webcast> genericGUI = new GenericGUI<>();
 
-        webcastStage.show();
-        webcastStage.setTitle("Webcasts");
+        mostViewedWebcastsStage.show();
+        mostViewedWebcastsStage.setTitle("Webcasts");
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
         // create buttons
-        Button refreshButton = new Button("Tabel verversen");
-        Button addWebcastButton = new Button("webcast toevoegen");
-        Button editWebcastButton = new Button("webcast bewerken");
-        Button deleteWebcastButton = new Button("webcast verwijderen");
-        Button viewMostViewedWebcastsButton = new Button("Top 3 webcasts");
-        Button backButton = new Button("Terug naar menu");
+        Button backButton = new Button("Terug naar webcasts");
 
         // create labels and textareas to show title and description since table columns
         // are narrow
@@ -57,11 +52,6 @@ public class ContentWebcastGUI extends Application {
 
         //sets equal width for buttons
         int equalWidth = 175;
-        refreshButton.setMinWidth(equalWidth);
-        addWebcastButton.setMinWidth(equalWidth);
-        editWebcastButton.setMinWidth(equalWidth);
-        deleteWebcastButton.setMinWidth(equalWidth);
-        viewMostViewedWebcastsButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -101,7 +91,7 @@ public class ContentWebcastGUI extends Application {
 
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Webcast");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT TOP(3) * FROM Webcast ORDER BY TimesViewed DESC");
 
         // puts the data from the resultset in an observablelist
         ObservableList<Webcast> data = genericGUI.getData(resultSet, Webcast.class);
@@ -130,8 +120,7 @@ public class ContentWebcastGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addWebcastButton, editWebcastButton, deleteWebcastButton, viewMostViewedWebcastsButton,
-                backButton);
+        VBox buttons = new VBox(backButton);
 
         VBox showData = new VBox(titleShow, titleShowText, descriptionShow, descriptionShowText);
 
@@ -145,113 +134,18 @@ public class ContentWebcastGUI extends Application {
 
         Scene scene = new Scene(box);
 
-        webcastStage.setScene(scene);
-
-        // eventhandler for adding webcast
-        addWebcastButton.setOnAction((addWebcastEvent) -> {
-            try {
-                AddWebcastGUI addWebcastGUI = new AddWebcastGUI();
-                Stage addWebcastStage = new Stage();
-
-                addWebcastStage.setTitle("Webcast toevoegen");
-                genericGUI.openPopupScreen(addWebcastStage, addWebcastGUI);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-        });
-
-        // eventhandler for editing a webcast
-        editWebcastButton.setOnAction((editWebcastEvent) -> {
-            Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
-
-            if (selectedWebcast != null) {
-                int contentId = selectedWebcast.getContentId();
-                String title = selectedWebcast.getTitle();
-                String description = selectedWebcast.getDescription();
-                String speakerName = selectedWebcast.getSpeakerName();
-                String speakerOrganisation = selectedWebcast.getSpeakerOrganisation();
-                Date publicationDate = selectedWebcast.getPublicationDate();
-                Status status = selectedWebcast.getStatus();
-                String URL = selectedWebcast.getURL();
-                int timesViewed = selectedWebcast.getTimesViewed();
-
-                Webcast webcast = new Webcast(contentId, title, description, speakerName, speakerOrganisation,
-                        publicationDate, status, URL, timesViewed);
-
-                try {
-                    EditWebcastGUI editWebcastGUI = new EditWebcastGUI(webcast);
-                    Stage editWebcastStage = new Stage();
-
-                    editWebcastStage.setTitle("Webcast bewerken");
-                    genericGUI.openPopupScreen(editWebcastStage, editWebcastGUI);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        // // eventhandler for deleting webcast
-        deleteWebcastButton.setOnAction((deleteWebcastEvent) -> {
-            Webcast selectedWebcast = table.getSelectionModel().getSelectedItem();
-
-            if (selectedWebcast != null) {
-                try {
-
-                    selectedWebcast.deleteWebcast(selectedWebcast, databaseConnection);
-                    refreshTable(data, table, genericGUI, databaseConnection);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        viewMostViewedWebcastsButton.setOnAction((viewMostViewedWebcastsButtonEvent) -> {
-            MostViewedWebcastsGUI mostViewedWebcastsGUI = new MostViewedWebcastsGUI();
-            Stage mostViewedWebcastsStage = new Stage();
-            mostViewedWebcastsStage.setTitle("Top 3 webcasts");
-
-            genericGUI.switchScreen(webcastStage, mostViewedWebcastsStage, mostViewedWebcastsGUI);
-        });
-
-        // eventhandler for refreshing table
-        refreshButton.setOnAction((refreshButtonEvent) -> {
-            try {
-                refreshTable(data, table, genericGUI, databaseConnection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        mostViewedWebcastsStage.setScene(scene);
 
         backButton.setOnAction((backButtonEvent) -> {
-            ChooseContentGUI chooseContentGUI = new ChooseContentGUI();
+            ContentWebcastGUI webcastGUI = new ContentWebcastGUI();
 
-            Stage chooseContentStage = new Stage();
-            chooseContentStage.setTitle("Content");
+            Stage webcastStage = new Stage();
+            webcastStage.setTitle("Webcasts");
 
-            genericGUI.switchScreen(webcastStage, chooseContentStage, chooseContentGUI);
+            genericGUI.switchScreen(mostViewedWebcastsStage, webcastStage, webcastGUI);
         });
 
-    }
-
-    // method for refreshing the table
-    private void refreshTable(ObservableList<Webcast> data, TableView<Webcast> table,
-            GenericGUI<Webcast> genericGUI,
-            DatabaseConnection databaseConnection) throws SQLException {
-        databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM Webcast");
-        databaseConnection.connectionIsOpen();
-
-        data = genericGUI.getData(resultSet, Webcast.class);
-
-        // displays new data in the table
-        table.setItems(data);
-        table.refresh();
     }
 
 }
+
