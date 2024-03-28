@@ -6,9 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import objects.Difficulty;
-import objects.Gender;
-import objects.Status;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -23,6 +20,7 @@ public class GenericGUI<T> {
         return table;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ObservableList<T> getData(ResultSet resultSet, Class<T> usedClass) throws SQLException {
         ObservableList<T> data = FXCollections.observableArrayList();
         try {
