@@ -18,6 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import objects.Gender;
+import objects.MailTools;
+import objects.PostalCode;
 import objects.Student;
 
 public class AddStudentGUI extends Application {
@@ -114,13 +116,13 @@ public class AddStudentGUI extends Application {
                 String name = nameInput.getText();
                 Gender gender = genderInput.getValue();
                 Date dateOfBirth = Date.valueOf(dateOfBirthInput.getValue());
-                String postalCode = postalCodeInput.getText();
+                String postalCode = PostalCode.formatPostalCode(postalCodeInput.getText());
                 int houseNumber = houseNumberInput.getValue();
                 String city = cityInput.getText();
                 String country = countryInput.getText();
 
                 //checks if all fields are filled
-                if (email.length() == 0 || name.length() == 0 || postalCode.length() < 6 || postalCode.length() > 7 || city.length() == 0 || country.length() == 0) {
+                if (!MailTools.validateMailAddress(email) || name.length() == 0 || postalCode.length() < 6 || postalCode.length() > 7 || city.length() == 0 || country.length() == 0) {
                     Alert errorAlert = new Alert(AlertType.ERROR);
                     errorAlert.setHeaderText("Niet alles ingevuld");
                     errorAlert.setContentText("Vul alle gegevens in om een student toe te voegen");

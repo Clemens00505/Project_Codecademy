@@ -26,7 +26,26 @@ public class PostalCode {
      * 
      */
     public static String formatPostalCode(/* non_null */ String postalCode) {
-        
-        return null;
+        if (postalCode == null) {
+            throw new NullPointerException("Postal code cannot be null");
+        }
+
+        postalCode = postalCode.trim();
+
+        if (postalCode.length() != 6) {
+            throw new IllegalArgumentException("Postal code must be exactly 6 characters long");
+        }
+
+        int numericPart = Integer.parseInt(postalCode.substring(0, 4));
+        if (numericPart <= 999 || numericPart > 9999) {
+            throw new IllegalArgumentException("Numeric part of postal code must be between 1000 and 9999");
+        }
+
+        String letterPart = postalCode.substring(4).trim().toUpperCase();
+        if (!Character.isLetter(letterPart.charAt(0)) || !Character.isLetter(letterPart.charAt(1))) {
+            throw new IllegalArgumentException("Letter part of postal code must be two letters");
+        }
+
+        return postalCode.substring(0, 4) + " " + letterPart;
     }
 }

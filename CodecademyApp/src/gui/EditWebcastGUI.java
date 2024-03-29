@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import objects.Status;
+import objects.URLTools;
 import objects.Webcast;
 
 
@@ -126,7 +127,7 @@ public class EditWebcastGUI extends Application {
 
 
                 //checks if all fields are filled
-                if (title.length() == 0 || description.length() == 0 || speakerName.length() == 0 || speakerOrganisation.length() == 0 || URL.length() == 0) {
+                if (title.length() == 0 || description.length() == 0 || speakerName.length() == 0 || speakerOrganisation.length() == 0 || !URLTools.validateURL(URL)) {
                     Alert errorAlert = new Alert(AlertType.ERROR);
                     errorAlert.setHeaderText("Niet alles ingevuld");
                     errorAlert.setContentText("Vul alle gegevens in om de Webcast te bewerken");

@@ -29,6 +29,8 @@ public class MailToolsTest {
     }
 
     /**
+     * @desc Validates if mailAddress is valid. It should be in the form of:
+     *       <at least 1 character>@<at least 1 character>.<at least 1 character>
      * @subcontract no mailbox part {
      * @requires !mailAddress.contains("@") ||
      *           mailAddress.split("@")[0].length < 1;

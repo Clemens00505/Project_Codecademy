@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import objects.ContentModule;
+import objects.MailTools;
 import objects.Status;
 
 /**
@@ -131,7 +132,7 @@ public class EditModuleGUI extends Application {
                 int indexNumber = indexNumberInput.getValue();
 
                 //checks if all fields are filled
-                if (title.length() == 0 || description.length() == 0 || contactPersonName.length() == 0 || contactPersonMail.length() == 0) {
+                if (title.length() == 0 || description.length() == 0 || contactPersonName.length() == 0 || !MailTools.validateMailAddress(contactPersonMail)) {
                     Alert errorAlert = new Alert(AlertType.ERROR);
                     errorAlert.setHeaderText("Niet alles ingevuld");
                     errorAlert.setContentText("Vul alle gegevens in om de module te bewerken");
