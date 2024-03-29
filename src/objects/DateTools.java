@@ -1,5 +1,7 @@
 package objects;
 
+import java.sql.Date;
+
 public class DateTools {
     /**
      * @desc Validates is a given date in the form of day, month and year is valid.
@@ -29,8 +31,8 @@ public class DateTools {
      * @ensures \result = false; }
      * 
      */
-    public static boolean validateDate(int day, int month, int year) {
-
+    public static boolean validateDate(Date date) {
+        
         return false;
     }
 }

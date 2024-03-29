@@ -1,34 +1,37 @@
 package objects;
 
 public class URLTools {
-    /**
-         * @desc Validates is URL is valid. It should be in the form of:
-         *       <https:// of http://><minimaal één letter>.<minimaal één letter>.<minimaal één letter>
-         * 
-         * @subcontract no prefix part {
-         * @requires !url.startsWith("https://") || !url.startsWith("http://")
-         * @ensures \result = false; }
-         * 
-         * @subcontract no subdomain {
-         * @requires !url.contains(".") || url.split(".")[0].length < 1;
-         * @ensures \result = false; }
-         * 
-         * @subcontract no second-level domain {
-         * @requires !url.contains(".") || url.split(".")[1].length < 1;
-         * @ensures \result = false; }
-         * 
-         * @subcontract no top-level domain {
-         * @requires !url.contains(".") || url.split(".")[2].length < 1;
-         * @ensures \result = false; }
-         * 
-         * @subcontract valid URL {
-         * @requires no other precondition;
-         * @ensures \result = true; }
-         * 
-         */
-        public static boolean validateURL(String url) {
 
-            return false;
+        public static boolean validateURL(String url) {
+            if (url == null || url.isEmpty()) {
+                return false; // Empty or null URL
+            }
+    
+            // Check if the URL starts with "https://" or "http://"
+            if (!url.startsWith("https://") && !url.startsWith("http://")) {
+                return false; // Missing prefix
+            }
+    
+            // Remove the protocol part from the URL
+            String urlWithoutProtocol = url.substring(url.indexOf("://") + 3);
+    
+            // Split the remaining URL into parts using "." as delimiter
+            String[] urlParts = urlWithoutProtocol.split("\\.");
+    
+            // Check if the URL contains exactly three parts separated by dots
+            if (urlParts.length != 3) {
+                return false; // Invalid format
+            }
+    
+            // Check if each part contains at least one letter
+            for (String part : urlParts) {
+                if (!part.matches(".*[a-zA-Z].*")) {
+                    return false; // Part does not contain any letter
+                }
+            }
+    
+            // All subcontracts passed, URL is valid
+            return true;
         }
 }
 

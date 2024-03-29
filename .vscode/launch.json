@@ -9,6 +9,13 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "gui.Main",
+            "projectName": "Project_Codecademy_12b0f6c6"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "gui.Main",
             "projectName": "Project_Codecademy_48550dfe"
         },
         {
