@@ -1,6 +1,5 @@
 package gui;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,8 +10,6 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -20,8 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import objects.Certificate;
-import objects.Enrollment;
 import objects.EnrollmentModules;
 
 public class EnrollmentModulesGUI extends Application{
@@ -43,19 +38,13 @@ public class EnrollmentModulesGUI extends Application{
 
         // create buttons
         Button refreshButton = new Button("Tabel verversen");
-        Button addEnrollmentButton = new Button("Enrollment toevoegen");
         Button editEnrollmentButton = new Button("Enrollment bewerken");
-        Button deleteEnrollmentButton = new Button("Enrollment verwijderen");
-        Button createCertificateButton = new Button("Certificaat maken");
-        Button backButton = new Button("Terug naar menu");
+        Button backButton = new Button("Terug naar inschrijvingen");
 
         // sets equal width for buttons
         int equalWidth = 175;
         refreshButton.setMinWidth(equalWidth);
-        addEnrollmentButton.setMinWidth(equalWidth);
         editEnrollmentButton.setMinWidth(equalWidth);
-        deleteEnrollmentButton.setMinWidth(equalWidth);
-        createCertificateButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -87,7 +76,7 @@ public class EnrollmentModulesGUI extends Application{
 
         // gets the data from the database as a resultset
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM EnrollmentModules");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM EnrollmentModules WHERE EnrollmentId = " + enrollmentId);
         // puts the data from the resultset in an observablelist
         ObservableList<EnrollmentModules> data = genericGUI.getData(resultSet, EnrollmentModules.class);
 
@@ -104,8 +93,7 @@ public class EnrollmentModulesGUI extends Application{
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addEnrollmentButton, editEnrollmentButton, deleteEnrollmentButton, createCertificateButton,
-                backButton);
+        VBox buttons = new VBox(refreshButton, editEnrollmentButton, backButton);
 
         buttons.setPrefWidth(200);
         buttons.setPadding(new Insets(10));
@@ -135,12 +123,12 @@ public class EnrollmentModulesGUI extends Application{
 
         // eventhandler for button to return to menu
         backButton.setOnAction((returnButtonEvent) -> {
-            CodecademyGUI codecademyGUI = new CodecademyGUI();
+            EnrollmentGUI enrollmentGUI = new EnrollmentGUI();
 
-            Stage codecademyStage = new Stage();
-            codecademyStage.setTitle("Menu");
+            Stage enrollmentStage = new Stage();
+            enrollmentStage.setTitle("Inschrijvingen");
 
-            genericGUI.switchScreen(enrollmentModulesStage, codecademyStage, codecademyGUI);
+            genericGUI.switchScreen(enrollmentModulesStage, enrollmentStage, enrollmentGUI);
         });
     }
 
@@ -149,7 +137,7 @@ public class EnrollmentModulesGUI extends Application{
             GenericGUI<EnrollmentModules> genericGUI,
             DatabaseConnection databaseConnection) throws SQLException {
         databaseConnection.openConnection();
-        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM EnrollmentModules");
+        ResultSet resultSet = databaseConnection.executeSQLSelectStatement("SELECT * FROM EnrollmentModules WHERE EnrollmentId = " + enrollmentId);
         databaseConnection.connectionIsOpen();
 
         data = genericGUI.getData(resultSet, EnrollmentModules.class);

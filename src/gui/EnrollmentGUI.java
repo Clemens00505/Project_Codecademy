@@ -41,6 +41,7 @@ public class EnrollmentGUI extends Application {
         Button editEnrollmentButton = new Button("Enrollment bewerken");
         Button deleteEnrollmentButton = new Button("Enrollment verwijderen");
         Button createCertificateButton = new Button("Certificaat maken");
+        Button showModulesButton = new Button("Toon modules");
         Button backButton = new Button("Terug naar menu");
 
         // sets equal width for buttons
@@ -50,6 +51,7 @@ public class EnrollmentGUI extends Application {
         editEnrollmentButton.setMinWidth(equalWidth);
         deleteEnrollmentButton.setMinWidth(equalWidth);
         createCertificateButton.setMinWidth(equalWidth);
+        showModulesButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -99,7 +101,7 @@ public class EnrollmentGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addEnrollmentButton, editEnrollmentButton, deleteEnrollmentButton, createCertificateButton,
+        VBox buttons = new VBox(refreshButton, addEnrollmentButton, editEnrollmentButton, deleteEnrollmentButton, createCertificateButton, showModulesButton,
                 backButton);
 
         buttons.setPrefWidth(200);
@@ -126,6 +128,19 @@ public class EnrollmentGUI extends Application {
                 e.printStackTrace();
 
             }
+        });
+
+        //eventhandler for opening EnrollmentModulesGUI
+        showModulesButton.setOnAction((showModulesButtonEvent) -> {
+            Enrollment enrollment = table.getSelectionModel().getSelectedItem();
+
+            int enrollmentId = enrollment.getEnrollmentId();
+
+            EnrollmentModulesGUI enrollmentModulesGUI = new EnrollmentModulesGUI(enrollmentId);
+            Stage enrollmentModulesStage = new Stage();
+            enrollmentModulesStage.setTitle("Modules bij inschrijving");
+
+            genericGUI.switchScreen(enrollmentStage, enrollmentModulesStage, enrollmentModulesGUI);
         });
 
         // eventhandler for editing an enrollment
