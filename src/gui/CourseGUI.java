@@ -40,6 +40,7 @@ public class CourseGUI extends Application {
         Button deleteCourseButton = new Button("Cursus verwijderen");
         Button showModulesButton = new Button("Toon modules in cursus");
         Button timesCompletedButton = new Button("Aantal keer gehaald");
+        Button avgCompletionModulesButton = new Button("Gemiddelde voortgang modules");
         Button backButton = new Button("Terug naar menu");
 
         // create labels and textareas to show courseName and IntroText since table
@@ -60,13 +61,14 @@ public class CourseGUI extends Application {
         introTextShowText.setWrapText(true);
 
         // sets equal width for buttons
-        int equalWidth = 175;
+        int equalWidth = 200;
         refreshButton.setMinWidth(equalWidth);
         addCourseButton.setMinWidth(equalWidth);
         editCourseButton.setMinWidth(equalWidth);
         deleteCourseButton.setMinWidth(equalWidth);
         showModulesButton.setMinWidth(equalWidth);
         timesCompletedButton.setMinWidth(equalWidth);
+        avgCompletionModulesButton.setMinWidth(equalWidth);
         backButton.setMinWidth(equalWidth);
 
         // create columns for the table
@@ -121,7 +123,7 @@ public class CourseGUI extends Application {
 
         // placing everything in the screen
         // put buttons in a vbox
-        VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton, showModulesButton, timesCompletedButton,
+        VBox buttons = new VBox(refreshButton, addCourseButton, editCourseButton, deleteCourseButton, showModulesButton, timesCompletedButton, avgCompletionModulesButton,
                 backButton);
 
         VBox showData = new VBox(timesCompletedName, timesCompleted, courseNameShow, courseNameShowText, introTextShow, introTextShowText);
@@ -131,7 +133,7 @@ public class CourseGUI extends Application {
         buttons.setPadding(new Insets(10));
 
         VBox rightSide = new VBox(buttons, showData);
-        rightSide.setPrefWidth(200);
+        rightSide.setPrefWidth(250);
         HBox box = new HBox(table, rightSide);
 
         Scene scene = new Scene(box);
@@ -245,6 +247,17 @@ public class CourseGUI extends Application {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        });
+
+        avgCompletionModulesButton.setOnAction((avgCompletionModulesButtonEvent) -> {
+            Course course = table.getSelectionModel().getSelectedItem();
+
+            AverageCompletionModulesGUI averageCompletionModulesGUI = new AverageCompletionModulesGUI(course);
+
+            Stage averageCompletionModulesStage = new Stage();
+            averageCompletionModulesStage.setTitle("Gemiddelde voortgang modules");
+
+            genericGUI.switchScreen(courseStage, averageCompletionModulesStage, averageCompletionModulesGUI);
         });
     }
 
