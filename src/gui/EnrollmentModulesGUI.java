@@ -108,7 +108,13 @@ public class EnrollmentModulesGUI extends Application{
 
         // eventhandler for editing an enrollment
         editEnrollmentButton.setOnAction((editEnrollmentEvent) -> {
+            EnrollmentModules enrollmentModules = table.getSelectionModel().getSelectedItem();
 
+            EditModuleProgressGUI editModuleProgressGUI = new EditModuleProgressGUI(enrollmentModules);
+            Stage editModuleProgressStage = new Stage();
+            editModuleProgressStage.setTitle("Voortgang module aanpassen");
+
+            genericGUI.openPopupScreen(editModuleProgressStage, editModuleProgressGUI);
 
         });
 

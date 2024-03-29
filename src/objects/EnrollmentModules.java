@@ -73,4 +73,53 @@ public class EnrollmentModules {
     public int getProgress() {
         return progress;
     }
+
+
+
+    public void updateProgress(EnrollmentModules enrollmentModules, DatabaseConnection databaseConnection) {
+        databaseConnection.openConnection();
+
+        String query = "UPDATE EnrollmentModules SET Progress = " + enrollmentModules.getProgress() + " WHERE EnrollmentId = " + enrollmentModules.getEnrollmentId() + " AND ContentId = " + enrollmentModules.getContentId();
+
+        databaseConnection.executeSQLInsertUpdateDeleteStatement(query);
+        databaseConnection.closeConnection();
+    }
+
+
+
+    public void setEnrollmentId(int enrollmentId) {
+        this.enrollmentId = enrollmentId;
+    }
+
+
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+
+
+    public void setContentId(int contentId) {
+        this.contentId = contentId;
+    }
+
+
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    
 }

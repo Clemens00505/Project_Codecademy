@@ -19,6 +19,7 @@ public class EditEnrollmentGUI extends Application {
         this.enrollment = enrollment;
     }
 
+    @Override
     public void start(Stage editEnrollmentStage) throws Exception {
         DatabaseConnection databaseConnection = new DatabaseConnection();
 
