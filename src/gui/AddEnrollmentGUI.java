@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import objects.Enrollment;
+import objects.EnrollmentModules;
 
 public class AddEnrollmentGUI extends Application {
 
@@ -92,12 +93,16 @@ public class AddEnrollmentGUI extends Application {
                     // Validation error handling remains the same
                 } else {
                     Enrollment enrollment = new Enrollment(studentMail, courseName, enrollmentDate);
-
                     // Retrieve the course ID based on the course name
                     int courseId = enrollment.getCourseIdByName(courseName, databaseConnection);
                     enrollment.setCourseId(courseId);
 
-                    enrollment.addEnrollment(enrollment, databaseConnection);
+                    int enrollmentId = enrollment.addEnrollment(enrollment, databaseConnection);
+
+                    EnrollmentModules enrollmentModules = new EnrollmentModules(enrollmentId, courseId);
+                    enrollmentModules.insertIntoDatabase(enrollmentModules, databaseConnection);
+
+
 
                     addEnrollmentStage.close();
                 }

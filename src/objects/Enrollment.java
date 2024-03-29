@@ -1,6 +1,8 @@
 package objects;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DatabaseConnection;
@@ -32,8 +34,6 @@ public class Enrollment {
         this.courseId = courseId;
     }
 
-
-
     public Enrollment(String studentMail, String courseName, int percentage, Date enrollmentDate, int enrollmentId) {
         this.studentMail = studentMail;
         this.courseName = courseName;
@@ -48,35 +48,39 @@ public class Enrollment {
         this.enrollmentDate = enrollmentDate;
     }
 
-    
+    public int addEnrollment(Enrollment enrollment, DatabaseConnection databaseConnection) throws SQLException {
+        int enrollmentId = -1; // Default value indicating failure
+        PreparedStatement preparedStatement = null;
+        ResultSet generatedKeys = null;
 
-    public void addEnrollment(Enrollment enrollment, DatabaseConnection databaseConnection) throws SQLException {
-        StringBuilder insertStmt = new StringBuilder();
-    
-        // Open the database connection
-        databaseConnection.openConnection();
-        if (databaseConnection.connectionIsOpen()) {
-            System.out.println("open");
-        } else {
-            System.out.println("closed");
+        try {
+            databaseConnection.openConnection();
+
+            String query = "INSERT INTO Enrollment (StudentMail, CourseId, EnrollmentDate) VALUES (?, ?, ?)";
+            preparedStatement = databaseConnection.getPreparedStatement(query, true); // true to retrieve generated keys
+            preparedStatement.setString(1, enrollment.getStudentMail());
+            preparedStatement.setInt(2, enrollment.getCourseId());
+            preparedStatement.setDate(3, enrollment.getEnrollmentDate());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    enrollmentId = generatedKeys.getInt(1); // Get the first generated key
+                }
+            }
+        } finally {
+            if (generatedKeys != null) {
+                generatedKeys.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            databaseConnection.closeConnection();
         }
-    
-        // StringBuilder used for constructing the SQL INSERT statement
-        insertStmt.append("INSERT INTO Enrollment (StudentMail, CourseId, EnrollmentDate) ");
-        insertStmt.append("VALUES ('");
-        insertStmt.append(enrollment.getStudentMail());
-        insertStmt.append("', ");
-        insertStmt.append(enrollment.getCourseId());
-        insertStmt.append(", '");
-        insertStmt.append(enrollment.getEnrollmentDate().toString());
-        insertStmt.append("')");
-    
-        System.out.println(insertStmt.toString());
-    
-        databaseConnection.executeSQLStatement(insertStmt.toString());
-    
-        // Close the database connection
-        databaseConnection.closeConnection();
+
+        return enrollmentId;
     }
 
     // method for deleting enrollment from database
@@ -160,8 +164,6 @@ public class Enrollment {
         this.enrollmentId = enrollmentId;
     }
 
-
-
     public int getCourseId() {
         return courseId;
     }
@@ -179,5 +181,5 @@ public class Enrollment {
         databaseConnection.executeSQLInsertUpdateDeleteStatement(updateStmt.toString());
         databaseConnection.closeConnection();
     }
-    
+
 }

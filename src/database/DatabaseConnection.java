@@ -160,6 +160,19 @@ public class DatabaseConnection {
         return connection.prepareStatement(sqlQuery);
     }
 
+    public PreparedStatement getPreparedStatement(String sqlQuery, boolean returnGeneratedKeys) throws SQLException {
+        openConnection();
+        PreparedStatement preparedStatement;
+    
+        if (returnGeneratedKeys) {
+            preparedStatement = connection.prepareStatement(sqlQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+        } else {
+            preparedStatement = connection.prepareStatement(sqlQuery);
+        }
+    
+        return preparedStatement;
+    }
+
     // Method to get the course ID by name
     public int getCourseIdByName(String courseName) throws SQLException {
         int courseId = -1; // Default value if course is not found or an error occurs
